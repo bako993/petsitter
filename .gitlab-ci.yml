@@ -1,2 +1,16 @@
-include:
-  - local: 'backend/.gitlab-ci.yml'
+stages:
+  - lint
+
+lint:
+  stage: lint
+  image: php:8.4
+  before_script:
+    - apt-get update && apt-get install -y unzip git
+    - cd backend
+    - curl -sS https://getcomposer.org/installer | php
+    - php composer.phar install --no-interaction --prefer-dist
+  script:
+    - cd backend
+    - vendor/bin/phpcs --standard=PSR12 app/ routes/
+  only:
+    - merge_requests
