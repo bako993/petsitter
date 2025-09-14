@@ -9,6 +9,6 @@ lint:
     - curl -sS https://getcomposer.org/installer | php
     - php composer.phar install --no-interaction --prefer-dist --working-dir=backend
   script:
-    - php vendor/bin/phpcs --standard=PSR12 backend/app/ backend/routes/
+    - php backend/vendor/bin/phpcs --standard=PSR12 backend/app/ backend/routes/
   only:
     - merge_requests
