@@ -23,6 +23,6 @@ phpunit:
     - php composer.phar install --no-interaction --prefer-dist --working-dir=backend
   script:
 #    - #php backend/vendor/bin/phpunit --configuration backend/phpunit.xml
-    - php backend/vendor/bin/phpunit --testsuite=Unit
+    - php backend/vendor/bin/phpunit --configuration backend/phpunit.xml --testsuite=Unit
   only:
     - merge_requests
