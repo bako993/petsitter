@@ -1,0 +1,109 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: backend
+    restart: unless-stopped
+    ports:
+      - "${BACKEND_PORT}:80"
+    volumes:
+      - ./backend:/var/www
+      - ./backend/storage:/var/www/storage
+    env_file:
+      - ./.env
+    depends_on:
+      - mysql_dev
+      - mysql_test
+    networks:
+      - network
+
+  mysql_dev:
+    image: mysql:8.0
+    container_name: mysql_dev
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DEV_DB_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${DEV_DB_DATABASE}
+      MYSQL_USER: ${DEV_DB_USERNAME}
+      MYSQL_PASSWORD: ${DEV_DB_PASSWORD}
+    ports:
+      - "33062:3306"
+    volumes:
+      - mysql_dev_data:/var/lib/mysql
+    networks:
+      - network
+
+  mysql_test:
+    image: mysql:8.0
+    container_name: mysql_test
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${TEST_DB_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${TEST_DB_DATABASE}
+      MYSQL_USER: ${TEST_DB_USERNAME}
+      MYSQL_PASSWORD: ${TEST_DB_PASSWORD}
+    ports:
+      - "33063:3306"
+    volumes:
+      - mysql_test_data:/var/lib/mysql
+    networks:
+      - network
+
+networks:
+  network:
+    driver: bridge
+
+volumes:
+  mysql_dev_data:
+  mysql_test_data:
+
+
+
+
+#services:
+#  backend:
+#    build:
+#      context: ./backend
+#      dockerfile: Dockerfile
+#    container_name: backend
+#    restart: unless-stopped
+#    ports:
+#      - "${BACKEND_PORT}:80"
+#    volumes:
+#      - ./backend:/var/www
+#      - ./backend/storage:/var/www/storage
+#    environment:
+#      DB_HOST: ${DB_HOST}
+#      DB_PORT: ${DB_PORT}
+#      DB_DATABASE: ${DB_DATABASE}
+#      DB_USERNAME: ${DB_USERNAME}
+#      DB_PASSWORD: ${DB_PASSWORD}
+#    depends_on:
+#      - db
+#    networks:
+#      - network
+#
+#  db:
+#    image: mysql:8.0
+#    container_name: db
+#    restart: unless-stopped
+#    ports:
+#      - "3307:3306"
+#    environment:
+#      MYSQL_DATABASE: ${DB_DATABASE}
+#      MYSQL_USER: ${DB_USERNAME}
+#      MYSQL_PASSWORD: ${DB_PASSWORD}
+#      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+#    volumes:
+#      - db-data:/var/lib/mysql
+#      - ./scripts:/docker-entrypoint-initdb.d
+#    networks:
+#      - network
+#
+#networks:
+#  network:
+#    driver: bridge
+#
+#volumes:
+#  db-data:
