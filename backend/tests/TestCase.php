@@ -2,9 +2,20 @@
 
 namespace Tests;
 
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
+use Mockery;
 
 abstract class TestCase extends BaseTestCase
 {
-    //
+    use CreatesApplication;
+    use RefreshDatabase;
+
+    protected function tearDown(): void
+    {
+        Mockery::close();
+
+        parent::tearDown();
+    }
+
 }
