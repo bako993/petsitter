@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use Core\Repositories\LocationRepository;
+use Core\Repositories\LocationRepositoryInterface;
 use Core\Repositories\UserRepository;
 use Core\Repositories\UserRepositoryInterface;
 use Illuminate\Support\ServiceProvider;
@@ -15,6 +17,7 @@ class AppServiceProvider extends ServiceProvider
     {
         //
         $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
+        $this->app->bind(LocationRepositoryInterface::class, LocationRepository::class);
     }
 
     /**

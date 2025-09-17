@@ -13,19 +13,14 @@ class UserRepository implements UserRepositoryInterface
         $this->model = $model;
     }
 
-    public function paginate(int $perPage = 15): LengthAwarePaginator
+    public function paginate(int $perPage = 15, array $with =[]): LengthAwarePaginator
     {
-        return $this->model->paginate($perPage);
+        return $this->model->with($with)->paginate($perPage);
     }
 
-    public function findById(int $id): ?User
+    public function findById(int $id, array $with =[]): ?User
     {
-        return $this->model->find($id);
-    }
-
-    public function findByEmail(string $email): ?User
-    {
-        return $this->model->where('email', $email)->first();
+        return $this->model->with($with)->find($id);
     }
 
     public function create(array $data): User

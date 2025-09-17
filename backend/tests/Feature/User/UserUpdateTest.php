@@ -5,7 +5,7 @@ namespace Tests\Feature\User;
 
 class UserUpdateTest extends UserTestCase
 {
-    public function test_it_can_update_a_user(): void
+    public function testUpdatesAUser(): void
     {
         $user = $this->createUser();
 

@@ -4,7 +4,7 @@ namespace Tests\Feature\User;
 
 class UserDestroyTest extends UserTestCase
 {
-    public function test_it_can_delete_a_user(): void
+    public function testDeletesAUser(): void
     {
         $user = $this->createUser();
 

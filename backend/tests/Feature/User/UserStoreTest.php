@@ -5,7 +5,7 @@ namespace Tests\Feature\User;
 class UserStoreTest extends UserTestCase
 {
 
-    public function test_it_can_create_a_user(): void
+    public function testCreatesAUser(): void
     {
         $payload = [
             'name' => 'Test User',

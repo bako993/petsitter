@@ -5,7 +5,7 @@ namespace Tests\Feature\User;
 class UserIndexTest extends UserTestCase
 {
 
-    public function test_it_can_list_paginated_users(): void
+    public function testListsPaginatedUsers(): void
     {
         $this->createUsers(10);
 

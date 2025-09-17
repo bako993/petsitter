@@ -15,19 +15,14 @@ class UserService
         $this->userRepo = $userRepo;
     }
 
-    public function paginate(int $perPage = 15): LengthAwarePaginator
+    public function paginate(int $perPage = 15, array $with =[]): LengthAwarePaginator
     {
-        return $this->userRepo->paginate($perPage);
+        return $this->userRepo->paginate($perPage, $with);
     }
 
-    public function findById(int $id)
+    public function findById(int $id, array $with =[])
     {
-        return $this->userRepo->findById($id);
-    }
-
-    public function findByEmail(string $email)
-    {
-        return $this->userRepo->findByEmail($email);
+        return $this->userRepo->findById($id, $with);
     }
 
     public function create(array $data)
