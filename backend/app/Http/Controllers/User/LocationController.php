@@ -13,6 +13,7 @@ use Illuminate\Http\JsonResponse;
 class LocationController extends Controller
 {
     protected LocationService $locationService;
+
     public function __construct(LocationService $locationService)
     {
         $this->locationService = $locationService;
