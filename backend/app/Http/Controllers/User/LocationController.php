@@ -24,6 +24,7 @@ class LocationController extends Controller
 
         return new LocationCollection($locations);
     }
+
     public function show(int $id): LocationResource|JsonResponse
     {
         $location = $this->locationService->findById($id, ['user']);
@@ -45,6 +46,7 @@ class LocationController extends Controller
     public function update(int $id, LocationUpdateRequest $request): JsonResponse
     {
         $location = $this->locationService->update($id, $request->validated());
+
         if (!$location) {
             return response()->json(['message' => 'Location not found'], 404);
         }
@@ -58,6 +60,7 @@ class LocationController extends Controller
     public function destroy(int $id): JsonResponse
     {
      $delete = $this->locationService->delete($id);
+
      if (!$delete) {
          return response()->json(['message' => 'Location not found'], 404);
      }
