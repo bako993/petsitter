@@ -62,12 +62,12 @@ class LocationController extends Controller
 
     public function destroy(int $id): JsonResponse
     {
-     $delete = $this->locationService->delete($id);
+        $delete = $this->locationService->delete($id);
 
-     if (!$delete) {
-         return response()->json(['message' => 'Location not found'], 404);
-     }
+        if (!$delete) {
+            return response()->json(['message' => 'Location not found'], 404);
+        }
 
-     return response()->json(null,204);
+        return response()->json(null, 204);
     }
 }
