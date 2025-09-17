@@ -51,10 +51,12 @@ class LocationController extends Controller
             return response()->json(['message' => 'Location not found'], 404);
         }
 
-        return response()->json([
-            'message' => 'Location updated successfully',
-            'location' => new LocationResource($location),
-        ]);
+        return response()->json(
+            [
+                'message' => 'Location updated successfully',
+                'location' => new LocationResource($location),
+            ]
+        );
     }
 
     public function destroy(int $id): JsonResponse
