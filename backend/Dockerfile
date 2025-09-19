@@ -5,15 +5,19 @@ RUN apt-get update && apt-get install -y \
     git \
     curl \
     libpng-dev \
+    libjpeg62-turbo-dev \
+    libfreetype6-dev \
     libonig-dev \
     libxml2-dev \
     libzip-dev \
     zip \
     unzip \
     nginx \
-    supervisor
+    supervisor \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip
+RUN docker-php-ext-configure gd --with-jpeg --with-freetype \
+    && docker-php-ext-install gd pdo_mysql mbstring exif pcntl bcmath zip
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 

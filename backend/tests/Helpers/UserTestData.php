@@ -14,6 +14,13 @@ trait UserTestData
         return User::factory()->create($overrides);
     }
 
+    protected function createLoggedInUser(array $overrides = []): User
+    {
+        $user = $this->createUser($overrides);
+        $this->actingAs($user);
+        return $user;
+    }
+
     protected function makeUser(array $overrides = []): User
     {
         return User::factory()->make($overrides);
