@@ -6,6 +6,7 @@ use App\Models\Location;
 use Core\Repositories\LocationRepositoryInterface;
 use Illuminate\Database\Eloquent\Collection;
 use Mockery;
+
 trait LocationTestData
 {
     protected function createLocation(array $overrides = []): Location|Collection
