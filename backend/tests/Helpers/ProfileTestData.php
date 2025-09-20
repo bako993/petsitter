@@ -24,7 +24,7 @@ trait ProfileTestData
     protected function createProfiles(int $count = 5, array $overrides = []): Collection
     {
         $user = $overrides['user_id'] ?? User::factory()->create()->id;
-//        $user = $overrides['user_id'] ?? User::factory()->create();
+
         return Profile::factory()->count($count)->create(array_merge(['user_id' => $user], $overrides));
     }
 

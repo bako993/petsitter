@@ -23,14 +23,14 @@ class LocationService
         return $this->locationRepo->findById($id, $with);
     }
 
-    public function create(array $location)
+    public function create(array $data)
     {
-        return $this->locationRepo->create($location);
+        return $this->locationRepo->create($data);
     }
 
-    public function update(int $id, array $location)
+    public function update(int $id, array $data)
     {
-        return $this->locationRepo->update($id, $location);
+        return $this->locationRepo->update($id, $data);
     }
 
     public function delete(int $id)

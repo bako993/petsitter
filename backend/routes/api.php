@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\User\LocationController;
+use App\Http\Controllers\User\OfferingController;
 use App\Http\Controllers\User\ProfileController;
 use App\Http\Controllers\User\UserController;
 use Illuminate\Support\Facades\Route;
@@ -22,3 +23,9 @@ Route::get('/profiles/{id}', [ProfileController::class, 'show']);
 Route::post('/profiles', [ProfileController::class, 'store']);
 Route::put('/profiles/{id}', [ProfileController::class, 'update']);
 Route::delete('/profiles/{id}', [ProfileController::class, 'destroy']);
+
+Route::get('/offerings', [OfferingController::class, 'index']);
+Route::get('/offerings/{id}', [OfferingController::class, 'show']);
+Route::post('/offerings', [OfferingController::class, 'store']);
+Route::put('/offerings/{id}', [OfferingController::class, 'update']);
+Route::delete('/offerings/{id}', [OfferingController::class, 'destroy']);

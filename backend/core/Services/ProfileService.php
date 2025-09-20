@@ -5,6 +5,7 @@ namespace Core\Services;
 use Core\Repositories\ProfileRepositoryInterface;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\UploadedFile;
+use RuntimeException;
 
 class ProfileService
 {
@@ -32,7 +33,6 @@ class ProfileService
             $data['profile_photo'] = $this->fileService->upload($photo, 'profiles');
         }
 
-        $data['user_id'] = auth()->id();
         return $this->profileRepo->create($data);
     }
 
@@ -41,7 +41,6 @@ class ProfileService
         $profile = $this->profileRepo->findById($id);
 
         if ($photo) {
-            // delete old photo if exists
             if ($profile->profile_photo) {
                 $this->fileService->delete($profile->profile_photo);
             }

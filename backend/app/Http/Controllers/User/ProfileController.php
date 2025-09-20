@@ -40,6 +40,9 @@ class ProfileController extends Controller
     {
         $data = $request->validated();
 
+        $data['user_id'] = $request->user()->id;
+        $data['profile_photo'] = $request->file('profile_photo');
+
         $profile = $this->profileService->create($data, $request->file('profile_photo'));
 
         return new ProfileResource($profile);
