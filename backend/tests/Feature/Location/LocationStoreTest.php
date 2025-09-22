@@ -6,7 +6,7 @@ class LocationStoreTest extends LocationTestCase
 {
     public function testCreateALocation(): void
     {
-        $user = $this->createUser();
+        $user = $this->createLoggedInUser();
 
         $payload = [
             'user_id' => $user->id,

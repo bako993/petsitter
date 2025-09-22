@@ -39,14 +39,19 @@ class LocationController extends Controller
 
     public function store(LocationStoreRequest $request): LocationResource
     {
-        $location = $this->locationService->create($request->validated());
+        $data = $request->validated();
+        $data['user_id'] = $request->user()->id;
+
+        $location = $this->locationService->create($data);
 
         return new LocationResource($location);
     }
 
     public function update(int $id, LocationUpdateRequest $request): JsonResponse
     {
-        $location = $this->locationService->update($id, $request->validated());
+        $data = $request->validated();
+
+        $location = $this->locationService->update($id, $data);
 
         if (!$location) {
             return response()->json(['message' => 'Location not found'], 404);
