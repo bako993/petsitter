@@ -20,6 +20,16 @@ trait ProfileTestData
         return $profile;
     }
 
+    protected function makeProfile(array $overrides = []): Profile
+    {
+        $userId = $overrides['user_id'] ?? User::factory()->make()->id;
+
+        /** @var Profile $profile */
+        $profile = Profile::factory()->make(array_merge(['user_id' => $userId], $overrides));
+
+        return $profile;
+    }
+
 
     protected function createProfiles(int $count = 5, array $overrides = []): Collection
     {

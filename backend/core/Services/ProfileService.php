@@ -5,7 +5,6 @@ namespace Core\Services;
 use Core\Repositories\ProfileRepositoryInterface;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\UploadedFile;
-use RuntimeException;
 
 class ProfileService
 {
