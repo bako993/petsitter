@@ -1,6 +1,6 @@
 <?php
 
-namespace Repository;
+namespace Location\Repository;
 
 use App\Models\Location;
 use Core\Repositories\LocationRepositoryInterface;

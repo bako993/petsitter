@@ -1,6 +1,6 @@
 <?php
 
-namespace Repository;
+namespace Offering\Respository;
 
 use App\Models\Offering;
 use Core\Repositories\OfferingRepositoryInterface;

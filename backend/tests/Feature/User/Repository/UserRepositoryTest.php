@@ -1,6 +1,6 @@
 <?php
 
-namespace Repository;
+namespace Tests\Feature\User\Repository;
 
 use App\Models\User;
 use Core\Repositories\UserRepositoryInterface;

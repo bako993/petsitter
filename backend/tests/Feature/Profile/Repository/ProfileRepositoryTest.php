@@ -1,6 +1,6 @@
 <?php
 
-namespace Repository;
+namespace Profile\Repository;
 
 use App\Models\Profile;
 use Core\Repositories\ProfileRepositoryInterface;
