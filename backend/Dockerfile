@@ -19,6 +19,11 @@ RUN apt-get update && apt-get install -y \
 RUN docker-php-ext-configure gd --with-jpeg --with-freetype \
     && docker-php-ext-install gd pdo_mysql mbstring exif pcntl bcmath zip
 
+RUN pecl install xdebug-3.4.5 \
+    && docker-php-ext-enable xdebug
+
+COPY xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
+
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www

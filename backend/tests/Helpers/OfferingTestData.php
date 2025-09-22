@@ -14,6 +14,10 @@ trait OfferingTestData
         return Offering::factory()->create($overrides);
     }
 
+    protected function makeOffering(array $overrides = []): Offering|Collection
+    {
+        return Offering::factory()->make($overrides);
+    }
 
     protected function createOfferings(int $count = 5, array $overrides = []): Collection
     {
