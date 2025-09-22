@@ -10,6 +10,8 @@ use Illuminate\Support\HigherOrderCollectionProxy;
 /**
  * @method create(array $data)
  * @property HigherOrderCollectionProxy|mixed $id
+ * @property mixed $profile_id
+ * @property mixed $offering_type
  */
 class Offering extends Model
 {

@@ -13,6 +13,7 @@ use Illuminate\Support\HigherOrderCollectionProxy;
  * @property mixed $street
  * @property mixed $house_number
  * @property HigherOrderCollectionProxy|mixed $id
+ * @property mixed $user_id
  * @method paginate(int $perPage)
  * @method find(int $id)
  * @method create(array $data)
