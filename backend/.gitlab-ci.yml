@@ -19,7 +19,9 @@ unit_tests:
   stage: test_unit
   image: php:8.4
   before_script:
-    - apt-get update && apt-get install -y unzip git
+    - apt-get update && apt-get install -y unzip git libpng-dev libjpeg-dev libfreetype6-dev
+    - docker-php-ext-configure gd --with-freetype --with-jpeg
+    - docker-php-ext-install gd
     - curl -sS https://getcomposer.org/installer | php
     - php composer.phar install --no-interaction --prefer-dist --working-dir=backend
   script:
