@@ -56,17 +56,7 @@ feature_tests:
     - docker-php-ext-install gd
     - curl -sS https://getcomposer.org/installer | php
     - php composer.phar install --no-interaction --prefer-dist --working-dir=backend
-    - |
-      TIMEOUT=60
-      while ! mysqladmin ping -h"$DB_HOST" -P"$DB_PORT" -u"$DB_USERNAME" -p"$DB_PASSWORD" --silent; do
-        if [ $TIMEOUT -le 0 ]; then
-          echo "MySQL did not start in time!"
-          exit 1
-        fi
-        echo "Waiting for MySQL..."
-        sleep 1
-        TIMEOUT=$((TIMEOUT-1))
-      done
+    - sleep 5
     - php backend/artisan migrate --env=testing
   script:
     - php backend/vendor/bin/phpunit --configuration backend/phpunit.xml --testsuite=Feature
