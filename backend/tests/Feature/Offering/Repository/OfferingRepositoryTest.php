@@ -1,20 +1,15 @@
 <?php
 
-namespace Offering\Respository;
+namespace Offering\Repository;
 
 use App\Models\Offering;
+use App\Models\Profile;
+use App\Models\User;
 use Core\Repositories\OfferingRepositoryInterface;
-use Tests\Helpers\OfferingTestData;
-use Tests\Helpers\ProfileTestData;
-use Tests\Helpers\UserTestData;
-use Tests\TestCase;
+use Tests\Feature\Offering\OfferingTestCase;
 
-class OfferingRepositoryTest extends TestCase
+class OfferingRepositoryTest extends OfferingTestCase
 {
-    use OfferingTestData;
-    use UserTestData;
-    use ProfileTestData;
-
     protected function setUp(): void
     {
         parent::setUp();
@@ -23,7 +18,7 @@ class OfferingRepositoryTest extends TestCase
 
     public function testPaginateOfferings(): void
     {
-        $this->createOfferings(20);
+        $this->createModels(Offering::class,20);
 
         $result = $this->repository->paginate();
 
@@ -35,7 +30,7 @@ class OfferingRepositoryTest extends TestCase
 
     public function testFindByIdReturnsOffering(): void
     {
-        $offering = $this->createOffering();
+        $offering = $this->createModel(Offering::class);
 
         $found = $this->repository->findById($offering->id);
 
@@ -50,7 +45,8 @@ class OfferingRepositoryTest extends TestCase
 
     public function testCreateOffering(): void
     {
-        $profile = $this->createProfile();
+        $user = $this->createModel(User::class);
+        $profile = $this->createModel(Profile::class, ['user_id' => $user->id]);
 
         $data = [
             'profile_id' => $profile->id,
@@ -67,7 +63,7 @@ class OfferingRepositoryTest extends TestCase
 
     public function testUpdateOffering(): void
     {
-        $offering = $this->createOffering(['offering_type' => 'dog_walking']);
+        $offering = $this->createModel(Offering::class, ['offering_type' => 'dog_walking']);
 
         $updated = $this->repository->update($offering->id, ['offering_type' => 'sitting']);
 
@@ -83,7 +79,7 @@ class OfferingRepositoryTest extends TestCase
 
     public function testDeleteOffering(): void
     {
-        $offering = $this->createOffering();
+        $offering = $this->createModel(Offering::class);
 
         $deleted = $this->repository->delete($offering->id);
 
@@ -98,7 +94,7 @@ class OfferingRepositoryTest extends TestCase
 
     public function testFindByIdWithRelations(): void
     {
-        $offering = $this->createOffering();
+        $offering = $this->createModel(Offering::class);
 
         $found = $this->repository->findById($offering->id, ['profile']);
 

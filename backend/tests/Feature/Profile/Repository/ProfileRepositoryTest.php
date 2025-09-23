@@ -3,16 +3,12 @@
 namespace Profile\Repository;
 
 use App\Models\Profile;
+use App\Models\User;
 use Core\Repositories\ProfileRepositoryInterface;
-use Tests\Helpers\ProfileTestData;
-use Tests\Helpers\UserTestData;
-use Tests\TestCase;
+use Tests\Feature\Profile\ProfileTestCase;
 
-class ProfileRepositoryTest extends TestCase
+class ProfileRepositoryTest extends ProfileTestCase
 {
-    use ProfileTestData;
-    use UserTestData;
-
     protected function setUp(): void
     {
         parent::setUp();
@@ -21,7 +17,7 @@ class ProfileRepositoryTest extends TestCase
 
     public function testPaginateProfiles(): void
     {
-        $this->createProfiles(20);
+        $this->createModels(Profile::class,20);
 
         $result = $this->repository->paginate();
 
@@ -33,7 +29,7 @@ class ProfileRepositoryTest extends TestCase
 
     public function testFindByIdReturnsProfile(): void
     {
-        $profile = $this->createProfile();
+        $profile = $this->createModel(Profile::class);
 
         $found = $this->repository->findById($profile->id);
 
@@ -48,7 +44,7 @@ class ProfileRepositoryTest extends TestCase
 
     public function testCreateProfile(): void
     {
-        $user = $this->createUser();
+        $user = $this->createModel(User::class);
 
         $data = [
             'user_id' => $user->id,
@@ -59,6 +55,7 @@ class ProfileRepositoryTest extends TestCase
         ];
 
         $profile = $this->repository->create($data);
+
         $this->assertInstanceOf(Profile::class, $profile);
         $this->assertEquals($user->id, $profile->user_id);
         $this->assertDatabaseHas('profiles', ['bio' => 'I love spending time with pets']);
@@ -66,7 +63,7 @@ class ProfileRepositoryTest extends TestCase
 
     public function testUpdateProfile(): void
     {
-        $profile = $this->createProfile(['experience' => '5 years']);
+        $profile = $this->createModel(Profile::class, ['experience' => '5 years']);
 
         $updated = $this->repository->update($profile->id, ['experience' => '7 years']);
 
@@ -83,7 +80,7 @@ class ProfileRepositoryTest extends TestCase
 
     public function testDeleteProfile(): void
     {
-        $profile = $this->createProfile();
+        $profile = $this->createModel(Profile::class);
 
         $deleted = $this->repository->delete($profile->id);
 
@@ -98,7 +95,7 @@ class ProfileRepositoryTest extends TestCase
 
     public function testFindByIdWithRelations(): void
     {
-        $profile = $this->createProfile(['user_id' => $this->createUser()->id]);
+        $profile = $this->createModel(Profile::class, ['user_id' => $this->createModel(User::class)->id]);
 
         $found = $this->repository->findById($profile->id, ['user']);
 

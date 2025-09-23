@@ -1,12 +1,15 @@
 <?php
 
-namespace Tests\Feature\Location;
+namespace Location\Endpoints;
+
+use App\Models\User;
+use Tests\Feature\Location\LocationTestCase;
 
 class LocationStoreTest extends LocationTestCase
 {
     public function testCreateALocation(): void
     {
-        $user = $this->createLoggedInUser();
+        $user = $this->createModel(User::class);
 
         $payload = [
             'user_id' => $user->id,
@@ -18,7 +21,7 @@ class LocationStoreTest extends LocationTestCase
             'house_number' => '1A',
         ];
 
-        $response = $this->postJson('/api/locations', $payload);
+        $response = $this->actingAs($user)->postJson('/api/locations', $payload);
 
         $response->assertStatus(201)
             ->assertJsonStructure([

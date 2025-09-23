@@ -1,12 +1,15 @@
 <?php
 
-namespace Tests\Feature\Location;
+namespace Location\Endpoints;
+
+use App\Models\Location;
+use Tests\Feature\Location\LocationTestCase;
 
 class LocationUpdateTest extends LocationTestCase
 {
     public function testUpdatesALocation(): void
     {
-        $location = $this->createLocation();
+        $location = $this->createModel(Location::class);
 
         $payload = [
             'city' => 'Rotterdam',
@@ -20,7 +23,6 @@ class LocationUpdateTest extends LocationTestCase
                 'city' => 'Rotterdam',
                 'street' => 'Coolsingel'
             ]);
-
         $this->assertDatabaseHas('locations', ['id' => $location->id, 'city' => 'Rotterdam', 'street' => 'Coolsingel']);
     }
 }

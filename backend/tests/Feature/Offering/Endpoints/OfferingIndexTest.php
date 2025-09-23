@@ -1,12 +1,15 @@
 <?php
 
-namespace Tests\Feature\Offering;
+namespace Offering\Endpoints;
+
+use App\Models\Offering;
+use Tests\Feature\Offering\OfferingTestCase;
 
 class OfferingIndexTest extends OfferingTestCase
 {
     public function testListsPaginatedOfferings(): void
     {
-        $this->createOfferings(10);
+        $this->createModels(Offering::class, 10);
 
         $response = $this->getJson('/api/offerings');
 
@@ -18,7 +21,6 @@ class OfferingIndexTest extends OfferingTestCase
                 'meta',
                 'links',
             ]);
-
         $this->assertCount(10, $response->json('data'));
     }
 }

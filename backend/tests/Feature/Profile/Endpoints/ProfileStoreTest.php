@@ -1,18 +1,19 @@
 <?php
 
-namespace Tests\Feature\Profile;
+namespace Profile\Endpoints;
 
+use App\Models\User;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
+use Tests\Feature\Profile\ProfileTestCase;
 
 class ProfileStoreTest extends ProfileTestCase
 {
-
     public function testCreateAProfile(): void
     {
         Storage::fake('public');
 
-        $user = $this->createLoggedInUser();
+        $user = $this->createModel(User::class);
 
         $payload = [
             'user_id' => $user->id,
@@ -23,7 +24,7 @@ class ProfileStoreTest extends ProfileTestCase
             'profile_photo' => UploadedFile::fake()->image('avatar.jpg'),
         ];
 
-        $response = $this->postJson('/api/profiles', $payload);
+        $response = $this->actingAs($user)->postJson('/api/profiles', $payload);
 
         $response->assertStatus(201)
             ->assertJsonStructure([

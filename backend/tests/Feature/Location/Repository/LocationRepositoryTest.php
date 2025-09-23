@@ -3,15 +3,12 @@
 namespace Location\Repository;
 
 use App\Models\Location;
+use App\Models\User;
 use Core\Repositories\LocationRepositoryInterface;
-use Tests\Helpers\LocationTestData;
-use Tests\Helpers\UserTestData;
-use Tests\TestCase;
+use Tests\Feature\Location\LocationTestCase;
 
-class LocationRepositoryTest extends TestCase
+class LocationRepositoryTest extends LocationTestCase
 {
-    use LocationTestData;
-    use UserTestData;
 
     protected function setUp(): void
     {
@@ -21,7 +18,7 @@ class LocationRepositoryTest extends TestCase
 
     public function testPaginateLocations(): void
     {
-        $this->createLocations(20);
+        $this->createModels(Location::class,20);
 
         $result = $this->repository->paginate();
 
@@ -33,7 +30,7 @@ class LocationRepositoryTest extends TestCase
 
     public function testFindByIdReturnsLocation(): void
     {
-        $location = $this->createLocation();
+        $location = $this->createModel(Location::class);
 
         $found = $this->repository->findById($location->id);
 
@@ -48,7 +45,7 @@ class LocationRepositoryTest extends TestCase
 
     public function testCreateLocation(): void
     {
-        $user = $this->createUser();
+        $user = $this->createModel(User::class);
 
         $data = [
             'user_id' => $user->id,
@@ -61,6 +58,7 @@ class LocationRepositoryTest extends TestCase
         ];
 
         $location = $this->repository->create($data);
+
         $this->assertInstanceOf(Location::class, $location);
         $this->assertEquals($user->id, $location->user_id);
         $this->assertDatabaseHas('locations', ['street' => 'Richter']);
@@ -68,7 +66,7 @@ class LocationRepositoryTest extends TestCase
 
     public function testUpdateLocation(): void
     {
-        $location = $this->createLocation(['street' => 'Richter']);
+        $location = $this->createModel(Location::class, ['street' => 'Richter']);
 
         $updated = $this->repository->update($location->id, ['street' => 'Richterweg']);
 
@@ -85,7 +83,7 @@ class LocationRepositoryTest extends TestCase
 
     public function testDeleteLocation(): void
     {
-        $location = $this->createLocation();
+        $location = $this->createModel(Location::class);
 
         $deleted = $this->repository->delete($location->id);
 
@@ -100,7 +98,8 @@ class LocationRepositoryTest extends TestCase
 
     public function testFindByIdWithRelations(): void
     {
-        $location = $this->createLocation(['user_id' => $this->createUser()->id]);
+        $user = $this->createModel(User::class);
+        $location = $this->createModel(Location::class, ['user_id' => $user->id]);
 
         $found = $this->repository->findById($location->id, ['user']);
 

@@ -1,12 +1,15 @@
 <?php
 
-namespace Tests\Feature\Profile;
+namespace Profile\Endpoints;
+
+use App\Models\Profile;
+use Tests\Feature\Profile\ProfileTestCase;
 
 class ProfileShowTest extends ProfileTestCase
 {
     public function testShowsASingleProfile(): void
     {
-        $profile = $this->createProfile();
+        $profile = $this->createModel(Profile::class);
 
         $response = $this->getJson("/api/profiles/$profile->id");
 
