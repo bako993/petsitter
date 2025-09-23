@@ -1,14 +1,15 @@
 <?php
 
-namespace Profile;
+namespace Profile\Endpoints;
 
+use App\Models\Profile;
 use Tests\Feature\Profile\ProfileTestCase;
 
 class ProfileUpdateTest extends ProfileTestCase
 {
     public function testUpdatesAProfile(): void
     {
-        $profile = $this->createProfile();
+        $profile = $this->createModel(Profile::class);
 
         $payload = [
             'bio' => 'Updated bio',

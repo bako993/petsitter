@@ -1,12 +1,15 @@
 <?php
 
-namespace Tests\Feature\User;
+namespace Tests\Feature\User\Endpoints;
+
+use App\Models\User;
+use Tests\Feature\User\UserTestCase;
 
 class UserShowTest extends UserTestCase
 {
     public function testShowsASingleUser(): void
     {
-        $user = $this->createUser();
+        $user = $this->createModel(User::class);
 
         $response = $this->getJson("/api/users/$user->id");
 

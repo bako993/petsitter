@@ -4,13 +4,10 @@ namespace Tests\Feature\User\Repository;
 
 use App\Models\User;
 use Core\Repositories\UserRepositoryInterface;
-use Tests\Helpers\UserTestData;
-use Tests\TestCase;
+use Tests\Feature\User\UserTestCase;
 
-class UserRepositoryTest extends TestCase
+class UserRepositoryTest extends UserTestCase
 {
-    use UserTestData;
-
     private UserRepositoryInterface $repository;
 
     protected function setUp(): void
@@ -21,7 +18,7 @@ class UserRepositoryTest extends TestCase
 
     public function testPaginateUsers(): void
     {
-        $this->createUsers(20);
+        $this->createModels(User::class,20);
 
         $result = $this->repository->paginate();
 
@@ -33,7 +30,7 @@ class UserRepositoryTest extends TestCase
 
     public function testFindByIdReturnsUser(): void
     {
-        $user = $this->createUser();
+        $user = $this->createModel(User::class);
 
         $found = $this->repository->findById($user->id);
 
@@ -56,6 +53,7 @@ class UserRepositoryTest extends TestCase
         ];
 
         $user = $this->repository->create($data);
+
         $this->assertInstanceOf(User::class, $user);
         $this->assertEquals($user->id, $user->id);
         $this->assertDatabaseHas('users', ['email' => 'bako@gmail.com']);
@@ -63,7 +61,7 @@ class UserRepositoryTest extends TestCase
 
     public function testUpdateUser(): void
     {
-        $user = $this->createUser(['name' => 'bako']);
+        $user = $this->createModel(User::class, ['name' => 'bako']);
 
         $updated = $this->repository->update($user->id, ['name' => 'updated name']);
 
@@ -80,7 +78,7 @@ class UserRepositoryTest extends TestCase
 
     public function testDeleteUser(): void
     {
-        $user = $this->createUser();
+        $user = $this->createModel(User::class);
 
         $deleted = $this->repository->delete($user->id);
 

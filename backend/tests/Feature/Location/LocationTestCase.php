@@ -2,12 +2,10 @@
 
 namespace Tests\Feature\Location;
 
-use Tests\Helpers\LocationTestData;
-use Tests\Helpers\UserTestData;
+use Tests\Fixtures\FixtureHelpers;
 use Tests\TestCase;
 
 class LocationTestCase extends TestCase
 {
-    use LocationTestData;
-    use UserTestData;
+    use FixtureHelpers;
 }

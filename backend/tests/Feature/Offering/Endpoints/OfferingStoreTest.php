@@ -1,13 +1,17 @@
 <?php
 
-namespace Tests\Feature\Offering;
+namespace Offering\Endpoints;
+
+use App\Models\Profile;
+use App\Models\User;
+use Tests\Feature\Offering\OfferingTestCase;
 
 class OfferingStoreTest extends OfferingTestCase
 {
     public function testCreateOffering(): void
     {
-        $user = $this->createUser();
-        $profile = $this->createProfile(['user_id' => $user->id]);
+        $user = $this->createModel(User::class);
+        $this->createModel(Profile::class, ['user_id' => $user->id]);
 
         $payload = [
             'offering_type' => 'dog_walking',

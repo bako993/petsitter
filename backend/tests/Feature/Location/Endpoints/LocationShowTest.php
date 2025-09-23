@@ -1,12 +1,15 @@
 <?php
 
-namespace Tests\Feature\Location;
+namespace Location\Endpoints;
+
+use App\Models\Location;
+use Tests\Feature\Location\LocationTestCase;
 
 class LocationShowTest extends LocationTestCase
 {
     public function testShowsASingleLocation(): void
     {
-        $location = $this->createLocation();
+        $location = $this->createModel(Location::class);
 
         $response = $this->getJson("/api/locations/$location->id");
 

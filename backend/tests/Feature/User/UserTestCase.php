@@ -2,10 +2,10 @@
 
 namespace Tests\Feature\User;
 
-use Tests\Helpers\UserTestData;
+use Tests\Fixtures\FixtureHelpers;
 use Tests\TestCase;
 
 class UserTestCase extends TestCase
 {
-    use UserTestData;
+    use FixtureHelpers;
 }

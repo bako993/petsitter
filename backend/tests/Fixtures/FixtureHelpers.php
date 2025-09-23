@@ -12,6 +12,11 @@ trait FixtureHelpers
     /**
      * Create a single model instance in DB.
      * @noinspection PhpUndefinedMethodInspection
+     *
+     * @template T of Model
+     * @param class-string<T> $modelClass
+     * @param array $overrides
+     * @return T
      */
     protected function createModel(string $modelClass, array $overrides = []): Model
     {

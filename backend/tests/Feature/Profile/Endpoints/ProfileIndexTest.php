@@ -1,12 +1,15 @@
 <?php
 
-namespace Tests\Feature\Profile;
+namespace Profile\Endpoints;
+
+use App\Models\Profile;
+use Tests\Feature\Profile\ProfileTestCase;
 
 class ProfileIndexTest extends ProfileTestCase
 {
     public function testListsPaginatedProfiles(): void
     {
-        $this->createProfiles(10);
+        $this->createModels(Profile::class,10);
 
         $response = $this->get('/api/profiles');
 
