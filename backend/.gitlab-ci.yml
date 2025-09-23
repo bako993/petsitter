@@ -42,18 +42,18 @@ feature_tests:
     - name: mysql:8.0
       alias: mysql_test
   variables:
-    MYSQL_ROOT_PASSWORD: "$TEST_DB_ROOT_PASSWORD"
-    MYSQL_DATABASE: "$TEST_DB_DATABASE"
-    MYSQL_USER: "$TEST_DB_USERNAME"
-    MYSQL_PASSWORD: "$TEST_DB_PASSWORD"
+    MYSQL_ROOT_PASSWORD: ${TEST_DB_ROOT_PASSWORD}
+    MYSQL_DATABASE: ${TEST_DB_DATABASE}
+    MYSQL_USER: ${TEST_DB_USERNAME}
+    MYSQL_PASSWORD: ${TEST_DB_PASSWORD}
     APP_ENV: testing
     DB_CONNECTION: mysql
     DB_HOST: mysql_test
     DB_PORT: "3306"
-    DB_DATABASE: "$TEST_DB_DATABASE"
-    DB_USERNAME: "$TEST_DB_USERNAME"
-    DB_PASSWORD: "$TEST_DB_PASSWORD"
-    APP_KEY: "$APP_KEY"
+    DB_DATABASE: ${TEST_DB_DATABASE}
+    DB_USERNAME: ${TEST_DB_USERNAME}
+    DB_PASSWORD: ${TEST_DB_PASSWORD}
+    APP_KEY: ${APP_KEY}
   before_script:
     - apt-get update && apt-get install -y unzip git libpng-dev libjpeg-dev libfreetype6-dev
     - docker-php-ext-install pdo_mysql
@@ -61,11 +61,11 @@ feature_tests:
     - docker-php-ext-install gd
     - curl -sS https://getcomposer.org/installer | php
     - php composer.phar install --no-interaction --prefer-dist --working-dir=backend
-    - echo "DB_DATABASE=$DB_DATABASE"
-    - echo "DB_USERNAME=$DB_USERNAME"
-    - echo "DB_PASSWORD=$DB_PASSWORD"
-    - echo "MYSQL_ROOT_PASSWORD=$TEST_DB_ROOT_PASSWORD"
-    - echo "APP_KEY=$APP_KEY"
+    - echo "DB_DATABASE=${TEST_DB_DATABASE}"
+    - echo "DB_USERNAME=${TEST_DB_USERNAME}"
+    - echo "DB_PASSWORD=${TEST_DB_PASSWORD}"
+    - echo "MYSQL_ROOT_PASSWORD=${TEST_DB_ROOT_PASSWORD}"
+    - echo "APP_KEY=${APP_KEY}"
     - sleep 5
     - php backend/artisan migrate --env=testing
   script:
