@@ -50,6 +50,7 @@ feature_tests:
     - apt-get update && apt-get install -y unzip git libpng-dev libjpeg-dev libfreetype6-dev
     - docker-php-ext-configure gd --with-freetype --with-jpeg
     - docker-php-ext-install gd
+    - docker-php-ext-install pdo_mysql
     - curl -sS https://getcomposer.org/installer | php
     - php composer.phar install --no-interaction --prefer-dist --working-dir=backend
     - php backend/artisan migrate --env=testing
