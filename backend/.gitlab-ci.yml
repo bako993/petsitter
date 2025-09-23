@@ -49,7 +49,7 @@ feature_tests:
     - docker-php-ext-install gd
     - curl -sS https://getcomposer.org/installer | php
     - php composer.phar install --no-interaction --prefer-dist --working-dir=backend
-    - php artisan migrate --env=testing
+    - php backend/artisan migrate --env=testing
   script:
     - php backend/vendor/bin/phpunit --configuration backend/phpunit.xml --testsuite=Feature
   only:
