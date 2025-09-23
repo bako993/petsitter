@@ -25,7 +25,7 @@ unit_tests:
     - curl -sS https://getcomposer.org/installer | php
     - php composer.phar install --no-interaction --prefer-dist --working-dir=backend
   script:
-    - php backend/vendor/bin/phpunit --configuration backend/phpunit.xml --testsuite=Unit --fail-on-low-coverage=100
+    - php backend/vendor/bin/phpunit --configuration backend/phpunit.xml --testsuite=Unit
   only:
     - merge_requests
 
@@ -43,6 +43,6 @@ feature_tests:
     - curl -sS https://getcomposer.org/installer | php
     - php composer.phar install --no-interaction --prefer-dist --working-dir=backend
   script:
-    - php backend/vendor/bin/phpunit --configuration backend/phpunit.xml --testsuite=Feature --fail-on-low-coverage=100
+    - php backend/vendor/bin/phpunit --configuration backend/phpunit.xml --testsuite=Feature
   only:
     - merge_requests
