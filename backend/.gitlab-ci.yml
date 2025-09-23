@@ -61,11 +61,11 @@ feature_tests:
     - docker-php-ext-install gd
     - curl -sS https://getcomposer.org/installer | php
     - php composer.phar install --no-interaction --prefer-dist --working-dir=backend
+    - echo "APP_KEY=${APP_KEY}"
     - echo "DB_DATABASE=${TEST_DB_DATABASE}"
     - echo "DB_USERNAME=${TEST_DB_USERNAME}"
     - echo "DB_PASSWORD=${TEST_DB_PASSWORD}"
     - echo "MYSQL_ROOT_PASSWORD=${TEST_DB_ROOT_PASSWORD}"
-    - echo "APP_KEY=${APP_KEY}"
     - sleep 5
     - php backend/artisan migrate --env=testing
   script:
