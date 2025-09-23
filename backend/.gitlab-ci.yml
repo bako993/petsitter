@@ -37,6 +37,7 @@ unit_tests:
 
 feature_tests:
   stage: test_feature
+  environment: test
   image: php:8.4
   services:
     - name: mysql:8.0
