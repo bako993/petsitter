@@ -18,6 +18,9 @@ lint:
 unit_tests:
   stage: test_unit
   image: php:8.4
+  variables:
+    DB_CONNECTION: sqlite
+    DB_DATABASE: ':memory:'
   before_script:
     - apt-get update && apt-get install -y unzip git libpng-dev libjpeg-dev libfreetype6-dev
     - docker-php-ext-configure gd --with-freetype --with-jpeg
