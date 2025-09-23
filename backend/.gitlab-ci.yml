@@ -55,13 +55,20 @@ feature_tests:
     DB_PASSWORD: $TEST_DB_PASSWORD
     APP_KEY: $APP_KEY
   before_script:
-    - apt-get update && apt-get install -y unzip git libpng-dev libjpeg-dev libfreetype6-dev
+    - apt-get update && apt-get install -y unzip git libpng-dev libjpeg-dev libfreetype6-dev default-mysql-client
     - docker-php-ext-install pdo_mysql
     - docker-php-ext-configure gd --with-freetype --with-jpeg
     - docker-php-ext-install gd
     - curl -sS https://getcomposer.org/installer | php
     - php composer.phar install --no-interaction --prefer-dist --working-dir=backend
-    - sleep 5
+    - echo "DB_DATABASE=$DB_DATABASE"
+    - echo "DB_USERNAME=$DB_USERNAME"
+    - echo "DB_PASSWORD=$DB_PASSWORD"
+    - echo "MYSQL_ROOT_PASSWORD=$TEST_DB_ROOT_PASSWORD"
+    - until mysql -hmysql_test -u"$DB_USERNAME" -p"$DB_PASSWORD" -e "SELECT 1" $DB_DATABASE; do
+        echo "Waiting for MySQL...";
+        sleep 2;
+      done
     - php backend/artisan migrate --env=testing
   script:
     - php backend/vendor/bin/phpunit --configuration backend/phpunit.xml --testsuite=Feature
