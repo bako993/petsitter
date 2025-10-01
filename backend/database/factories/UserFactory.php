@@ -16,7 +16,8 @@ class UserFactory extends Factory
             'name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
             'password' => Hash::make('password'),
-            'role' => $this->faker->randomElement(['owner', 'sitter']),
+            'role' => 'user',
+            'type' => 'owner',
         ];
     }
 }

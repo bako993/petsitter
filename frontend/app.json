@@ -1,0 +1,39 @@
+{
+  "expo": {
+    "name": "frontend",
+    "slug": "frontend",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "scheme": "frontend",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "ios": {
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "We need your location to show nearby sitters"
+      },
+      "config": {
+        "googleMapsApiKey": ""
+      }
+    },
+    "android": {
+      "permissions": ["ACCESS_FINE_LOCATION"],
+      "config": {
+        "googleMaps": {
+          "apiKey": ""
+        }
+      },
+      "edgeToEdgeEnabled": true
+    },
+    "web": {
+      "output": "static"
+    },
+    "plugins": [
+      "expo-router"
+    ],
+    "experiments": {
+      "typedRoutes": true,
+      "reactCompiler": true
+    }
+  }
+}

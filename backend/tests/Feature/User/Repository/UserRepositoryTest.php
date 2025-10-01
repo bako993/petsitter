@@ -49,7 +49,6 @@ class UserRepositoryTest extends UserTestCase
             'name' => 'bako',
             'email' => 'bako@gmail.com',
             'password' => bcrypt('password'),
-            'role' => 'sitter'
         ];
 
         $user = $this->repository->create($data);

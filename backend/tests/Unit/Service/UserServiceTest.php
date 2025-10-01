@@ -73,7 +73,7 @@ class UserServiceTest extends TestCase
             'name' => 'bako',
             'email' => 'bako@test.com',
             'password' => 'secret123',
-            'role' => 'sitter'
+            'type' => 'owner'
         ];
 
         $expectedUser = $this->makeModel(User::class, [
