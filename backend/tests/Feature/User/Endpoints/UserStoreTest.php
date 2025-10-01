@@ -12,7 +12,6 @@ class UserStoreTest extends UserTestCase
             'name' => 'Test User',
             'email' => 'test@example.com',
             'password' => 'password123',
-            'role' => 'owner',
         ];
 
         $response = $this->postJson('/api/users', $payload);
@@ -21,7 +20,7 @@ class UserStoreTest extends UserTestCase
             ->assertJsonFragment([
                 'name' => 'Test User',
                 'email' => 'test@example.com',
-                'role' => 'owner',
+                'type' => 'owner',
             ]);
         $this->assertDatabaseHas('users', ['email' => 'test@example.com']);
     }

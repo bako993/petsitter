@@ -18,7 +18,6 @@ class UserStoreRequest extends FormRequest
             'name' => ['sometimes', 'string', 'min:3', 'max:255'],
             'email' => ['sometimes', 'email', 'max:255', 'unique:users,email'],
             'password' => ['required', 'string', 'min:3', UserRule::password()],
-            'role' => ['required', 'in:owner,sitter'],
         ];
     }
 }

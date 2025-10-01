@@ -16,7 +16,7 @@ class UserIndexTest extends UserTestCase
         $response->assertStatus(200)
             ->assertJsonStructure([
                 'data' => [
-                    '*' => ['id', 'name', 'email', 'role', 'created_at', 'updated_at']
+                    '*' => ['id', 'name', 'email', 'role', 'type', 'created_at', 'updated_at']
                 ],
                 'meta' => ['current_page', 'last_page', 'per_page', 'total'],
                 'links' => ['first', 'last', 'prev', 'next'],
