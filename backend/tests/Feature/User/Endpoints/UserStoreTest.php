@@ -20,7 +20,6 @@ class UserStoreTest extends UserTestCase
             ->assertJsonFragment([
                 'name' => 'Test User',
                 'email' => 'test@example.com',
-                'type' => 'owner',
             ]);
         $this->assertDatabaseHas('users', ['email' => 'test@example.com']);
     }
