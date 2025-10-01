@@ -31,8 +31,6 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
-        'role',
-        'type',
         'password',
     ];
 
@@ -54,6 +52,11 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
+    ];
+
+    protected $attributes = [
+        'role' => 'user',
+        'type' => 'owner',
     ];
 
     public function profile(): HasOne
