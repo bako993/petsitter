@@ -1,8 +1,9 @@
 export type AppStackParams = {
     MainTabs: {screen: keyof BottomTabParams};
-    SitterProfile: { sitterId: number };
-    SitterOnboarding: undefined;
-    Login: undefined;
+    SitterScreen: { sitterId: number };
+    SitterOnboardingScreen: undefined;
+    LoginScreen: undefined;
+    SignupScreen: undefined;
 };
 
 export type BottomTabParams = {
@@ -15,4 +16,8 @@ export type BottomTabParams = {
 export type BackButtonProps = {
     color?: string;
     size?: number;
+};
+
+export type PhotoSliderProps = {
+    images: number[];
 };

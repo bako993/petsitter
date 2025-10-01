@@ -16,9 +16,9 @@ export default function HomeButtons() {
 
     const handleBecomeSitter = () => {
         if (!currentUser) {
-            navigation.navigate('Login');
+            navigation.navigate('LoginScreen');
         } else if (!currentUser.sitterProfile) {
-            navigation.navigate('SitterOnboarding');
+            navigation.navigate('SitterOnboardingScreen');
         } else {
             navigation.navigate('MainTabs', { screen: 'Profile' });
         }

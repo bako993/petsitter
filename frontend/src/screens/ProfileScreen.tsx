@@ -30,7 +30,7 @@ const mockUser: User | null = {
     type: "sitter",
     name: "Alice",
     email: "alice@example.com",
-    profileImage: require("@/assets/slider/slider1.jpg"),
+    profileImage: require("@/assets/images/slider/slider1.jpg"),
     services: ["Pet Sitting", "Dog Walking", "Grooming"],
     availability: ["Mon-Fri", "Weekends"],
     reviews: [
