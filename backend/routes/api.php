@@ -25,4 +25,3 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('profiles', ProfileController::class);
     Route::apiResource('offerings', OfferingController::class);
 });
-
