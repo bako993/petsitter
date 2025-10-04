@@ -1,31 +1,28 @@
 <?php
 
+use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\User\LocationController;
 use App\Http\Controllers\User\OfferingController;
 use App\Http\Controllers\User\ProfileController;
 use App\Http\Controllers\User\UserController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/users', [UserController::class, 'index']);
-Route::get('/users/{id}', [UserController::class, 'show']);
-Route::post('/users', [UserController::class, 'store']);
-Route::put('/users/{id}', [UserController::class, 'update']);
-Route::delete('/users/{id}', [UserController::class, 'destroy']);
+// public routes
+Route::middleware('throttle:10,1')->group(function () {
+    Route::post('register', [AuthController::class, 'register']);
+    Route::post('login', [AuthController::class, 'login']);
+});
 
-Route::get('/locations', [LocationController::class, 'index']);
-Route::get('/locations/{id}', [LocationController::class, 'show']);
-Route::post('/locations', [LocationController::class, 'store']);
-Route::put('/locations/{id}', [LocationController::class, 'update']);
-Route::delete('/locations/{id}', [LocationController::class, 'destroy']);
+// logged in routes
+Route::middleware('auth:sanctum')->group(function () {
 
-Route::get('/profiles', [ProfileController::class, 'index']);
-Route::get('/profiles/{id}', [ProfileController::class, 'show']);
-Route::post('/profiles', [ProfileController::class, 'store']);
-Route::put('/profiles/{id}', [ProfileController::class, 'update']);
-Route::delete('/profiles/{id}', [ProfileController::class, 'destroy']);
+    Route::middleware('admin')->group(function () {
+        Route::apiResource('users', UserController::class)->only(['index', 'store']);
+    });
 
-Route::get('/offerings', [OfferingController::class, 'index']);
-Route::get('/offerings/{id}', [OfferingController::class, 'show']);
-Route::post('/offerings', [OfferingController::class, 'store']);
-Route::put('/offerings/{id}', [OfferingController::class, 'update']);
-Route::delete('/offerings/{id}', [OfferingController::class, 'destroy']);
+    Route::apiResource('users', UserController::class)->only(['show', 'update', 'destroy']);
+    Route::apiResource('locations', LocationController::class);
+    Route::apiResource('profiles', ProfileController::class);
+    Route::apiResource('offerings', OfferingController::class);
+});
+

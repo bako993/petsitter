@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use Core\Repositories\AuthRepository;
+use Core\Repositories\AuthRepositoryInterface;
 use Core\Repositories\LocationRepository;
 use Core\Repositories\LocationRepositoryInterface;
 use Core\Repositories\OfferingRepository;
@@ -20,6 +22,7 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         //
+        $this->app->bind(AuthRepositoryInterface::class, AuthRepository::class);
         $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
         $this->app->bind(LocationRepositoryInterface::class, LocationRepository::class);
         $this->app->bind(ProfileRepositoryInterface::class, ProfileRepository::class);
