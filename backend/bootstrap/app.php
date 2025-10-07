@@ -1,7 +1,9 @@
 <?php
 
 use App\Exceptions\UserNotAllowedException;
-use App\Exceptions\UserNotFoundException;
+use App\Exceptions\NotFoundException;
+use App\Http\Middlewares\AdminMiddleware;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -15,16 +17,23 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        $middleware->alias([
+            'admin' => AdminMiddleware::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
+        $exceptions->render(function (AuthenticationException $e, Request $request) {
+            return response()->json([
+                'message' => 'Unauthenticated.'
+            ], 401);
+        });
         $exceptions->render(function (UserNotAllowedException $e, Request $request) {
             return response()->json([
                 'error' => 'Unauthorized',
                 'message' => $e->getMessage(),
             ], 403);
         });
-        $exceptions->render(function (UserNotFoundException $e, Request $_request) {
+        $exceptions->render(function (NotFoundException $e, Request $_request) {
             return response()->json([
                 'error' => 'Not Found',
                 'message' => $e->getMessage(),

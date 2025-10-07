@@ -36,7 +36,7 @@ class UserService
     public function findById(int $id, $authUser)
     {
         if (!$this->policy->view($authUser->id, $authUser->role, $id)) {
-            throw new UserNotAllowedException("Not allowed to view this user.");
+            throw new UserNotAllowedException();
         }
 
         return $this->userRepo->findById($id);
@@ -47,7 +47,7 @@ class UserService
     public function create(array $data, $authUser)
     {
         if (!$this->policy->create($authUser->role)) {
-            throw new UserNotAllowedException("Not allowed to create user.");
+            throw new UserNotAllowedException();
         }
 
         if (isset($data['password'])) {
@@ -62,7 +62,7 @@ class UserService
     public function update(int $id, array $data, $authUser)
     {
         if (!$this->policy->update($authUser->id, $authUser->role, $id)) {
-            throw new UserNotAllowedException("Not allowed to update this user.");
+            throw new UserNotAllowedException();
         }
 
         unset($data['password']);
@@ -73,8 +73,8 @@ class UserService
      */
     public function delete(int $id, $authUser)
     {
-        if (!$this->policy->delete($authUser->role)) {
-            throw new UserNotAllowedException("Not allowed to delete user.");
+        if (!$this->policy->delete($authUser->id, $authUser->role, $id)) {
+            throw new UserNotAllowedException();
         }
 
         return $this->userRepo->delete($id);

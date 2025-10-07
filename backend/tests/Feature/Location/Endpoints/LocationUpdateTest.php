@@ -10,13 +10,14 @@ class LocationUpdateTest extends LocationTestCase
     public function testUpdatesALocation(): void
     {
         $location = $this->createModel(Location::class);
+        $user = $location->user;
 
         $payload = [
             'city' => 'Rotterdam',
             'street' => 'Coolsingel',
         ];
 
-        $response = $this->putJson("/api/locations/$location->id", $payload);
+        $response = $this->actingAs($user)->putJson("/api/locations/$location->id", $payload);
 
         $response->assertStatus(200)
             ->assertJsonFragment([

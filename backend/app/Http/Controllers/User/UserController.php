@@ -26,6 +26,7 @@ class UserController extends Controller
     public function index(): UserCollection
     {
         $users = $this->userService->paginate(15, auth()->user());
+
         return new UserCollection($users);
     }
 
@@ -48,6 +49,7 @@ class UserController extends Controller
     public function store(UserStoreRequest $request): UserResource
     {
         $user = $this->userService->create($request->validated(), auth()->user());
+
         return new UserResource($user);
     }
 

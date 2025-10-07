@@ -24,8 +24,8 @@ class UserPolicy
         return $authUserRole === 'admin' || $authUserId === $targetUserId;
     }
 
-    public function delete(string $authUserRole): bool
+    public function delete(int $authUserId, string $authUserRole, int $targetUserId): bool
     {
-        return $authUserRole === 'admin';
+        return $authUserRole === 'admin' || $authUserId === $targetUserId;
     }
 }

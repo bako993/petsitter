@@ -44,5 +44,4 @@ class UserRepository implements UserRepositoryInterface
 
         return $user->delete();
     }
-
 }

@@ -7,7 +7,7 @@ use Tests\Feature\Location\LocationTestCase;
 
 class LocationStoreTest extends LocationTestCase
 {
-    public function testCreateALocation(): void
+    public function testCreateALocationWhenAuthenticatedReturnsCreated(): void
     {
         $user = $this->createModel(User::class);
 
@@ -42,5 +42,24 @@ class LocationStoreTest extends LocationTestCase
             'user_id' => $user->id,
             'city' => 'Amsterdam',
         ]);
+    }
+
+    public function testCreateALocationWhenNotLoggedInReturnsUnAuthorized(): void
+    {
+        $user = $this->createModel(User::class);
+
+        $payload = [
+            'user_id' => $user->id,
+            'latitude' => 52.370216,
+            'longitude' => 4.895168,
+            'city' => 'Amsterdam',
+            'postal_code' => '1012',
+            'street' => 'Damrak',
+            'house_number' => '1A',
+        ];
+
+        $response = $this->postJson('/api/locations', $payload);
+
+        $response->assertStatus(401);
     }
 }

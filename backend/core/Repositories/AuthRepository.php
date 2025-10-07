@@ -2,7 +2,7 @@
 
 namespace Core\Repositories;
 
-use App\Exceptions\UserNotFoundException;
+use App\Exceptions\NotFoundException;
 use App\Models\User;
 
 class AuthRepository implements AuthRepositoryInterface
@@ -35,7 +35,7 @@ class AuthRepository implements AuthRepositoryInterface
         $user = $this->findById($userId);
 
         if (! $user) {
-            throw new UserNotFoundException($userId);
+            throw new NotFoundException('user', $userId);
         }
 
         $name = $deviceName ?? request()->userAgent() ?? 'auth_token';

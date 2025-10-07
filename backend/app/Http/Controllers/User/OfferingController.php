@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\User;
 
+use App\Exceptions\UserNotAllowedException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Offering\OfferingStoreRequest;
 use App\Http\Requests\Offering\OfferingUpdateRequest;
@@ -36,28 +37,22 @@ class OfferingController extends Controller
         return new OfferingResource($offering);
     }
 
+    /**
+     * @throws UserNotAllowedException
+     */
     public function store(OfferingStoreRequest $request): OfferingResource|JsonResponse
     {
-        $profile = $request->user()->profile;
-        if (!$profile) {
-            return response()->json(['message' => 'Create a profile first.'], 422);
-        }
-
-        $data = $request->validated();
-        $data['profile_id'] = $profile->id;
-
-        $offering = $this->offeringService->create($data);
+        $offering = $this->offeringService->create($request->validated(), $request->user());
 
         return new OfferingResource($offering);
     }
 
+    /**
+     * @throws UserNotAllowedException
+     */
     public function update(int $id, OfferingUpdateRequest $request): JsonResponse
     {
-        $offering = $this->offeringService->update($id, $request->validated());
-
-        if (!$offering) {
-            return response()->json(['message' => 'Offering not found'], 404);
-        }
+        $offering = $this->offeringService->update($id, $request->validated(), $request->user());
 
         return response()->json(
             [
@@ -67,9 +62,12 @@ class OfferingController extends Controller
         );
     }
 
+    /**
+     * @throws UserNotAllowedException
+     */
     public function destroy(int $id): JsonResponse
     {
-        $delete = $this->offeringService->delete($id);
+        $delete = $this->offeringService->delete($id, auth()->user());
 
         if (!$delete) {
             return response()->json(['message' => 'Offering not found'], 404);
