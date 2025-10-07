@@ -73,7 +73,7 @@ class ProfileController extends Controller
      */
     public function destroy(int $id): JsonResponse
     {
-        $deleted = $this->profileService->delete($id,auth()->user());
+        $deleted = $this->profileService->delete($id, auth()->user());
 
         if (!$deleted) {
             return response()->json(['message' => 'Profile not found or delete failed'], 404);
