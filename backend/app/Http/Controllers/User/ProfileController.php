@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\User;
 
+use App\Exceptions\UserNotAllowedException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Profile\ProfileStoreRequest;
 use App\Http\Requests\Profile\ProfileUpdateRequest;
@@ -36,6 +37,9 @@ class ProfileController extends Controller
         return new ProfileResource($profile);
     }
 
+    /**
+     * @throws UserNotAllowedException
+     */
     public function store(ProfileStoreRequest $request): ProfileResource
     {
         $data = $request->validated();
@@ -43,16 +47,19 @@ class ProfileController extends Controller
         $data['user_id'] = $request->user()->id;
         $data['profile_photo'] = $request->file('profile_photo');
 
-        $profile = $this->profileService->create($data, $request->file('profile_photo'));
+        $profile = $this->profileService->create($data, $request->user(), $request->file('profile_photo'));
 
         return new ProfileResource($profile);
     }
 
+    /**
+     * @throws UserNotAllowedException
+     */
     public function update(ProfileUpdateRequest $request, int $id): JsonResponse|ProfileResource
     {
         $data = $request->validated();
 
-        $updatedProfile = $this->profileService->update($id, $data, $request->file('profile_photo'));
+        $updatedProfile = $this->profileService->update($id, $data, $request->user(), $request->file('profile_photo'));
 
         if (!$updatedProfile) {
             return response()->json(['message' => 'Profile not found.'], 404);
@@ -61,9 +68,12 @@ class ProfileController extends Controller
         return new ProfileResource($updatedProfile);
     }
 
+    /**
+     * @throws UserNotAllowedException
+     */
     public function destroy(int $id): JsonResponse
     {
-        $deleted = $this->profileService->delete($id);
+        $deleted = $this->profileService->delete($id, auth()->user());
 
         if (!$deleted) {
             return response()->json(['message' => 'Profile not found or delete failed'], 404);

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\User;
 
+use App\Exceptions\UserNotAllowedException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Location\LocationStoreRequest;
 use App\Http\Requests\Location\LocationUpdateRequest;
@@ -37,21 +38,27 @@ class LocationController extends Controller
         return new LocationResource($location);
     }
 
+    /**
+     * @throws UserNotAllowedException
+     */
     public function store(LocationStoreRequest $request): LocationResource
     {
         $data = $request->validated();
         $data['user_id'] = $request->user()->id;
 
-        $location = $this->locationService->create($data);
+        $location = $this->locationService->create($data, auth()->user());
 
         return new LocationResource($location);
     }
 
+    /**
+     * @throws UserNotAllowedException
+     */
     public function update(int $id, LocationUpdateRequest $request): JsonResponse
     {
         $data = $request->validated();
 
-        $location = $this->locationService->update($id, $data);
+        $location = $this->locationService->update($id, $data, auth()->user());
 
         if (!$location) {
             return response()->json(['message' => 'Location not found'], 404);
@@ -65,9 +72,12 @@ class LocationController extends Controller
         );
     }
 
+    /**
+     * @throws UserNotAllowedException
+     */
     public function destroy(int $id): JsonResponse
     {
-        $delete = $this->locationService->delete($id);
+        $delete = $this->locationService->delete($id, auth()->user());
 
         if (!$delete) {
             return response()->json(['message' => 'Location not found'], 404);

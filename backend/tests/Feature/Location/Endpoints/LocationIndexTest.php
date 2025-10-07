@@ -3,6 +3,7 @@
 namespace Location\Endpoints;
 
 use App\Models\Location;
+use App\Models\User;
 use Tests\Feature\Location\LocationTestCase;
 
 class LocationIndexTest extends LocationTestCase
@@ -11,7 +12,7 @@ class LocationIndexTest extends LocationTestCase
     {
         $this->createModels(Location::class,10);
 
-        $response = $this->get('/api/locations');
+        $response = $this->getJson('/api/locations');
 
         $response->assertStatus(200)
             ->assertJsonStructure([
@@ -21,5 +22,18 @@ class LocationIndexTest extends LocationTestCase
                 'meta' => ['current_page', 'last_page', 'per_page', 'total'],
                 'links' => ['first', 'last', 'prev', 'next'],
             ]);
+    }
+
+    public function testListsLocationsWhenAuthenticated(): void
+    {
+        $user = $this->createModel(User::class);
+        $this->actingAs($user, 'sanctum');
+
+        $this->createModels(Location::class);
+
+        $response = $this->getJson('/api/locations');
+
+        $response->assertStatus(200)
+            ->assertJsonStructure(['data', 'meta', 'links']);
     }
 }

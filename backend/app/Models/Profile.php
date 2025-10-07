@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property mixed $id
  * @property mixed $experience
  * @property mixed $user_id
+ * @property mixed $user
  */
 class Profile extends Model
 {

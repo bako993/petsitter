@@ -9,6 +9,9 @@ class UserIndexTest extends UserTestCase
 {
     public function testListsPaginatedUsers(): void
     {
+        $admin = $this->createModel(User::class, ['role' => 'admin']);
+        $this->actingAs($admin, 'sanctum');
+
         $this->createModels(User::class,10);
 
         $response = $this->getJson('/api/users');

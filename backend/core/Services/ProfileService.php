@@ -2,6 +2,9 @@
 
 namespace Core\Services;
 
+use App\Exceptions\NotFoundException;
+use App\Exceptions\UserNotAllowedException;
+use App\Policies\ProfilePolicy;
 use Core\Repositories\ProfileRepositoryInterface;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\UploadedFile;
@@ -10,9 +13,11 @@ class ProfileService
 {
     protected ProfileRepositoryInterface $profileRepo;
     protected FileService $fileService;
-    public function __construct(ProfileRepositoryInterface $profileRepo, FileService $fileService)
+    protected ProfilePolicy $policy;
+    public function __construct(ProfileRepositoryInterface $profileRepo, ProfilePolicy $policy, FileService $fileService)
     {
         $this->profileRepo = $profileRepo;
+        $this->policy      = $policy;
         $this->fileService = $fileService;
     }
 
@@ -26,8 +31,15 @@ class ProfileService
         return $this->profileRepo->findById($id, $with);
     }
 
-    public function create(array $data, ?UploadedFile $photo = null)
+    /**
+     * @throws UserNotAllowedException
+     */
+    public function create(array $data, $authUser, ?UploadedFile $photo = null)
     {
+        if (!$this->policy->create($authUser->id, $authUser->role, $data['user_id'])) {
+            throw new UserNotAllowedException();
+        }
+
         if ($photo) {
             $data['profile_photo'] = $this->fileService->upload($photo, 'profiles');
         }
@@ -35,9 +47,20 @@ class ProfileService
         return $this->profileRepo->create($data);
     }
 
-    public function update(int $id, array $data, ?UploadedFile $photo = null)
+    /**
+     * @throws UserNotAllowedException
+     */
+    public function update(int $id, array $data, $authUser, ?UploadedFile $photo = null)
     {
         $profile = $this->profileRepo->findById($id);
+
+        if (!$profile) {
+            throw new NotFoundException('profile', $id);
+        }
+
+        if (!$this->policy->update($authUser->id, $authUser->role, $profile->user_id)) {
+            throw new UserNotAllowedException();
+        }
 
         if ($photo) {
             if ($profile->profile_photo) {
@@ -49,10 +72,20 @@ class ProfileService
         return $this->profileRepo->update($id, $data);
     }
 
-    public function delete(int $id): bool
+    /**
+     * @throws UserNotAllowedException
+     */
+    public function delete(int $id, $authUser): bool
     {
         $profile = $this->profileRepo->findById($id);
-        if (!$profile) return false;
+
+        if (!$profile) {
+            return false;
+        }
+
+        if (!$this->policy->delete($authUser->id, $authUser->role, $profile->user_id)) {
+            throw new UserNotAllowedException();
+        }
 
         if ($profile->profile_photo) {
             $this->fileService->delete($profile->profile_photo);

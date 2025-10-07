@@ -2,7 +2,10 @@
 
 namespace Service;
 
+use App\Exceptions\UserNotAllowedException;
 use App\Models\Location;
+use App\Models\User;
+use App\Policies\LocationPolicy;
 use Core\Repositories\LocationRepositoryInterface;
 use Core\Services\LocationService;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -17,13 +20,29 @@ class LocationServiceTest extends TestCase
 
     protected LocationService $service;
     protected LocationRepositoryInterface $locationRepoMock;
+    protected LocationPolicy $locationPolicyMock;
+    protected User $authUser;
 
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->locationRepoMock = $this->mockRepository(LocationRepositoryInterface::class);
-        $this->service = new LocationService($this->locationRepoMock);
+
+        $this->locationPolicyMock = Mockery::mock(LocationPolicy::class);
+
+        $this->locationPolicyMock->shouldReceive('viewAny')->andReturn(true);
+        $this->locationPolicyMock->shouldReceive('view')->andReturn(true);
+        $this->locationPolicyMock->shouldReceive('create')->andReturn(true);
+        $this->locationPolicyMock->shouldReceive('update')->andReturn(true);
+        $this->locationPolicyMock->shouldReceive('delete')->andReturn(true);
+
+        $this->service = new LocationService($this->locationRepoMock, $this->locationPolicyMock);
+
+        $this->authUser = $this->makeModel(User::class, [
+            'id' => 1,
+            'role' => 'admin',
+        ]);
     }
 
     protected function tearDown(): void
@@ -66,9 +85,13 @@ class LocationServiceTest extends TestCase
         $this->assertSame($mockLocation, $result);
     }
 
+    /**
+     * @throws UserNotAllowedException
+     */
     public function test_creates_location(): void
     {
         $data = [
+            'user_id' => $this->authUser->id,
             'latitude' => '12.34',
             'longitude' => '12.34',
             'city' => 'arnhem',
@@ -85,7 +108,7 @@ class LocationServiceTest extends TestCase
             ->with($data)
             ->andReturn($expectedLocation);
 
-        $result = $this->service->create($data);
+        $result = $this->service->create($data, $this->authUser);
         $this->assertSame($expectedLocation, $result);
     }
 
@@ -103,18 +126,31 @@ class LocationServiceTest extends TestCase
         $mockLocation = $this->makeModel(Location::class, array_merge(['id' => 123], $data));
 
         $this->locationRepoMock
+            ->shouldReceive('findById')
+            ->once()
+            ->with($mockLocation->id)
+            ->andReturn($mockLocation);
+
+        $this->locationRepoMock
             ->shouldReceive('update')
             ->once()
             ->with($mockLocation->id, $data)
             ->andReturn($mockLocation);
 
-        $result = $this->service->update($mockLocation->id, $data);
+        $result = $this->service->update($mockLocation->id, $data, $this->authUser);
         $this->assertSame($mockLocation, $result);
     }
 
     public function test_deletes_location(): void
     {
         $mockLocationId = 123;
+        $mockLocation = $this->makeModel(Location::class, ['id' => $mockLocationId, 'user_id' => 1]);
+
+        $this->locationRepoMock
+            ->shouldReceive('findById')
+            ->once()
+            ->with($mockLocationId)
+            ->andReturn($mockLocation);
 
         $this->locationRepoMock
             ->shouldReceive('delete')
@@ -122,7 +158,7 @@ class LocationServiceTest extends TestCase
             ->with($mockLocationId)
             ->andReturnTrue();
 
-        $result = $this->service->delete($mockLocationId);
+        $result = $this->service->delete($mockLocationId, $this->authUser);
         $this->assertTrue($result);
     }
 }

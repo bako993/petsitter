@@ -10,7 +10,7 @@ class UserShowTest extends UserTestCase
     public function testShowsASingleUser(): void
     {
         $user = $this->createModel(User::class);
-
+        $this->actingAs($user, 'sanctum');
         $response = $this->getJson("/api/users/$user->id");
 
         $response->assertStatus(200)
@@ -20,10 +20,21 @@ class UserShowTest extends UserTestCase
             ]);
     }
 
-    public function testReturns404IfUserNotFound(): void
+    public function testReturns404WhenTargetUserNotFound(): void
     {
+        $user = $this->createModel(User::class, ['role' => 'admin']);
+        $this->actingAs($user, 'sanctum');
         $response = $this->getJson('/api/users/999');
 
         $response->assertStatus(404);
+    }
+
+    public function testReturns403WhenUserIsNotAdmin(): void
+    {
+        $user = $this->createModel(User::class);
+        $this->actingAs($user, 'sanctum');
+        $response = $this->getJson('/api/users/999');
+
+        $response->assertStatus(403);
     }
 }

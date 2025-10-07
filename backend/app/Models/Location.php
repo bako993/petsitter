@@ -14,6 +14,7 @@ use Illuminate\Support\HigherOrderCollectionProxy;
  * @property mixed $house_number
  * @property HigherOrderCollectionProxy|mixed $id
  * @property mixed $user_id
+ * @property mixed $user
  * @method paginate(int $perPage)
  * @method find(int $id)
  * @method create(array $data)
