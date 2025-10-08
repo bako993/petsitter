@@ -66,4 +66,9 @@ class User extends Authenticatable
     {
         return $this->hasOne(Profile::class);
     }
+
+    public function location(): HasOne
+    {
+        return $this->hasOne(Location::class);
+    }
 }

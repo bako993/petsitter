@@ -18,8 +18,7 @@ class ProfileShowTest extends ProfileTestCase
                 'id' => $profile->id
             ])
             ->assertJsonStructure(['data' => [
-                'id','profile_photo','bio','phone','experience','availability',
-                'user' => ['id','name','email','role'],
+                'id','profile_photo','bio','phone','experience','availability', 'offerings', 'reviews',
                 'created_at','updated_at'
             ]]);
     }

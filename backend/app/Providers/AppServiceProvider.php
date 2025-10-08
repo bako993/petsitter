@@ -10,6 +10,8 @@ use Core\Repositories\OfferingRepository;
 use Core\Repositories\OfferingRepositoryInterface;
 use Core\Repositories\ProfileRepository;
 use Core\Repositories\ProfileRepositoryInterface;
+use Core\Repositories\ReviewRepository;
+use Core\Repositories\ReviewRepositoryInterface;
 use Core\Repositories\UserRepository;
 use Core\Repositories\UserRepositoryInterface;
 use Illuminate\Support\ServiceProvider;
@@ -27,6 +29,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(LocationRepositoryInterface::class, LocationRepository::class);
         $this->app->bind(ProfileRepositoryInterface::class, ProfileRepository::class);
         $this->app->bind(OfferingRepositoryInterface::class, OfferingRepository::class);
+        $this->app->bind(ReviewRepositoryInterface::class, ReviewRepository::class);
     }
 
     /**

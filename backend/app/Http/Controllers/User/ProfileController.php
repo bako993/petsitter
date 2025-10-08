@@ -21,14 +21,14 @@ class ProfileController extends Controller
 
     public function index(): ProfileCollection
     {
-        $profiles = $this->profileService->paginate(15, ['user']);
+        $profiles = $this->profileService->paginate(15, ['offerings', 'reviews']);
 
         return new ProfileCollection($profiles);
     }
 
     public function show(int $id): ProfileResource|JsonResponse
     {
-        $profile = $this->profileService->findById($id, ['user']);
+        $profile = $this->profileService->findById($id, ['offerings', 'reviews']);
 
         if (!$profile) {
             return response()->json(['message' => 'Profile not found.'], 404);

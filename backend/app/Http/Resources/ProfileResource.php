@@ -26,7 +26,8 @@ class ProfileResource extends JsonResource
             'phone' => $this->phone,
             'experience' => $this->experience,
             'availability' => $this->availability,
-            'user' => new UserResource($this->whenLoaded('user')),
+            'offerings' => OfferingResource::collection($this->whenLoaded('offerings')),
+            'reviews' => ReviewResource::collection($this->whenLoaded('reviews')),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];
