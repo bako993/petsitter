@@ -22,24 +22,24 @@ class UserService
     /**
      * @throws UserNotAllowedException
      */
-    public function paginate(int $perPage, $authUser): LengthAwarePaginator
+    public function paginate(int $perPage, $authUser, array $with=[]): LengthAwarePaginator
     {
         if (!$this->policy->viewAny($authUser->role)) {
             throw new UserNotAllowedException();
         }
 
-        return $this->userRepo->paginate($perPage);
+        return $this->userRepo->paginate($perPage, $with);
     }
     /**
      * @throws UserNotAllowedException
      */
-    public function findById(int $id, $authUser)
+    public function findById(int $id, $authUser, array $with=[])
     {
         if (!$this->policy->view($authUser->id, $authUser->role, $id)) {
             throw new UserNotAllowedException();
         }
 
-        return $this->userRepo->findById($id);
+        return $this->userRepo->findById($id, $with);
     }
     /**
      * @throws UserNotAllowedException
@@ -71,11 +71,16 @@ class UserService
     /**
      * @throws UserNotAllowedException
      */
-    public function delete(int $id, $authUser)
+    public function delete(int $id, $authUser): bool
     {
         if (!$this->policy->delete($authUser->id, $authUser->role, $id)) {
             throw new UserNotAllowedException();
         }
+
+        $user = $this->userRepo->findById($id);
+        if (!$user) return false;
+
+        $user->tokens()->delete();
 
         return $this->userRepo->delete($id);
     }

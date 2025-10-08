@@ -62,7 +62,7 @@ class UserServiceTest extends TestCase
         $this->userRepoMock
             ->shouldReceive('paginate')
             ->once()
-            ->with(15)
+            ->with(15, Mockery::any())
             ->andReturn($mockResult);
 
         $result = $this->service->paginate(15, $this->authUser);
@@ -79,7 +79,7 @@ class UserServiceTest extends TestCase
         $this->userRepoMock
             ->shouldReceive('findById')
             ->once()
-            ->with($mockUser->id)
+            ->with($mockUser->id, Mockery::any())
             ->andReturn($mockUser);
 
         $result = $this->service->findById($mockUser->id, $this->authUser);
@@ -140,6 +140,16 @@ class UserServiceTest extends TestCase
     public function test_deletes_user(): void
     {
         $mockUserId = 123;
+
+        $mockUser = $this->makeModel(User::class, ['id' => $mockUserId]);
+
+        $mockUser->setRelation('tokens', collect());
+
+        $this->userRepoMock
+            ->shouldReceive('findById')
+            ->once()
+            ->with($mockUserId)
+            ->andReturn($mockUser);
 
         $this->userRepoMock
             ->shouldReceive('delete')

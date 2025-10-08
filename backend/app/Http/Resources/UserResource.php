@@ -24,6 +24,8 @@ class UserResource extends JsonResource
             'email' => $this->email,
             'role' => $this->role,
             'type' => $this->type,
+            'profile' => new ProfileResource($this->whenLoaded('profile')),
+            'location' => new LocationResource($this->whenLoaded('location')),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

@@ -25,7 +25,7 @@ class UserController extends Controller
      */
     public function index(): UserCollection
     {
-        $users = $this->userService->paginate(15, auth()->user());
+        $users = $this->userService->paginate(15, auth()->user(), ['profile.offerings', 'profile.reviews', 'location']);
 
         return new UserCollection($users);
     }
@@ -35,7 +35,7 @@ class UserController extends Controller
      */
     public function show(int $id): UserResource|JsonResponse
     {
-        $user = $this->userService->findById($id, auth()->user());
+        $user = $this->userService->findById($id, auth()->user(), ['profile.offerings', 'profile.reviews', 'location']);
         if (!$user) {
             return response()->json(['message' => 'User not found'], 404);
         }
@@ -75,6 +75,7 @@ class UserController extends Controller
     public function destroy(int $id): JsonResponse
     {
         $deleted = $this->userService->delete($id, auth()->user());
+
         if (!$deleted) {
             return response()->json(['message' => 'User not found or delete failed'], 404);
         }

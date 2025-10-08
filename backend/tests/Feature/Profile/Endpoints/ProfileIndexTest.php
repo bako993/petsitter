@@ -16,7 +16,7 @@ class ProfileIndexTest extends ProfileTestCase
         $response->assertStatus(200)
             ->assertJsonStructure([
                 'data' => [
-                    '*' => ['id','profile_photo','bio','phone','experience','availability','user','created_at','updated_at']
+                    '*' => ['id','profile_photo','bio','phone','experience','availability', 'offerings', 'reviews','created_at','updated_at']
                 ],
                 'meta' => ['current_page','last_page','per_page','total'],
                 'links' => ['first','last','prev','next'],
