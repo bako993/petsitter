@@ -6,6 +6,7 @@ type Props = {
     text: string;
     onPress?: () => void;
     type?: 'primary' | 'secondary';
+    disabled?: boolean;
 };
 
 export default function ProfileButton({ text, onPress, type = 'primary' }: Props) {
