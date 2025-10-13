@@ -3,7 +3,6 @@ import {BASE_URL} from "@env";
 
 export const api = async (endpoint: string, options: RequestInit = {}) => {
     const token = await SecureStore.getItemAsync("token");
-
     const isFormData = options.body instanceof FormData;
 
     const res = await fetch(`${BASE_URL}${endpoint}`, {

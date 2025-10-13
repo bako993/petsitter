@@ -1,42 +1,56 @@
-import { useApiQuery } from "./useApiQuery";
-import { useApiMutation } from "./useApiMutation";
-import { ProfileData, profiles } from "../services/profiles";
+import {useState} from 'react';
+import {profiles} from '../services/profiles';
 
 export const useProfiles = () => {
-    const getProfiles = useApiQuery<ProfileData[]>({
-        key: "profiles",
-        endpoint: "/profiles",
-    });
+    const [profile, setProfile] = useState<any>(null);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
 
-    const getProfile = (id: number) =>
-        useApiQuery<ProfileData>({
-            key: ["profiles", id],
-            endpoint: `/profiles/${id}`,
-        });
+    const getProfileById = async (id: number) => {
+        setLoading(true);
+        setError(null);
+        try {
+            const res = await profiles.get(id);
+            setProfile(res);
+            return res;
+        } catch (err: any) {
+            setError(err.message || 'Failed to fetch profile');
+            throw err;
+        } finally {
+            setLoading(false);
+        }
+    };
 
-    const createProfile = useApiMutation<ProfileData, ProfileData>({
-        endpoint: "/profiles",
-        method: "POST",
-        options: {
-            mutationFn: (data: ProfileData) => profiles.create(data),
-        },
-    });
+    const updateProfile = async (id: number, data: any) => {
+        setLoading(true);
+        setError(null);
+        try {
+            const res = await profiles.update(id, data);
+            console.log('profiles.update response:', res);
+            return res;
+        } catch (err: any) {
+            console.warn('Error in updateProfile:', err);
+            setError(err.message || 'Failed to update profile');
+            throw err;
+        } finally {
+            setLoading(false);
+        }
+    };
 
-    const updateProfile = useApiMutation<ProfileData, { id: number; data: Partial<ProfileData> }>({
-        endpoint: "/profiles",
-        method: "PUT",
-        options: {
-            mutationFn: ({ id, data }) => profiles.update(id, data),
-        },
-    });
+    const createProfile = async (data: any) => {
+        setLoading(true);
+        setError(null);
+        try {
+            const res = await profiles.create(data);
+            setProfile(res);
+            return res;
+        } catch (err: any) {
+            setError(err.message || 'Failed to create profile');
+            throw err;
+        } finally {
+            setLoading(false);
+        }
+    };
 
-    const deleteProfile = useApiMutation<void, number>({
-        endpoint: "/profiles",
-        method: "DELETE",
-        options: {
-            mutationFn: (id: number) => profiles.delete(id),
-        },
-    });
-
-    return { getProfiles, getProfile, createProfile, updateProfile, deleteProfile };
+    return { profile, loading, error, getProfileById, updateProfile, createProfile };
 };

@@ -1,51 +1,106 @@
 import React, { useState } from 'react';
-import { TextInput, TouchableOpacity, Text, StyleSheet, Alert, KeyboardAvoidingView, Platform } from 'react-native';
+import {
+    TextInput,
+    TouchableOpacity,
+    Text,
+    StyleSheet,
+    Alert,
+    KeyboardAvoidingView,
+    Platform
+} from 'react-native';
 import ScreenWrapper from '../components/ScreenWrapper';
 import { Theme } from '@/src/theme/theme';
+import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { AppStackParams } from '@/src/types/types';
-import { useNavigation } from '@react-navigation/native';
-import { auth } from '../services/auth';
 import Logo from '../components/Logo';
+import { useAuth } from '@/src/hooks/useAuth';
 
 export default function SignupScreen() {
     const navigation = useNavigation<NativeStackNavigationProp<AppStackParams>>();
+    const { signup, loading, error } = useAuth();
+
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [passwordConfirm, setPasswordConfirm] = useState('');
-    const [loading, setLoading] = useState(false);
 
     const handleSignup = async () => {
-        setLoading(true);
-        try {
-            const res = await auth.signup({ name, email, password, password_confirmation: passwordConfirm });
-            navigation.navigate('MainTabs', { screen: 'Home' });
-        } catch (err: any) {
-            Alert.alert('Signup failed', err.message || 'Please try again');
-        } finally {
-            setLoading(false);
+        if (!name || !email || !password || !passwordConfirm) {
+            return Alert.alert('Error', 'Please fill in all fields');
         }
+
+        if (password !== passwordConfirm) {
+            return Alert.alert('Error', 'Passwords do not match');
+        }
+
+        await signup({
+            name,
+            email,
+            password,
+            password_confirmation: passwordConfirm,
+        });
+
+        if (error) {
+            Alert.alert('Signup failed', error);
+            return;
+        }
+
+        navigation.reset({ index: 0, routes: [{ name: 'MainTabs' }] });
     };
 
     return (
         <ScreenWrapper>
-            <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={styles.container}>
+            <KeyboardAvoidingView
+                behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+                style={styles.container}
+            >
                 <Logo />
+
                 <Text style={styles.label}>Name</Text>
-                <TextInput placeholder="Enter your name" value={name} onChangeText={setName} style={styles.input} />
+                <TextInput
+                    placeholder="Enter your name"
+                    value={name}
+                    onChangeText={setName}
+                    style={styles.input}
+                />
 
                 <Text style={styles.label}>Email</Text>
-                <TextInput placeholder="Enter your email" value={email} onChangeText={setEmail} autoCapitalize="none" style={styles.input} />
+                <TextInput
+                    placeholder="Enter your email"
+                    value={email}
+                    onChangeText={setEmail}
+                    autoCapitalize="none"
+                    keyboardType="email-address"
+                    style={styles.input}
+                />
 
                 <Text style={styles.label}>Password</Text>
-                <TextInput placeholder="Enter your password" value={password} onChangeText={setPassword} secureTextEntry style={styles.input} />
+                <TextInput
+                    placeholder="Enter your password"
+                    value={password}
+                    onChangeText={setPassword}
+                    secureTextEntry
+                    style={styles.input}
+                />
 
                 <Text style={styles.label}>Confirm Password</Text>
-                <TextInput placeholder="Confirm password" value={passwordConfirm} onChangeText={setPasswordConfirm} secureTextEntry style={styles.input} />
+                <TextInput
+                    placeholder="Confirm password"
+                    value={passwordConfirm}
+                    onChangeText={setPasswordConfirm}
+                    secureTextEntry
+                    style={styles.input}
+                />
 
-                <TouchableOpacity style={styles.button} onPress={handleSignup} disabled={loading}>
-                    <Text style={styles.buttonText}>{loading ? 'Signing up...' : 'Sign Up'}</Text>
+                <TouchableOpacity
+                    style={styles.button}
+                    onPress={handleSignup}
+                    disabled={loading}
+                >
+                    <Text style={styles.buttonText}>
+                        {loading ? 'Signing up...' : 'Sign Up'}
+                    </Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity onPress={() => navigation.navigate('LoginScreen')}>
@@ -55,6 +110,54 @@ export default function SignupScreen() {
         </ScreenWrapper>
     );
 }
+
+// import React from 'react';
+// import { TextInput, TouchableOpacity, Text, StyleSheet, Alert, KeyboardAvoidingView, Platform } from 'react-native';
+// import ScreenWrapper from '../components/ScreenWrapper';
+// import { Theme } from '@/src/theme/theme';
+// import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+// import { AppStackParams } from '@/src/types/types';
+// import { useNavigation } from '@react-navigation/native';
+// import Logo from '../components/Logo';
+//
+// export default function SignupScreen() {
+//     const navigation = useNavigation<NativeStackNavigationProp<AppStackParams>>();
+//
+//     const handleSignup = async () => {
+//
+//     };
+//
+//     return (
+//         <ScreenWrapper>
+//             <KeyboardAvoidingView
+//                 behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+//                 style={styles.container}
+//             >
+//                 <Logo />
+//
+//                 <Text style={styles.label}>Name</Text>
+//                 <TextInput placeholder="Enter your name" style={styles.input} />
+//
+//                 <Text style={styles.label}>Email</Text>
+//                 <TextInput placeholder="Enter your email" autoCapitalize="none" style={styles.input} />
+//
+//                 <Text style={styles.label}>Password</Text>
+//                 <TextInput placeholder="Enter your password" secureTextEntry style={styles.input} />
+//
+//                 <Text style={styles.label}>Confirm Password</Text>
+//                 <TextInput placeholder="Confirm password" secureTextEntry style={styles.input} />
+//
+//                 <TouchableOpacity style={styles.button} onPress={handleSignup}>
+//                     <Text style={styles.buttonText}> Signing up...Sign Up</Text>
+//                 </TouchableOpacity>
+//
+//                 <TouchableOpacity onPress={() => navigation.navigate('LoginScreen')}>
+//                     <Text style={styles.linkText}>Already have an account?</Text>
+//                 </TouchableOpacity>
+//             </KeyboardAvoidingView>
+//         </ScreenWrapper>
+//     );
+// }
 
 const styles = StyleSheet.create({
     container: { flex: 1, justifyContent: 'center', padding: Theme.SPACING.page },

@@ -1,39 +1,28 @@
-// hooks/useOfferings.ts
-import { useApiQuery } from "./useApiQuery";
-import { useApiMutation } from "./useApiMutation";
-import { OfferingData, offerings } from "../services/offerings";
+import { useState, useEffect } from 'react';
+import { offerings } from '../services/offerings';
 
 export const useOfferings = () => {
-    const getOfferings = useApiQuery<OfferingData[]>({
-        key: "offerings",
-        endpoint: "/offerings",
-    });
+    const [data, setData] = useState<any[]>([]);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<any>(null);
 
-    const getOffering = (id: number) =>
-        useApiQuery<OfferingData>({
-            key: ["offerings", id],
-            endpoint: `/offerings/${id}`,
-        });
-
-    const createOffering = useApiMutation<OfferingData, OfferingData>({
-        endpoint: "/offerings",
-        method: "POST",
-        options: { mutationFn: (data) => offerings.create(data) },
-    });
-
-    const updateOffering = useApiMutation<OfferingData, { id: number; data: Partial<OfferingData> }>({
-        endpoint: "/offerings",
-        method: "PUT",
-        options: {
-            mutationFn: ({ id, data }) => offerings.update(id, data),
+    const fetchOfferings = async () => {
+        setLoading(true);
+        try {
+            const res = await offerings.getAll();
+            setData(res);
+        } catch (err) {
+            setError(err);
+        } finally {
+            setLoading(false);
         }
-    });
+    };
 
-    const deleteOffering = useApiMutation<void, number>({
-        endpoint: "/offerings",
-        method: "DELETE",
-        options: { mutationFn: (id) => offerings.delete(id) },
-    });
+    useEffect(() => {
+        (async () => {
+            await fetchOfferings();
+        })();
+    }, []);
 
-    return { getOfferings, getOffering, createOffering, updateOffering, deleteOffering };
+    return { data, loading, error, refresh: fetchOfferings };
 };

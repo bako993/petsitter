@@ -1,36 +1,24 @@
-import { useApiQuery } from "./useApiQuery";
-import { useApiMutation } from "./useApiMutation";
-import { UserData, users } from "../services/users";
+import { useState } from 'react';
+import { users } from '../services/users';
 
 export const useUsers = () => {
-    const getUsers = useApiQuery<UserData[]>({
-        key: "users",
-        endpoint: "/users",
-    });
+    const [data, setData] = useState<any[]>([]);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<any>(null);
 
-    const getUser = (id: number) =>
-        useApiQuery<UserData>({
-            key: ["users", id],
-            endpoint: `/users/${id}`,
-        });
+    const getUserById = async (id: number) => {
+        setLoading(true);
+        try {
+            const res = await users.get(id);
+            setData(res);
+            return res;
+        } catch (err) {
+            setError(err);
+            throw err;
+        } finally {
+            setLoading(false);
+        }
+    };
 
-    const createUser = useApiMutation<UserData, UserData>({
-        endpoint: "/users",
-        method: "POST",
-        options: { mutationFn: (data) => users.create(data) },
-    });
-
-    const updateUser = useApiMutation<UserData, { id: number; data: Partial<UserData> }>({
-        endpoint: "/users",
-        method: "PUT",
-        options: { mutationFn: ({ id, data }) => users.update(id, data) },
-    });
-
-    const deleteUser = useApiMutation<void, number>({
-        endpoint: "/users",
-        method: "DELETE",
-        options: { mutationFn: (id) => users.delete(id) },
-    });
-
-    return { getUsers, getUser, createUser, updateUser, deleteUser };
+    return { data, loading, error, getUserById };
 };

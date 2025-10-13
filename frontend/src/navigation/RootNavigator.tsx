@@ -9,6 +9,8 @@ import { Theme } from '@/src/theme/theme';
 import AuthGate from '@/src/components/AuthGate';
 import WelcomeScreen from "@/src/screens/WelcomeScreen";
 import SitterOnboardingScreen from "@/src/screens/SitterOnboardingScreen";
+import OwnerProfileScreen from "@/src/screens/Profile/OwnerProfileScreen";
+import SitterProfileScreen from "@/src/screens/Profile/SitterProfileScreen";
 
 const Stack = createNativeStackNavigator<AppStackParams>();
 
@@ -18,15 +20,14 @@ export default function RootNavigator() {
             <StatusBar barStyle="dark-content" backgroundColor={Theme.COLORS.background} />
             <AuthGate>
                 {(isLoggedIn) => (
-                    <Stack.Navigator
-                        initialRouteName={isLoggedIn ? 'MainTabs' : 'WelcomeScreen'}
-                        screenOptions={{ headerShown: false }}
-                    >
+                    <Stack.Navigator initialRouteName={isLoggedIn ? 'MainTabs' : 'WelcomeScreen'} screenOptions={{ headerShown: false }}>
                         <Stack.Screen name="WelcomeScreen" component={WelcomeScreen} />
                         <Stack.Screen name="LoginScreen" component={LoginScreen} />
                         <Stack.Screen name="SignupScreen" component={SignupScreen} />
                         <Stack.Screen name="MainTabs" component={MainTabs} />
                         <Stack.Screen name="SitterOnboardingScreen" component={SitterOnboardingScreen} />
+                        <Stack.Screen name="SitterProfileScreen" component={SitterProfileScreen} />
+                        <Stack.Screen name="OwnerProfileScreen" component={OwnerProfileScreen} />
                     </Stack.Navigator>
                 )}
             </AuthGate>

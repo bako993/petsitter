@@ -2,11 +2,13 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
 import HomeScreen from '@/src/screens/HomeScreen';
 import SearchScreen from '@/src/screens/SearchScreen';
-import ProfileScreen from '@/src/screens/ProfileScreen';
+import OwnerProfileScreen from '@/src/screens/Profile/OwnerProfileScreen';
+import SitterProfileScreen from '@/src/screens/Profile/SitterProfileScreen';
 import MapScreen from '@/src/screens/MapScreen';
 import { Theme } from '../theme/theme';
 import { ICONS } from "@/src/constants/icons";
 import { BottomTabParams } from '@/src/types/types';
+import { useAuth } from '@/src/hooks/useAuth';
 
 const Tab = createBottomTabNavigator<BottomTabParams>();
 
@@ -23,6 +25,7 @@ const renderTabIcon = (routeName: keyof BottomTabParams, focused: boolean, color
 };
 
 export default function MainTabs() {
+    const { user } = useAuth();
     return (
         <Tab.Navigator
             screenOptions={({ route }) => ({
@@ -36,7 +39,10 @@ export default function MainTabs() {
             <Tab.Screen name="Home" component={HomeScreen} />
             <Tab.Screen name="Search" component={SearchScreen} />
             <Tab.Screen name="Map" component={MapScreen} />
-            <Tab.Screen name="Profile" component={ProfileScreen} />
+            <Tab.Screen
+                name="Profile"
+                component={user?.data?.type === 'sitter' ? SitterProfileScreen : OwnerProfileScreen}
+            />
         </Tab.Navigator>
     );
 }

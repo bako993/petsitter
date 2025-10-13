@@ -14,7 +14,7 @@ export default function AuthGate({ children }: AuthGateProps) {
     useEffect(() => {
         (async () => {
             try {
-                const token = await SecureStore.getItemAsync('token');
+                const token = await SecureStore.getItemAsync('user');
                 setIsLoggedIn(!!token);
             } catch (err) {
                 console.error('Error checking token', err);

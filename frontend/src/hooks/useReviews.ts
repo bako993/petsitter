@@ -1,36 +1,28 @@
-import { useApiQuery } from "./useApiQuery";
-import { useApiMutation } from "./useApiMutation";
-import { ReviewData, reviews } from "../services/reviews";
+import { useState, useEffect } from 'react';
+import { reviews } from '../services/reviews';
 
 export const useReviews = () => {
-    const getReviews = useApiQuery<ReviewData[]>({
-        key: "reviews",
-        endpoint: "/reviews",
-    });
+    const [data, setData] = useState<any[]>([]);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<any>(null);
 
-    const getReview = (id: number) =>
-        useApiQuery<ReviewData>({
-            key: ["reviews", id],
-            endpoint: `/reviews/${id}`,
-        });
+    const fetchReviews = async () => {
+        setLoading(true);
+        try {
+            const res = await reviews.getAll();
+            setData(res);
+        } catch (err) {
+            setError(err);
+        } finally {
+            setLoading(false);
+        }
+    };
 
-    const createReview = useApiMutation<ReviewData, ReviewData>({
-        endpoint: "/reviews",
-        method: "POST",
-        options: { mutationFn: (data) => reviews.create(data) },
-    });
+    useEffect(() => {
+        (async () => {
+            await fetchReviews();
+        })();
+    }, []);
 
-    const updateReview = useApiMutation<ReviewData, { id: number; data: Partial<ReviewData> }>({
-        endpoint: "/reviews",
-        method: "PUT",
-        options: { mutationFn: ({ id, data }) => reviews.update(id, data) },
-    });
-
-    const deleteReview = useApiMutation<void, number>({
-        endpoint: "/reviews",
-        method: "DELETE",
-        options: { mutationFn: (id) => reviews.delete(id) },
-    });
-
-    return { getReviews, getReview, createReview, updateReview, deleteReview };
+    return { data, loading, error, refresh: fetchReviews };
 };

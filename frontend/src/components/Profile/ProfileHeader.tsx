@@ -1,11 +1,11 @@
 import React from 'react';
-import { View, Text, Image } from 'react-native';
+import { View, Text, Image, ImageSourcePropType } from 'react-native';
 import { profileStyles as styles } from '@/src/theme/profileStyles';
 
 type Props = {
     name: string;
     email: string;
-    profileImage?: any;
+    profileImage?: ImageSourcePropType;
 };
 
 export default function ProfileHeader({ name, email, profileImage }: Props) {

@@ -3,6 +3,8 @@ export type AppStackParams = {
     MainTabs: {screen: keyof BottomTabParams};
     SitterScreen: { sitterId: number };
     SitterOnboardingScreen: undefined;
+    SitterProfileScreen: undefined;
+    OwnerProfileScreen: undefined;
     LoginScreen: undefined;
     SignupScreen: undefined;
 };

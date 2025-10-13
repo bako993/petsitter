@@ -1,7 +1,6 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import * as SecureStore from "expo-secure-store";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { AppStackParams } from "@/src/types/types";
 import { Theme } from "@/src/theme/theme";
@@ -9,18 +8,6 @@ import Logo from "@/src/components/Logo";
 
 export default function WelcomeScreen() {
     const navigation = useNavigation<NativeStackNavigationProp<AppStackParams>>();
-
-    useEffect(() => {
-        (async () => {
-            const token = await SecureStore.getItemAsync("token");
-            if (token) {
-                navigation.reset({
-                    index: 0,
-                    routes: [{ name: "MainTabs" }],
-                });
-            }
-        })();
-    }, []);
 
     return (
         <View style={styles.container}>

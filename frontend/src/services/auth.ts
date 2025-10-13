@@ -1,66 +1,74 @@
+import { api } from './api';
 import * as SecureStore from 'expo-secure-store';
-import {api} from './api';
-
-type LoginParams = { email: string; password: string };
-type SignupParams = { name: string; email: string; password: string; password_confirmation: string };
 
 const TOKEN_KEY = 'token';
 const USER_KEY = 'user';
 
 export const auth = {
-    login: async ({ email, password }: LoginParams) => {
+    login: async ({ email, password }: { email: string; password: string }) => {
         const res = await api('/login', {
             method: 'POST',
             body: JSON.stringify({ email, password }),
         });
 
-        if (!res.token) throw new Error('Invalid response from server');
+        if (!res.token) throw new Error(getErrorMessage(res));
 
         await SecureStore.setItemAsync(TOKEN_KEY, res.token);
-        const userObj = res.user ?? res;
-        await SecureStore.setItemAsync(USER_KEY, JSON.stringify(userObj));
+        const user = await auth.fetchFullUser(res.user?.id || res.id);
+        await SecureStore.setItemAsync(USER_KEY, JSON.stringify(user));
 
-        return res;
+        return { token: res.token, user };
     },
 
-    signup: async ({ name, email, password, password_confirmation }: SignupParams) => {
+    signup: async (params: { name: string; email: string; password: string; password_confirmation: string }) => {
         const res = await api('/register', {
             method: 'POST',
-            body: JSON.stringify({ name, email, password, password_confirmation }),
+            body: JSON.stringify(params),
         });
 
-        if (!res.token) throw new Error('Invalid response from server');
+        if (!res.token) throw new Error(getErrorMessage(res));
 
         await SecureStore.setItemAsync(TOKEN_KEY, res.token);
-        const userObj = res.user ?? res;
-        await SecureStore.setItemAsync(USER_KEY, JSON.stringify(userObj));
+        const user = await auth.fetchFullUser(res.user?.id || res.id);
+        await SecureStore.setItemAsync(USER_KEY, JSON.stringify(user));
 
-        return res;
+        return { token: res.token, user };
+    },
+
+    fetchFullUser: async (userId: number) => {
+        return api(`/users/${userId}`);
     },
 
     logout: async () => {
         try {
             await api('/logout', { method: 'POST' });
         } catch (err) {
-            console.log('Logout request failed', err);
+            console.warn('Logout failed', err);
         } finally {
             await SecureStore.deleteItemAsync(TOKEN_KEY);
             await SecureStore.deleteItemAsync(USER_KEY);
         }
     },
 
-    getToken: async () => {
-        return await SecureStore.getItemAsync(TOKEN_KEY);
-    },
+    getToken: async () => await SecureStore.getItemAsync(TOKEN_KEY),
 
     getLoggedInUser: async () => {
         const userString = await SecureStore.getItemAsync(USER_KEY);
         if (!userString) return null;
         try {
-            return JSON.parse(userString);
+            const parsedUser = JSON.parse(userString);
+            if (parsedUser?.id) parsedUser.id = parseInt(parsedUser.id, 10);
+            return parsedUser;
         } catch (err) {
-            console.warn("Failed to parse stored user", err);
+            console.warn('Failed to parse stored user', err);
             return null;
         }
     },
+};
+
+const getErrorMessage = (res: any) => {
+    if (!res) return 'Unknown error';
+    if (res.message) return res.message;
+    if (res.errors) return Object.values(res.errors).flat().join('\n');
+    return 'An error occurred';
 };

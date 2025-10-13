@@ -1,36 +1,30 @@
 import React, { useState } from 'react';
-import { TextInput, TouchableOpacity, Text, StyleSheet, Alert, KeyboardAvoidingView, Platform } from 'react-native';
+import { TextInput, TouchableOpacity, Text, Alert, KeyboardAvoidingView, Platform, StyleSheet } from 'react-native';
 import ScreenWrapper from '../components/ScreenWrapper';
 import { Theme } from '@/src/theme/theme';
+import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { AppStackParams } from '@/src/types/types';
-import { useNavigation } from '@react-navigation/native';
-import { auth } from '../services/auth';
 import Logo from '../components/Logo';
+import { useAuth } from '@/src/hooks/useAuth';
 
 export default function LoginScreen() {
     const navigation = useNavigation<NativeStackNavigationProp<AppStackParams>>();
+    const { login, loading, error } = useAuth();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [loading, setLoading] = useState(false);
 
     const handleLogin = async () => {
-        if (!email || !password) {
-            Alert.alert('Error', 'Please fill in all fields');
+        if (!email || !password) return Alert.alert('Error', 'Please fill in all fields');
+
+        await login(email, password);
+
+        if (error) {
+            Alert.alert('Login failed', error);
             return;
         }
 
-        setLoading(true);
-        try {
-            await auth.login({ email, password });
-            console.log('Sending login request', { email, password });
-            navigation.navigate('MainTabs', { screen: 'Home' });
-        } catch (err: any) {
-            const message = err?.message || 'Login failed';
-            Alert.alert('Login failed', message);
-        } finally {
-            setLoading(false);
-        }
+        navigation.reset({ index: 0, routes: [{ name: 'MainTabs' }] });
     };
 
     return (
@@ -38,24 +32,11 @@ export default function LoginScreen() {
             <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={styles.container}>
                 <Logo />
                 <Text style={styles.label}>Email</Text>
-                <TextInput
-                    placeholder="Enter your email"
-                    value={email}
-                    onChangeText={setEmail}
-                    autoCapitalize="none"
-                    keyboardType="email-address"
-                    style={styles.input}
-                />
+                <TextInput placeholder="Enter your email" value={email} onChangeText={setEmail} autoCapitalize="none" keyboardType="email-address" style={styles.input} />
                 <Text style={styles.label}>Password</Text>
-                <TextInput
-                    placeholder="Enter your password"
-                    value={password}
-                    onChangeText={setPassword}
-                    secureTextEntry
-                    style={styles.input}
-                />
+                <TextInput placeholder="Enter your password" value={password} onChangeText={setPassword} secureTextEntry style={styles.input} />
 
-                <TouchableOpacity style={styles.button} onPress={handleLogin} disabled={loading}>
+                <TouchableOpacity onPress={handleLogin} style={styles.button}>
                     <Text style={styles.buttonText}>{loading ? 'Logging in...' : 'Login'}</Text>
                 </TouchableOpacity>
 

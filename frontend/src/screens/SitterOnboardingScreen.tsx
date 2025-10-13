@@ -7,7 +7,9 @@ import {
     StyleSheet,
     Image,
     Alert,
-    KeyboardAvoidingView, Platform
+    KeyboardAvoidingView,
+    Platform,
+    ActivityIndicator
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { Theme } from '@/src/theme/theme';
@@ -15,10 +17,13 @@ import ScreenWrapper from '@/src/components/ScreenWrapper';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { AppStackParams } from '@/src/types/types';
+import { useAuth } from '@/src/hooks/useAuth';
 import { profiles } from '@/src/services/profiles';
 
 export default function SitterOnboardingScreen() {
     const navigation = useNavigation<NativeStackNavigationProp<AppStackParams>>();
+    const { refreshUser } = useAuth();
+
     const [bio, setBio] = useState('');
     const [experience, setExperience] = useState('');
     const [phone, setPhone] = useState('');
@@ -29,7 +34,7 @@ export default function SitterOnboardingScreen() {
     const pickImage = async () => {
         const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
         if (status !== 'granted') {
-            alert('Permission required to select a photo.');
+            Alert.alert('Permission required', 'You need to grant photo access to continue.');
             return;
         }
 
@@ -47,13 +52,16 @@ export default function SitterOnboardingScreen() {
 
     const handleSubmit = async () => {
         if (!bio || !experience || !phone || !availability) {
-            Alert.alert('Missing fields', 'Please fill out all fields before submitting.');
+            Alert.alert('Missing fields', 'Please fill out all fields.');
             return;
         }
 
         setLoading(true);
         try {
-            await profiles.create({ bio, experience, phone, availability, photo });
+            await profiles.create({ bio, experience, phone, availability, profilePhoto: photo });
+
+            await refreshUser();
+
             Alert.alert('Success', 'Your sitter profile has been created!');
             navigation.navigate("MainTabs", { screen: "Profile" });
         } catch (err: any) {
@@ -70,7 +78,6 @@ export default function SitterOnboardingScreen() {
             style={{ flex: 1 }}
         >
             <ScreenWrapper style={{ backgroundColor: Theme.COLORS.background }}>
-
                 <View style={styles.container}>
                     <Text style={styles.title}>Become a Sitter</Text>
                     <Text style={styles.subtitle}>Fill in your details to start receiving requests</Text>
@@ -89,16 +96,25 @@ export default function SitterOnboardingScreen() {
                     {renderInput('Availability', availability, setAvailability, 'e.g. Weekdays 9–5')}
 
                     <TouchableOpacity style={styles.button} onPress={handleSubmit} disabled={loading}>
-                        <Text style={styles.buttonText}>{loading ? 'Submitting...' : 'Submit'}</Text>
+                        {loading ? (
+                            <ActivityIndicator size="small" color={Theme.COLORS.background} />
+                        ) : (
+                            <Text style={styles.buttonText}>Submit</Text>
+                        )}
                     </TouchableOpacity>
                 </View>
             </ScreenWrapper>
         </KeyboardAvoidingView>
     );
-
 }
 
-function renderInput(label: string, value: string, setValue: any, placeholder: string, keyboardType: any = 'default') {
+function renderInput(
+    label: string,
+    value: string,
+    setValue: (val: string) => void,
+    placeholder: string,
+    keyboardType: any = 'default'
+) {
     return (
         <View style={styles.inputGroup}>
             <Text style={styles.label}>{label}</Text>
@@ -108,7 +124,7 @@ function renderInput(label: string, value: string, setValue: any, placeholder: s
                 value={value}
                 onChangeText={setValue}
                 keyboardType={keyboardType}
-                multiline={label === 'Bio' || label === 'Experience' || label === 'Availability'}
+                multiline={['Bio', 'Experience', 'Availability'].includes(label)}
             />
         </View>
     );

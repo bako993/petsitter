@@ -1,33 +1,29 @@
-import { useApiQuery } from "./useApiQuery";
-import { useApiMutation } from "./useApiMutation";
-import { LocationData } from "../services/locations";
+import { useState, useEffect } from 'react';
+import { locations } from '../services/locations';
 
 export const useLocations = () => {
-    const getLocations = useApiQuery<LocationData[]>({
-        key: "locations",
-        endpoint: "/locations",
-    });
+    const [data, setData] = useState<any[]>([]);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<any>(null);
 
-    const getLocation = (id: number) =>
-        useApiQuery<LocationData>({
-            key: ["locations", id],
-            endpoint: `/locations/${id}`,
-        });
+    const fetchLocations = async () => {
+        setLoading(true);
+        try {
+            const res = await locations.getAll();
+            setData(res);
+        } catch (err) {
+            setError(err);
+        } finally {
+            setLoading(false);
+        }
+    };
 
-    const createLocation = useApiMutation<LocationData, LocationData>({
-        endpoint: "/locations",
-        method: "POST",
-    });
+    useEffect(() => {
+        (async () => {
+            await fetchLocations();
+        })();
+    }, []);
 
-    const updateLocation = useApiMutation<LocationData, { id: number; data: Partial<LocationData> }>({
-        endpoint: "/locations",
-        method: "PUT",
-    });
-
-    const deleteLocation = useApiMutation<void, number>({
-        endpoint: "/locations",
-        method: "DELETE",
-    });
-
-    return { getLocations, getLocation, createLocation, updateLocation, deleteLocation };
+    return { data, loading, error, refresh: fetchLocations };
 };
+
