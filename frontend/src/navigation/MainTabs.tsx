@@ -8,7 +8,10 @@ import MapScreen from '@/src/screens/MapScreen';
 import { Theme } from '../theme/theme';
 import { ICONS } from "@/src/constants/icons";
 import { BottomTabParams } from '@/src/types/types';
-import { useAuth } from '@/src/hooks/useAuth';
+import { useUsers } from '@/src/hooks/useUsers';
+import { useEffect, useState } from 'react';
+import { ActivityIndicator, View } from 'react-native';
+import * as SecureStore from 'expo-secure-store';
 
 const Tab = createBottomTabNavigator<BottomTabParams>();
 
@@ -25,7 +28,35 @@ const renderTabIcon = (routeName: keyof BottomTabParams, focused: boolean, color
 };
 
 export default function MainTabs() {
-    const { user } = useAuth();
+    const { data: user, loading, getUserById } = useUsers();
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchUser = async () => {
+            const storedUser = await SecureStore.getItemAsync('user');
+            if (storedUser) {
+                const parsed = JSON.parse(storedUser);
+                const userId = parsed?.data?.id;
+                if (userId) {
+                    await getUserById(userId);
+                }
+            }
+            setIsLoading(false);
+        };
+        fetchUser();
+    }, []);
+
+    if (loading || isLoading || !user) {
+        return (
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                <ActivityIndicator size="large" color={Theme.COLORS.primary} />
+            </View>
+        );
+    }
+
+    console.log(user.data?.type);
+    const ProfileComponent = user?.data.type === 'sitter' ? SitterProfileScreen : OwnerProfileScreen;
+
     return (
         <Tab.Navigator
             screenOptions={({ route }) => ({
@@ -39,10 +70,7 @@ export default function MainTabs() {
             <Tab.Screen name="Home" component={HomeScreen} />
             <Tab.Screen name="Search" component={SearchScreen} />
             <Tab.Screen name="Map" component={MapScreen} />
-            <Tab.Screen
-                name="Profile"
-                component={user?.data?.type === 'sitter' ? SitterProfileScreen : OwnerProfileScreen}
-            />
+            <Tab.Screen name="Profile" component={ProfileComponent} />
         </Tab.Navigator>
     );
 }

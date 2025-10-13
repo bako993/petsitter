@@ -52,18 +52,6 @@ export const auth = {
 
     getToken: async () => await SecureStore.getItemAsync(TOKEN_KEY),
 
-    getLoggedInUser: async () => {
-        const userString = await SecureStore.getItemAsync(USER_KEY);
-        if (!userString) return null;
-        try {
-            const parsedUser = JSON.parse(userString);
-            if (parsedUser?.id) parsedUser.id = parseInt(parsedUser.id, 10);
-            return parsedUser;
-        } catch (err) {
-            console.warn('Failed to parse stored user', err);
-            return null;
-        }
-    },
 };
 
 const getErrorMessage = (res: any) => {

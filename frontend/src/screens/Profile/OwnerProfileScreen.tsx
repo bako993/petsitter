@@ -7,21 +7,9 @@ import ProfileButton from "@/src/components/Profile/ProfileButton";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { AppStackParams } from "@/src/types/types";
-import { useAuth } from "@/src/hooks/useAuth";
-import {ActivityIndicator, Text} from "react-native";
 
 export default function OwnerProfileScreen() {
     const navigation = useNavigation<NativeStackNavigationProp<AppStackParams>>();
-    const { user, logout, loading } = useAuth();
-
-    if (loading) {
-        return (
-            <ScreenWrapper style={{ justifyContent: 'center', alignItems: 'center' }}>
-                <ActivityIndicator size="large" color={Theme.COLORS.primary} />
-                <Text>Loading profile...</Text>
-            </ScreenWrapper>
-        );
-    }
 
     const handleEdit = async () => {
 
@@ -38,10 +26,19 @@ export default function OwnerProfileScreen() {
 
     return (
         <ScreenWrapper style={{ backgroundColor: Theme.COLORS.background }}>
-            <ProfileHeader name={user?.data.name || "Unknown"} email={user?.data.email || "No email"} />
+            <ProfileHeader name={"No email"} />
             <ProfileCard title="Saved Sitters" content="No saved sitters yet." />
             <ProfileButton text="Edit Profile" type="primary" onPress={handleEdit} />
             <ProfileButton text="Logout" type="secondary" onPress={handleLogout} />
         </ScreenWrapper>
     );
+
+    // return (
+    //     <ScreenWrapper style={{ backgroundColor: Theme.COLORS.background }}>
+    //         <ProfileHeader name={user?.data.name || "Unknown"} email={user?.data.email || "No email"} />
+    //         <ProfileCard title="Saved Sitters" content="No saved sitters yet." />
+    //         <ProfileButton text="Edit Profile" type="primary" onPress={handleEdit} />
+    //         <ProfileButton text="Logout" type="secondary" onPress={handleLogout} />
+    //     </ScreenWrapper>
+    // );
 }

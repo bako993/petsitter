@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { users } from '../services/users';
 
 export const useUsers = () => {
-    const [data, setData] = useState<any[]>([]);
+    // const [data, setData] = useState<any[]>([]);
+    const [data, setData] = useState<User | null>(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<any>(null);
 

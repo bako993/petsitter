@@ -11,7 +11,7 @@ export const useProfiles = () => {
         setError(null);
         try {
             const res = await profiles.get(id);
-            setProfile(res);
+            setProfile(res.data);
             return res;
         } catch (err: any) {
             setError(err.message || 'Failed to fetch profile');
