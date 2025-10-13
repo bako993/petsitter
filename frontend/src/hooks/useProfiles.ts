@@ -25,9 +25,7 @@ export const useProfiles = () => {
         setLoading(true);
         setError(null);
         try {
-            const res = await profiles.update(id, data);
-            console.log('profiles.update response:', res);
-            return res;
+            return await profiles.update(id, data);
         } catch (err: any) {
             console.warn('Error in updateProfile:', err);
             setError(err.message || 'Failed to update profile');

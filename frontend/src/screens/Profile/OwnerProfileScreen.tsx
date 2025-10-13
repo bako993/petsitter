@@ -1,5 +1,4 @@
 import React from "react";
-import {Text} from "react-native";
 import ScreenWrapper from "@/src/components/ScreenWrapper";
 import { Theme } from "@/src/theme/theme";
 import ProfileHeader from "@/src/components/Profile/ProfileHeader";
@@ -9,23 +8,20 @@ import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { AppStackParams } from "@/src/types/types";
 import { useAuth } from "@/src/hooks/useAuth";
+import {ActivityIndicator, Text} from "react-native";
 
 export default function OwnerProfileScreen() {
     const navigation = useNavigation<NativeStackNavigationProp<AppStackParams>>();
-    const { user, logout } = useAuth();
+    const { user, logout, loading } = useAuth();
 
-    // if (!user?.data) {
-    //     return (
-    //         <ScreenWrapper style={{ justifyContent: 'center', alignItems: 'center' }}>
-    //             <Text>No user data available. Please login again.</Text>
-    //             <ProfileButton
-    //                 text="Go to Login"
-    //                 type="primary"
-    //                 onPress={() => navigation.reset({ index: 0, routes: [{ name: 'LoginScreen' }] })}
-    //             />
-    //         </ScreenWrapper>
-    //     );
-    // }
+    if (loading) {
+        return (
+            <ScreenWrapper style={{ justifyContent: 'center', alignItems: 'center' }}>
+                <ActivityIndicator size="large" color={Theme.COLORS.primary} />
+                <Text>Loading profile...</Text>
+            </ScreenWrapper>
+        );
+    }
 
     const handleEdit = async () => {
 

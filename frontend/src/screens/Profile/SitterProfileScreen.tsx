@@ -14,7 +14,7 @@ import ProfileEditModal from "@/src/components/Profile/ProfileEditModal";
 
 export default function SitterProfileScreen() {
     const navigation = useNavigation<NativeStackNavigationProp<AppStackParams>>();
-    const { user, logout, loading, refreshUser } = useAuth();
+    const { user, logout, loading } = useAuth();
     const [modalVisible, setModalVisible] = useState(false);
 
     const profile = user?.data.profile;
@@ -41,31 +41,29 @@ export default function SitterProfileScreen() {
         ? `${BASE_URL.replace(/\/api$/, '')}${profile.profile_photo}`
         : undefined;
 
-    console.log('Rendering SitterProfileScreen, user:', user);
     return (
         <ScreenWrapper style={{ backgroundColor: Theme.COLORS.background }}>
-            <ProfileHeader
-                name={user?.data.name || "unknown"}
-                email={user?.data.email || "No email"}
-                profileImage={profilePhotoUri ? { uri: profilePhotoUri } : undefined}
-            />
-
-            <ProfileCard title="Bio" content={profile?.bio || "No bio yet"} />
-            <ProfileCard title="Experience" content={profile?.experience || "No experience info"} />
-            <ProfileCard title="Availability" content={profile?.availability || "No availability set"} />
-            <ProfileCard title="Phone" content={profile?.phone || "No phone number"} />
-
-            <ProfileButton text="Edit Profile" type="secondary" onPress={() => setModalVisible(true)} />
-            <ProfileButton text="Logout" type="secondary" onPress={handleLogout} />
-
-            {modalVisible && (
-                <ProfileEditModal
-                    visible={modalVisible}
-                    profileData={profile}
-                    onClose={() => setModalVisible(false)}
-                    onSave={refreshUser}
+                <ProfileHeader
+                    name={user?.data.name || "unknown"}
+                    email={user?.data.email || "No email"}
+                    profileImage={profilePhotoUri ? { uri: profilePhotoUri } : undefined}
                 />
-            )}
+
+                <ProfileCard title="Bio" content={profile?.bio || "No bio yet"} />
+                <ProfileCard title="Experience" content={profile?.experience || "No experience info"} />
+                <ProfileCard title="Availability" content={profile?.availability || "No availability set"} />
+                <ProfileCard title="Phone" content={profile?.phone || "No phone number"} />
+
+                <ProfileButton text="Edit Profile" type="secondary" onPress={() => setModalVisible(true)} />
+                <ProfileButton text="Logout" type="secondary" onPress={handleLogout} />
+
+                {modalVisible && (
+                    <ProfileEditModal
+                        visible={modalVisible}
+                        profileData={profile}
+                        onClose={() => setModalVisible(false)}
+                    />
+                )}
         </ScreenWrapper>
     );
 }

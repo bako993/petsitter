@@ -75,12 +75,6 @@ class ProfileService
                 $this->fileService->delete($profile->profile_photo);
             }
         }
-//         if ($photo) {
-//             if ($profile->profile_photo) {
-//                 $this->fileService->delete($profile->profile_photo);
-//             }
-//             $data['profile_photo'] = $this->fileService->upload($photo, 'profiles');
-//         }
 
         return $this->profileRepo->update($id, $data);
     }

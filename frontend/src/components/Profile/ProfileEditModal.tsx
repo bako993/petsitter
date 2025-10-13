@@ -20,7 +20,6 @@ type Props = {
     visible: boolean;
     onClose: () => void;
     profileData: any;
-    onSave: () => Promise<void>;
 };
 
 export default function ProfileEditModal({ visible, onClose, profileData }: Props) {
@@ -53,12 +52,12 @@ export default function ProfileEditModal({ visible, onClose, profileData }: Prop
             setProfilePhoto(result.assets[0].uri);
         }
     };
-    console.log("Sending profile update, profilePhoto URI:", profilePhoto);
 
     const handleSave = async () => {
+        console.log("➡️ Saving profile...", { bio, experience, phone, availability, profilePhoto });
         setLoading(true);
         try {
-            await updateProfile(profileData.id, {
+            const res = await updateProfile(profileData.id, {
                 bio,
                 experience,
                 phone,
@@ -89,11 +88,6 @@ export default function ProfileEditModal({ visible, onClose, profileData }: Prop
                             <TouchableOpacity onPress={pickImage}>
                                 <Image
                                     source={{ uri: profilePhoto || avatar }}
-                                    // source={{
-                                    //     uri: profilePhoto
-                                    //         ? profilePhoto
-                                    //         : avatar,
-                                    // }}
                                     style={styles.image}
                                 />
                                 <Text style={styles.changePhoto}>Change Photo</Text>

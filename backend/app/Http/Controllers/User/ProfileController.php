@@ -58,7 +58,11 @@ class ProfileController extends Controller
     public function update(ProfileUpdateRequest $request, int $id): JsonResponse|ProfileResource
     {
         $data = $request->validated();
-        $data['profile_photo'] = $request->file('profile_photo');
+        if ($request->hasFile('profile_photo')) {
+            $data['profile_photo'] = $request->file('profile_photo');
+        } else {
+            unset($data['profile_photo']);
+        }
 
         $updatedProfile = $this->profileService->update($id, $data, $request->user(), $request->file('profile_photo'));
 
