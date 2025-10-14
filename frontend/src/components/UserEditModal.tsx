@@ -20,7 +20,7 @@ type Props = {
 };
 
 export default function UserEditModal({ visible, userData, onClose, onUserUpdated }: Props) {
-    const { updateUser } = useUsers();
+    const { updateUserById } = useUsers();
     const [name, setName] = useState(userData?.name || "");
     const [email, setEmail] = useState(userData?.email || "");
     const [loading, setLoading] = useState(false);
@@ -33,7 +33,7 @@ export default function UserEditModal({ visible, userData, onClose, onUserUpdate
     const handleSave = async () => {
         setLoading(true);
         try {
-            await updateUser(userData.id, {
+            await updateUserById(userData.id, {
                 name: name !== userData.name ? name : undefined,
                 email: email !== userData.email ? email : undefined,
             });

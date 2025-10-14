@@ -1,4 +1,4 @@
-import { api } from './api';
+import {api} from './api';
 
 type SitterProfileData = {
     bio: string;
@@ -55,12 +55,10 @@ export const profiles = {
             } as any);
         }
 
-        const response = await api(`/profiles/${id}`, {
+        return await api(`/profiles/${id}`, {
             method: "POST",
             body: formData,
         });
-
-        return response;
     },
     delete: (id: number) => api(`/profiles/${id}`, { method: 'DELETE' }),
 };

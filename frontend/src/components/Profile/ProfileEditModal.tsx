@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
     Modal,
     View,
@@ -10,11 +10,11 @@ import {
     ScrollView,
     TouchableWithoutFeedback,
     Keyboard,
-} from 'react-native';
-import * as ImagePicker from 'expo-image-picker';
-import { Theme } from '@/src/theme/theme';
-import { useProfiles } from '@/src/hooks/useProfiles';
-import avatar from '@/assets/images/avatar.jpg';
+} from "react-native";
+import * as ImagePicker from "expo-image-picker";
+import { Theme } from "@/src/theme/theme";
+import { useProfiles } from "@/src/hooks/useProfiles";
+import avatar from "@/assets/images/avatar.jpg";
 
 type Props = {
     visible: boolean;
@@ -26,20 +26,19 @@ type Props = {
 export default function ProfileEditModal({ visible, onClose, profileData, onProfileUpdated }: Props) {
     const { updateProfile } = useProfiles();
 
-    const [bio, setBio] = useState(profileData.bio || '');
-    const [experience, setExperience] = useState(profileData.experience || '');
-    const [phone, setPhone] = useState(profileData.phone || '');
-    const [availability, setAvailability] = useState(profileData.availability || '');
-    const [profilePhoto, setProfilePhoto] = useState(profileData.profile_photo || null);
+    const [bio, setBio] = useState("");
+    const [experience, setExperience] = useState("");
+    const [phone, setPhone] = useState("");
+    const [availability, setAvailability] = useState("");
+    const [profilePhoto, setProfilePhoto] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        setBio(profileData.bio || '');
-        setExperience(profileData.experience || '');
-        setPhone(profileData.phone || '');
-        setAvailability(profileData.availability || '');
+        setBio(profileData.bio || "");
+        setExperience(profileData.experience || "");
+        setPhone(profileData.phone || "");
+        setAvailability(profileData.availability || "");
         setProfilePhoto(profileData.profile_photo || null);
-
     }, [profileData]);
 
     const pickImage = async () => {
@@ -49,7 +48,6 @@ export default function ProfileEditModal({ visible, onClose, profileData, onProf
             aspect: [1, 1],
             quality: 0.8,
         });
-
         if (!result.canceled && result.assets?.[0].uri) {
             setProfilePhoto(result.assets[0].uri);
         }
@@ -67,10 +65,9 @@ export default function ProfileEditModal({ visible, onClose, profileData, onProf
             });
 
             if (onProfileUpdated) await onProfileUpdated();
-            // onProfileUpdated?.();
             onClose();
         } catch (err) {
-            console.warn('Error to update profile:', err);
+            console.warn("Error updating profile:", err);
         } finally {
             setLoading(false);
         }
@@ -85,7 +82,7 @@ export default function ProfileEditModal({ visible, onClose, profileData, onProf
                             <Text style={styles.title}>Edit Profile</Text>
 
                             <TouchableOpacity onPress={pickImage}>
-                                <Image source={{ uri: profilePhoto || avatar }} style={styles.image} />
+                                <Image source={profilePhoto ? { uri: profilePhoto } : avatar} style={styles.image} />
                                 <Text style={styles.changePhoto}>Change Photo</Text>
                             </TouchableOpacity>
 
@@ -99,7 +96,7 @@ export default function ProfileEditModal({ visible, onClose, profileData, onProf
                                     <Text style={styles.buttonText}>Cancel</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity style={[styles.button, styles.save]} onPress={handleSave} disabled={loading}>
-                                    <Text style={styles.buttonText}>{loading ? 'Saving...' : 'Save'}</Text>
+                                    <Text style={styles.buttonText}>{loading ? "Saving..." : "Save"}</Text>
                                 </TouchableOpacity>
                             </View>
                         </ScrollView>
@@ -109,6 +106,7 @@ export default function ProfileEditModal({ visible, onClose, profileData, onProf
         </Modal>
     );
 }
+
 
 
 // import React, { useState, useEffect } from 'react';
