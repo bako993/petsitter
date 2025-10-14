@@ -1,16 +1,8 @@
 import React, { useState, useEffect } from "react";
-import {
-    Modal,
-    View,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    StyleSheet,
-    TouchableWithoutFeedback,
-    Keyboard,
-} from "react-native";
+import { TextInput, StyleSheet } from "react-native";
 import { Theme } from "@/src/theme/theme";
 import { useUsers } from "@/src/hooks/useUsers";
+import BaseEditModal from "@/src/components/BaseEditModal";
 
 type Props = {
     visible: boolean;
@@ -21,8 +13,8 @@ type Props = {
 
 export default function UserEditModal({ visible, userData, onClose, onUserUpdated }: Props) {
     const { updateUserById } = useUsers();
-    const [name, setName] = useState(userData?.name || "");
-    const [email, setEmail] = useState(userData?.email || "");
+    const [name, setName] = useState("");
+    const [email, setEmail] = useState("");
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
@@ -37,9 +29,7 @@ export default function UserEditModal({ visible, userData, onClose, onUserUpdate
                 name: name !== userData.name ? name : undefined,
                 email: email !== userData.email ? email : undefined,
             });
-
-            if (onUserUpdated) await onUserUpdated();
-
+            await onUserUpdated?.();
             onClose();
         } catch (err) {
             console.warn("Failed to update user:", err);
@@ -49,48 +39,122 @@ export default function UserEditModal({ visible, userData, onClose, onUserUpdate
     };
 
     return (
-        <Modal visible={visible} animationType="slide" transparent onRequestClose={onClose}>
-            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-                <View style={styles.overlay}>
-                    <View style={[styles.container, Theme.SHADOWS.default]}>
-                        <Text style={styles.title}>Edit User Info</Text>
-
-                        <TextInput
-                            style={styles.input}
-                            placeholder="Name"
-                            value={name}
-                            onChangeText={setName}
-                        />
-                        <TextInput
-                            style={styles.input}
-                            placeholder="Email"
-                            value={email}
-                            onChangeText={setEmail}
-                            keyboardType="email-address"
-                        />
-
-                        <View style={styles.buttonRow}>
-                            <TouchableOpacity
-                                style={[styles.button, styles.cancel]}
-                                onPress={onClose}
-                                disabled={loading}
-                            >
-                                <Text style={styles.buttonText}>Cancel</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                                style={[styles.button, styles.save]}
-                                onPress={handleSave}
-                                disabled={loading}
-                            >
-                                <Text style={styles.buttonText}>{loading ? "Saving..." : "Save"}</Text>
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                </View>
-            </TouchableWithoutFeedback>
-        </Modal>
+        <BaseEditModal
+            visible={visible}
+            title="Edit User Info"
+            loading={loading}
+            onClose={onClose}
+            onSave={handleSave}
+        >
+            <TextInput style={styles.input} placeholder="Name" value={name} onChangeText={setName} />
+            <TextInput
+                style={styles.input}
+                placeholder="Email"
+                value={email}
+                onChangeText={setEmail}
+                keyboardType="email-address"
+            />
+        </BaseEditModal>
     );
 }
+
+
+
+
+
+// import React, { useState, useEffect } from "react";
+// import {
+//     Modal,
+//     View,
+//     Text,
+//     TextInput,
+//     TouchableOpacity,
+//     StyleSheet,
+//     TouchableWithoutFeedback,
+//     Keyboard,
+// } from "react-native";
+// import { Theme } from "@/src/theme/theme";
+// import { useUsers } from "@/src/hooks/useUsers";
+//
+// type Props = {
+//     visible: boolean;
+//     userData: any;
+//     onClose: () => void;
+//     onUserUpdated?: () => Promise<void>;
+// };
+//
+// export default function UserEditModal({ visible, userData, onClose, onUserUpdated }: Props) {
+//     const { updateUserById } = useUsers();
+//     const [name, setName] = useState(userData?.name || "");
+//     const [email, setEmail] = useState(userData?.email || "");
+//     const [loading, setLoading] = useState(false);
+//
+//     useEffect(() => {
+//         setName(userData?.name || "");
+//         setEmail(userData?.email || "");
+//     }, [userData]);
+//
+//     const handleSave = async () => {
+//         setLoading(true);
+//         try {
+//             await updateUserById(userData.id, {
+//                 name: name !== userData.name ? name : undefined,
+//                 email: email !== userData.email ? email : undefined,
+//             });
+//
+//             if (onUserUpdated) await onUserUpdated();
+//
+//             onClose();
+//         } catch (err) {
+//             console.warn("Failed to update user:", err);
+//         } finally {
+//             setLoading(false);
+//         }
+//     };
+//
+//     return (
+//         <Modal visible={visible} animationType="slide" transparent onRequestClose={onClose}>
+//             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+//                 <View style={styles.overlay}>
+//                     <View style={[styles.container, Theme.SHADOWS.default]}>
+//                         <Text style={styles.title}>Edit User Info</Text>
+//
+//                         <TextInput
+//                             style={styles.input}
+//                             placeholder="Name"
+//                             value={name}
+//                             onChangeText={setName}
+//                         />
+//                         <TextInput
+//                             style={styles.input}
+//                             placeholder="Email"
+//                             value={email}
+//                             onChangeText={setEmail}
+//                             keyboardType="email-address"
+//                         />
+//
+//                         <View style={styles.buttonRow}>
+//                             <TouchableOpacity
+//                                 style={[styles.button, styles.cancel]}
+//                                 onPress={onClose}
+//                                 disabled={loading}
+//                             >
+//                                 <Text style={styles.buttonText}>Cancel</Text>
+//                             </TouchableOpacity>
+//                             <TouchableOpacity
+//                                 style={[styles.button, styles.save]}
+//                                 onPress={handleSave}
+//                                 disabled={loading}
+//                             >
+//                                 <Text style={styles.buttonText}>{loading ? "Saving..." : "Save"}</Text>
+//                             </TouchableOpacity>
+//                         </View>
+//                     </View>
+//                 </View>
+//             </TouchableWithoutFeedback>
+//         </Modal>
+//     );
+// }
 
 const styles = StyleSheet.create({
     overlay: {
