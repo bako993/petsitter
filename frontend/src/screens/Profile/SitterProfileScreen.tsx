@@ -10,7 +10,7 @@ import { AppStackParams } from "@/src/types/types";
 import { useAuth } from "@/src/hooks/useAuth";
 import { BASE_URL } from '@env';
 import ProfileEditModal from "@/src/components/Profile/ProfileEditModal";
-import UserEditModal from '@/src/components/UserEditModal'
+import UserEditModal from '@/src/components/Profile/UserEditModal'
 import { useProfiles } from "@/src/hooks/useProfiles";
 import {Loading} from "@/src/components/Loading";
 import { useUsers } from '@/src/hooks/useUsers';
@@ -69,7 +69,7 @@ export default function SitterProfileScreen() {
                 profileImage={profilePhotoUri ? { uri: profilePhotoUri } : undefined}
             />
             <ProfileButton
-                text="Edit Account"
+                text="Edit Perrsonal Info"
                 type="primary"
                 onPress={() => setUserModalVisible(true)}
             />
@@ -78,7 +78,7 @@ export default function SitterProfileScreen() {
             <ProfileCard title="Availability" content={profile?.availability || "No availability set"} />
             <ProfileCard title="Phone" content={profile?.phone || "No phone number"} />
 
-            <ProfileButton text="Edit Profile" type="secondary" onPress={() => setModalVisible(true)} />
+            <ProfileButton text="Edit Sitter Info" type="primary" onPress={() => setModalVisible(true)} />
             <ProfileButton text="Logout" type="secondary" onPress={handleLogout} />
 
             {modalVisible && (

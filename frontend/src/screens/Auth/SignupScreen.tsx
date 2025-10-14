@@ -8,12 +8,12 @@ import {
     KeyboardAvoidingView,
     Platform
 } from 'react-native';
-import ScreenWrapper from '../components/ScreenWrapper';
+import ScreenWrapper from '../../components/ScreenWrapper';
 import { Theme } from '@/src/theme/theme';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { AppStackParams } from '@/src/types/types';
-import Logo from '../components/Logo';
+import Logo from '../../components/Logo';
 import { useAuth } from '@/src/hooks/useAuth';
 
 export default function SignupScreen() {

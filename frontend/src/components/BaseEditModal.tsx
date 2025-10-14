@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: "rgba(0,0,0,0.5)",
+        backgroundColor: Theme.COLORS.overlayBackground,
         padding: 20,
     },
     container: {
@@ -78,8 +78,8 @@ const styles = StyleSheet.create({
         padding: 20,
     },
     title: {
-        fontSize: 22,
-        fontWeight: "bold",
+        fontSize: Theme.FONTS.sizes.subtitle,
+        fontWeight: Theme.FONTS.weights.bold,
         marginBottom: 20,
         color: Theme.COLORS.primary,
         textAlign: "center",
@@ -97,13 +97,13 @@ const styles = StyleSheet.create({
         marginHorizontal: 4,
     },
     cancel: {
-        backgroundColor: Theme.COLORS.shadow,
+        backgroundColor: Theme.COLORS.secondary,
     },
     save: {
         backgroundColor: Theme.COLORS.primary,
     },
     buttonText: {
         color: Theme.COLORS.background,
-        fontWeight: "600",
+        fontWeight: Theme.FONTS.weights.semiBold,
     },
 });

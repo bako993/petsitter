@@ -12,6 +12,7 @@ const COLORS = {
     shadow: "#000000",
     error: "#FF4C4C",
     success: "#4CAF50",
+    overlayBackground: "rgba(0,0,0,0.5)",
 } as const;
 
 const FONTS = {
