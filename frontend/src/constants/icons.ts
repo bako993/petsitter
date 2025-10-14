@@ -8,5 +8,6 @@ export const ICONS = {
     person: 'person',
     personOutline: 'person-outline',
     star: 'star',
-    back: 'arrow-back'
+    back: 'arrow-back',
+    edit: 'pencil'
 } as const;

@@ -10,8 +10,8 @@ import { ICONS } from "@/src/constants/icons";
 import { BottomTabParams } from '@/src/types/types';
 import { useUsers } from '@/src/hooks/useUsers';
 import { useEffect, useState } from 'react';
-import { ActivityIndicator, View } from 'react-native';
 import * as SecureStore from 'expo-secure-store';
+import {Loading} from "@/src/components/Loading";
 
 const Tab = createBottomTabNavigator<BottomTabParams>();
 
@@ -47,15 +47,11 @@ export default function MainTabs() {
     }, []);
 
     if (loading || isLoading || !user) {
-        return (
-            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                <ActivityIndicator size="large" color={Theme.COLORS.primary} />
-            </View>
-        );
+        return <Loading />;
     }
 
-    console.log(user.data?.type);
-    const ProfileComponent = user?.data.type === 'sitter' ? SitterProfileScreen : OwnerProfileScreen;
+    console.log(user?.type);
+    const ProfileComponent = user?.type === 'sitter' ? SitterProfileScreen : OwnerProfileScreen;
 
     return (
         <Tab.Navigator

@@ -24,3 +24,21 @@ export type BackButtonProps = {
 export type PhotoSliderProps = {
     images: number[];
 };
+
+export type User = {
+    id: number;
+    name: string;
+    email: string;
+    role?: string;
+    type?: string;
+    profile?: {
+        id: number;
+        profile_photo?: string;
+        bio?: string;
+        experience?: string;
+        availability?: string;
+        phone?: string;
+    };
+    created_at?: string;
+    updated_at?: string;
+};

@@ -1,16 +1,21 @@
 import React from 'react';
-import { View, ScrollView, ViewProps } from 'react-native';
+import {View, ScrollView, ViewProps, RefreshControl} from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import {Theme} from "@/src/theme/theme";
 
 type ScreenWrapperProps = {
     children: React.ReactNode;
     scrollable?: boolean;
+    onRefresh?: () => Promise<void> | void; // ✅ add this
+    refreshing?: boolean; // ✅ needed for RefreshControl
 } & ViewProps;
 
 export default function ScreenWrapper({
                                           children,
                                           scrollable = true,
                                           style,
+                                          onRefresh,
+                                          refreshing = false,
                                           ...props
                                       }: ScreenWrapperProps) {
     const insets = useSafeAreaInsets();
@@ -26,7 +31,22 @@ export default function ScreenWrapper({
 
     if (scrollable) {
         return (
-            <ScrollView contentContainerStyle={containerStyle} {...props}>
+            <ScrollView
+                contentContainerStyle={containerStyle}
+                refreshControl={
+                    onRefresh ? (
+                        <RefreshControl
+                            refreshing={refreshing}
+                            onRefresh={onRefresh}
+                            colors={[Theme.COLORS.primary]}
+                            tintColor={Theme.COLORS.primary}
+                        />
+                    ) : undefined
+                }
+                alwaysBounceVertical
+                overScrollMode="always"
+                {...props}
+            >
                 {children}
             </ScrollView>
         );

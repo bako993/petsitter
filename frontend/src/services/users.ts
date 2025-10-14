@@ -8,16 +8,3 @@ export const users = {
     update: (id: number, data: any) => api(`/users/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
     delete: (id: number) => api(`/users/${id}`, { method: 'DELETE' }),
 };
-
-
-
-
-
-
-// import { api } from "@/src/services/api";
-//
-// export const users = {
-//     getById: async (id: number) => {
-//         return api(`/users/${id}`, { method: "GET" });
-//     },
-// };
