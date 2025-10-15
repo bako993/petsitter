@@ -6,6 +6,7 @@ type Props = {
     title: string;
     children?: React.ReactNode;
     content?: string;
+    onPress?: () => void;
 };
 
 export default function ProfileCard({ title, children, content }: Props) {

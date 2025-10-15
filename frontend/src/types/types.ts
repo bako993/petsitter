@@ -7,6 +7,7 @@ export type AppStackParams = {
     OwnerProfileScreen: undefined;
     LoginScreen: undefined;
     SignupScreen: undefined;
+    OfferingScreen: undefined;
 };
 
 export type BottomTabParams = {
@@ -39,6 +40,17 @@ export type User = {
         availability?: string;
         phone?: string;
     };
+    created_at?: string;
+    updated_at?: string;
+};
+
+export type Offering = {
+    id: number;
+    profile_id: number;
+    offering_type: string;
+    price: number;
+    conditions: string[];
+    duration?: number;
     created_at?: string;
     updated_at?: string;
 };

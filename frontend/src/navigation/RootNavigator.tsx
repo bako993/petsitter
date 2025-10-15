@@ -11,6 +11,7 @@ import WelcomeScreen from "@/src/screens/WelcomeScreen";
 import SitterOnboardingScreen from "@/src/screens/SitterOnboardingScreen";
 import OwnerProfileScreen from "@/src/screens/Profile/OwnerProfileScreen";
 import SitterProfileScreen from "@/src/screens/Profile/SitterProfileScreen";
+import OfferingScreen from "@/src/screens/OfferingScreen";
 
 const Stack = createNativeStackNavigator<AppStackParams>();
 
@@ -28,6 +29,7 @@ export default function RootNavigator() {
                         <Stack.Screen name="SitterOnboardingScreen" component={SitterOnboardingScreen} />
                         <Stack.Screen name="SitterProfileScreen" component={SitterProfileScreen} />
                         <Stack.Screen name="OwnerProfileScreen" component={OwnerProfileScreen} />
+                        <Stack.Screen name="OfferingScreen" component={OfferingScreen} />
                     </Stack.Navigator>
                 )}
             </AuthGate>

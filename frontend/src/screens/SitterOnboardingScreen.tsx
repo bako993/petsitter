@@ -71,18 +71,18 @@ export default function SitterOnboardingScreen() {
 
                 setUser(updatedUser);
                 await saveUserToStorage(updatedUser);
-
-                Alert.alert('Success', 'Welcome! You are now a sitter.', [
-                    {
-                        text: 'OK',
-                        onPress: () => {
-                            navigation.reset({
-                                index: 0,
-                                routes: [{ name: 'MainTabs', params: { screen: 'Profile' } }],
-                            });
-                        },
-                    },
-                ]);
+                navigation.navigate("OfferingScreen");
+                // Alert.alert('Success', 'Welcome! You are now a sitter.', [
+                //     {
+                //         text: 'OK',
+                //         onPress: () => {
+                //             navigation.reset({
+                //                 index: 0,
+                //                 routes: [{ name: 'MainTabs', params: { screen: 'Profile' } }],
+                //             });
+                //         },
+                //     },
+                // ]);
             }
         } catch (err: any) {
             Alert.alert('Error', err.message || 'Something went wrong.');

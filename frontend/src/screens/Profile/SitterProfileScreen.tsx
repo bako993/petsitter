@@ -1,4 +1,5 @@
-import React, {useState, useEffect} from "react";
+import React, { useEffect, useState } from "react";
+import { View } from "react-native";
 import ScreenWrapper from "@/src/components/ScreenWrapper";
 import { Theme } from "@/src/theme/theme";
 import { ProfileHeader } from "@/src/components/Profile/ProfileHeader";
@@ -6,35 +7,43 @@ import ProfileCard from "@/src/components/Profile/ProfileCard";
 import ProfileButton from "@/src/components/Profile/ProfileButton";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { AppStackParams } from "@/src/types/types";
+import { AppStackParams, Offering } from "@/src/types/types";
 import { useAuth } from "@/src/hooks/useAuth";
 import { BASE_URL } from '@env';
 import ProfileEditModal from "@/src/components/Profile/ProfileEditModal";
-import UserEditModal from '@/src/components/Profile/UserEditModal'
+import UserEditModal from '@/src/components/Profile/UserEditModal';
 import { useProfiles } from "@/src/hooks/useProfiles";
-import {Loading} from "@/src/components/Loading";
+import { Loading } from "@/src/components/Loading";
 import { useUsers } from '@/src/hooks/useUsers';
+import OfferingCreateModal from "@/src/components/Profile/OfferingCreateModal";
+import OfferingEditModal from "@/src/components/Profile/OfferingEditModal";
+import OfferingEditDetailModal from "@/src/components/Profile/OfferingEditDetailModal"; // new modal
+import { useOfferings } from "@/src/hooks/useOfferings";
 
 export default function SitterProfileScreen() {
     const navigation = useNavigation<NativeStackNavigationProp<AppStackParams>>();
     const { logout } = useAuth();
     const { user, fetchUserById, loadStoredUser } = useUsers();
     const { profile, getProfileById, loading } = useProfiles();
+    const { data: offeringsData, setData: setOfferings, createOffering, updateOffering } = useOfferings();
+
     const [modalVisible, setModalVisible] = useState(false);
     const [userModalVisible, setUserModalVisible] = useState(false);
+
+    const [createOfferingModalVisible, setCreateOfferingModalVisible] = useState(false);
+    const [editOfferingsModalVisible, setEditOfferingsModalVisible] = useState(false);
+    const [offeringEditDetailModalVisible, setOfferingEditDetailModalVisible] = useState(false);
+
+    const [selectedOffering, setSelectedOffering] = useState<Offering | null>(null);
     const [refreshing, setRefreshing] = useState(false);
 
+    // Load user and profile
+    useEffect(() => { (async () => { await loadStoredUser(); })(); }, [loadStoredUser]);
     useEffect(() => {
         (async () => {
-            await loadStoredUser();
-        })();
-    }, [loadStoredUser]);
-
-    useEffect(() => {
-        (async () => {
-            if (!user || !user.profile?.id) return;
-            const profileId = user.profile.id;
-            await getProfileById(profileId);
+            if (!user?.profile?.id) return;
+            const prof = await getProfileById(user.profile.id);
+            if (prof.offerings) setOfferings(prof.offerings);
         })();
     }, [user, getProfileById]);
 
@@ -71,27 +80,56 @@ export default function SitterProfileScreen() {
                 email={user.email || "No email"}
                 profileImage={profilePhotoUri ? { uri: profilePhotoUri } : undefined}
             />
-            <ProfileButton
-                text="Edit Perrsonal Info"
-                type="primary"
-                onPress={() => setUserModalVisible(true)}
-            />
+
+            <ProfileButton text="Edit Personal Info" type="primary" onPress={() => setUserModalVisible(true)} />
             <ProfileCard title="Bio" content={profile?.bio || "No bio yet"} />
             <ProfileCard title="Experience" content={profile?.experience || "No experience info"} />
             <ProfileCard title="Availability" content={profile?.availability || "No availability set"} />
             <ProfileCard title="Phone" content={profile?.phone || "No phone number"} />
-
             <ProfileButton text="Edit Sitter Info" type="primary" onPress={() => setModalVisible(true)} />
+
+            {/* Offerings Section */}
+            {offeringsData.length > 0 ? (
+                offeringsData.map((offering: Offering) => (
+                    <ProfileCard
+                        key={offering.id}
+                        title={offering.offering_type || "Unnamed Offering"}
+                        content={`Price: $${offering.price}${offering.duration ? ` / ${offering.duration} min` : ""}\n${offering.conditions?.join(", ") || ""}`}
+                        onPress={() => {
+                            setSelectedOffering(offering);
+                            setOfferingEditDetailModalVisible(true);
+                        }}
+                    />
+                ))
+            ) : (
+                <ProfileCard key="no-offerings" title="Offerings" content="No offerings added yet" />
+            )}
+
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                <ProfileButton
+                    text="Add Offering"
+                    type="primary"
+                    onPress={() => {
+                        setSelectedOffering(null);
+                        setCreateOfferingModalVisible(true);
+                    }}
+                />
+                <ProfileButton
+                    text="Edit Offering"
+                    type="secondary"
+                    onPress={() => setEditOfferingsModalVisible(true)}
+                />
+            </View>
+
             <ProfileButton text="Logout" type="secondary" onPress={handleLogout} />
 
+            {/* Modals */}
             {modalVisible && (
                 <ProfileEditModal
                     visible={modalVisible}
                     profileData={profile}
                     onClose={() => setModalVisible(false)}
-                    onProfileUpdated={async () => {
-                        if (user?.profile?.id) await getProfileById(user.profile.id);
-                    }}
+                    onProfileUpdated={async () => { if (user?.profile?.id) await getProfileById(user.profile.id); }}
                 />
             )}
             {userModalVisible && (
@@ -99,11 +137,167 @@ export default function SitterProfileScreen() {
                     visible={userModalVisible}
                     userData={user}
                     onClose={() => setUserModalVisible(false)}
-                    onUserUpdated={async () => {
-                        if (user?.id) await fetchUserById(user.id);
+                    onUserUpdated={async () => { if (user?.id) await fetchUserById(user.id); }}
+                />
+            )}
+            {createOfferingModalVisible && (
+                <OfferingCreateModal
+                    visible={createOfferingModalVisible}
+                    onClose={() => setCreateOfferingModalVisible(false)}
+                    onOfferingSaved={async (data) => {
+                        if (user?.profile?.id) {
+                            await createOffering({ ...data, profile_id: user.profile.id });
+                            const prof = await getProfileById(user.profile.id);
+                            setOfferings(prof.offerings);
+                        }
+                        setCreateOfferingModalVisible(false);
+                    }}
+                />
+            )}
+            {editOfferingsModalVisible && (
+                <OfferingEditModal
+                    visible={editOfferingsModalVisible}
+                    offerings={offeringsData}
+                    onClose={() => setEditOfferingsModalVisible(false)}
+                    onSelectOffering={(offering) => {
+                        setSelectedOffering(offering);
+                        setOfferingEditDetailModalVisible(true);
+                        setEditOfferingsModalVisible(false); // close list
+                    }}
+                />
+            )}
+            {offeringEditDetailModalVisible && selectedOffering && (
+                <OfferingEditDetailModal
+                    visible={offeringEditDetailModalVisible}
+                    offering={selectedOffering}
+                    onClose={() => setOfferingEditDetailModalVisible(false)}
+                    onOfferingSaved={async (data) => {
+                        if (selectedOffering) {
+                            await updateOffering(selectedOffering.id, data);
+                            if (user?.profile?.id) {
+                                const prof = await getProfileById(user.profile.id);
+                                setOfferings(prof.offerings);
+                            }
+                        }
+                        setOfferingEditDetailModalVisible(false);
                     }}
                 />
             )}
         </ScreenWrapper>
     );
 }
+
+
+
+
+
+
+// import React, {useState, useEffect} from "react";
+// import ScreenWrapper from "@/src/components/ScreenWrapper";
+// import { Theme } from "@/src/theme/theme";
+// import { ProfileHeader } from "@/src/components/Profile/ProfileHeader";
+// import ProfileCard from "@/src/components/Profile/ProfileCard";
+// import ProfileButton from "@/src/components/Profile/ProfileButton";
+// import { useNavigation } from "@react-navigation/native";
+// import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+// import { AppStackParams } from "@/src/types/types";
+// import { useAuth } from "@/src/hooks/useAuth";
+// import { BASE_URL } from '@env';
+// import ProfileEditModal from "@/src/components/Profile/ProfileEditModal";
+// import UserEditModal from '@/src/components/Profile/UserEditModal'
+// import { useProfiles } from "@/src/hooks/useProfiles";
+// import {Loading} from "@/src/components/Loading";
+// import { useUsers } from '@/src/hooks/useUsers';
+//
+// export default function SitterProfileScreen() {
+//     const navigation = useNavigation<NativeStackNavigationProp<AppStackParams>>();
+//     const { logout } = useAuth();
+//     const { user, fetchUserById, loadStoredUser } = useUsers();
+//     const { profile, getProfileById, loading } = useProfiles();
+//     const [modalVisible, setModalVisible] = useState(false);
+//     const [userModalVisible, setUserModalVisible] = useState(false);
+//     const [refreshing, setRefreshing] = useState(false);
+//
+//     useEffect(() => {
+//         (async () => {
+//             await loadStoredUser();
+//         })();
+//     }, [loadStoredUser]);
+//
+//     useEffect(() => {
+//         (async () => {
+//             if (!user || !user.profile?.id) return;
+//             const profileId = user.profile.id;
+//             await getProfileById(profileId);
+//         })();
+//     }, [user, getProfileById]);
+//
+//     const onRefresh = async () => {
+//         setRefreshing(true);
+//         if (user?.id) await fetchUserById(user.id);
+//         if (user?.profile?.id) await getProfileById(user.profile.id);
+//         setRefreshing(false);
+//     };
+//
+//     const handleLogout = async () => {
+//         try {
+//             await logout();
+//             navigation.reset({ index: 0, routes: [{ name: "WelcomeScreen" }] });
+//         } catch (err) {
+//             console.warn("Logout failed", err);
+//         }
+//     };
+//
+//     if (loading || !user) return <Loading />;
+//
+//     const profilePhotoUri = profile?.profile_photo
+//         ? `${BASE_URL.replace(/\/api$/, '')}${profile.profile_photo}`
+//         : undefined;
+//
+//     return (
+//         <ScreenWrapper
+//             style={{ backgroundColor: Theme.COLORS.background }}
+//             refreshing={refreshing}
+//             onRefresh={onRefresh}
+//         >
+//             <ProfileHeader
+//                 name={user.name || "unknown"}
+//                 email={user.email || "No email"}
+//                 profileImage={profilePhotoUri ? { uri: profilePhotoUri } : undefined}
+//             />
+//             <ProfileButton
+//                 text="Edit Perrsonal Info"
+//                 type="primary"
+//                 onPress={() => setUserModalVisible(true)}
+//             />
+//             <ProfileCard title="Bio" content={profile?.bio || "No bio yet"} />
+//             <ProfileCard title="Experience" content={profile?.experience || "No experience info"} />
+//             <ProfileCard title="Availability" content={profile?.availability || "No availability set"} />
+//             <ProfileCard title="Phone" content={profile?.phone || "No phone number"} />
+//
+//             <ProfileButton text="Edit Sitter Info" type="primary" onPress={() => setModalVisible(true)} />
+//             <ProfileButton text="Logout" type="secondary" onPress={handleLogout} />
+//
+//             {modalVisible && (
+//                 <ProfileEditModal
+//                     visible={modalVisible}
+//                     profileData={profile}
+//                     onClose={() => setModalVisible(false)}
+//                     onProfileUpdated={async () => {
+//                         if (user?.profile?.id) await getProfileById(user.profile.id);
+//                     }}
+//                 />
+//             )}
+//             {userModalVisible && (
+//                 <UserEditModal
+//                     visible={userModalVisible}
+//                     userData={user}
+//                     onClose={() => setUserModalVisible(false)}
+//                     onUserUpdated={async () => {
+//                         if (user?.id) await fetchUserById(user.id);
+//                     }}
+//                 />
+//             )}
+//         </ScreenWrapper>
+//     );
+// }

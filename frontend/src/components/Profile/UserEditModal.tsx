@@ -3,7 +3,6 @@ import { TextInput, StyleSheet } from "react-native";
 import { Theme } from "@/src/theme/theme";
 import { useUsers } from "@/src/hooks/useUsers";
 import BaseEditModal from "@/src/components/BaseEditModal";
-import {input} from "sucrase/dist/types/parser/traverser/base";
 
 type Props = {
     visible: boolean;
