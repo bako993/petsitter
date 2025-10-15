@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View } from "react-native";
+import {Alert, View} from "react-native";
 import ScreenWrapper from "@/src/components/ScreenWrapper";
 import { Theme } from "@/src/theme/theme";
 import { ProfileHeader } from "@/src/components/Profile/ProfileHeader";
@@ -25,7 +25,7 @@ export default function SitterProfileScreen() {
     const { logout } = useAuth();
     const { user, fetchUserById, loadStoredUser } = useUsers();
     const { profile, getProfileById, loading } = useProfiles();
-    const { data: offeringsData, setData: setOfferings, createOffering, updateOffering } = useOfferings();
+    const { data: offeringsData, setData: setOfferings, createOffering, updateOffering, deleteOffering } = useOfferings();
 
     const [modalVisible, setModalVisible] = useState(false);
     const [userModalVisible, setUserModalVisible] = useState(false);
@@ -52,6 +52,25 @@ export default function SitterProfileScreen() {
         if (user?.id) await fetchUserById(user.id);
         if (user?.profile?.id) await getProfileById(user.profile.id);
         setRefreshing(false);
+    };
+
+    const handleDeleteOffering = async (offering: Offering) => {
+        Alert.alert(
+            "Delete Offering",
+            `Are you sure you want to delete "${offering.offering_type}"?`,
+            [
+                { text: "Cancel", style: "cancel" },
+                { text: "Delete", style: "destructive", onPress: async () => {
+                        try {
+                            await deleteOffering(offering.id);
+                            setOfferings(prev => prev.filter(o => o.id !== offering.id));
+                        } catch (err) {
+                            console.warn("Failed to delete offering:", err);
+                        }
+                    }
+                }
+            ]
+        );
     };
 
     const handleLogout = async () => {
@@ -165,6 +184,7 @@ export default function SitterProfileScreen() {
                         setOfferingEditDetailModalVisible(true);
                         setEditOfferingsModalVisible(false);
                     }}
+                    onDeleteOffering={handleDeleteOffering}
                 />
             )}
             {offeringEditDetailModalVisible && selectedOffering && (
