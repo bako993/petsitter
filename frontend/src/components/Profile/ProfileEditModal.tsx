@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { TextInput, StyleSheet, TouchableOpacity, Image, Text } from "react-native";
-import * as ImagePicker from "expo-image-picker";
+import { TextInput, StyleSheet } from "react-native";
 import BaseEditModal from "@/src/components/BaseEditModal";
 import { Theme } from "@/src/theme/theme";
 import { useProfiles } from "@/src/hooks/useProfiles";
-import avatar from "@/assets/images/avatar.jpg";
+import PhotoPicker from '@/src/components/PhotoPicker'
 
 type Props = {
     visible: boolean;
@@ -34,18 +33,6 @@ export default function ProfileEditModal({ visible, onClose, profileData, onProf
         });
     }, [profileData]);
 
-    const pickImage = async () => {
-        const result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: "images",
-            allowsEditing: true,
-            aspect: [1, 1],
-            quality: 0.8,
-        });
-        if (!result.canceled && result.assets?.[0].uri) {
-            setForm((prev) => ({ ...prev, profilePhoto: result.assets[0].uri }));
-        }
-    };
-
     const handleSave = async () => {
         setLoading(true);
         try {
@@ -67,13 +54,11 @@ export default function ProfileEditModal({ visible, onClose, profileData, onProf
             onClose={onClose}
             onSave={handleSave}
         >
-            <TouchableOpacity onPress={pickImage}>
-                <Image
-                    source={form.profilePhoto ? { uri: form.profilePhoto } : avatar}
-                    style={styles.image}
-                />
-                <Text style={styles.changePhoto}>Change Photo</Text>
-            </TouchableOpacity>
+            <PhotoPicker
+                imageUri={form.profilePhoto}
+                onImagePicked={(uri) => setForm(prev => ({ ...prev, profilePhoto: uri }))}
+                size={100}
+            />
 
             <TextInput
                 style={styles.input}

@@ -1,15 +1,23 @@
-import React from "react";
+import React, {use, useEffect} from "react";
 import { View, Text, StyleSheet } from "react-native";
 import Logo from "@/src/components/Logo";
 import { Theme } from "@/src/theme/theme";
+import { useUsers} from "@/src/hooks/useUsers";
 
 export default function HomeHeader() {
+    const { user, loadStoredUser } = useUsers();
+
+    useEffect(() => {
+        (async () => {
+            await loadStoredUser();
+        })();
+    }, [loadStoredUser]);
 
     return (
         <View style={styles.header}>
             <Logo />
             <Text style={styles.welcomeText}>
-                Welcome!
+                {"Welcome " + user?.name + "!"}
             </Text>
 
             <Text style={styles.tagline}>

@@ -1,18 +1,33 @@
-import React from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import React, {useEffect} from "react";
+import {View, Text, TouchableOpacity, StyleSheet, Alert} from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { AppStackParams } from "@/src/types/types";
 import { Theme } from "@/src/theme/theme";
+import {useUsers} from "@/src/hooks/useUsers";
 
 export default function HomeButtons() {
     const navigation = useNavigation<NativeStackNavigationProp<AppStackParams>>();
+    const { user, loadStoredUser } = useUsers();
 
+    useEffect(() => {
+        (async () => {
+            await loadStoredUser();
+        })();
+    }, [loadStoredUser]);
+
+    console.log('user here or not?? ', user);
     const handleBecomeSitter = () => {
-        // navigation.navigate("LoginScreen");
-        navigation.navigate("SitterOnboardingScreen");
-        // navigation.navigate("MainTabs", { screen: "Profile" });
+        if (!user) {
+            Alert.alert("Error", "User not loaded yet. Please log in.");
+            return;
+        }
 
+        if (user.type === "sitter" || user.profile) {
+            navigation.navigate("MainTabs", { screen: "Profile" });
+        } else {
+            navigation.navigate("SitterOnboardingScreen");
+        }
     };
 
     const handleFindSitter = () => {
@@ -27,7 +42,7 @@ export default function HomeButtons() {
 
             <TouchableOpacity style={styles.becomeButton} onPress={handleBecomeSitter}>
                 <Text style={styles.becomeButtonText}>
-                    Become a Sitter
+                    {user?.profile ? "Go to Profile" : "Become a Sitter"}
                 </Text>
             </TouchableOpacity>
         </View>

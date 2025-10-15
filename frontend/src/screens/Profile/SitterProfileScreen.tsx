@@ -24,16 +24,19 @@ export default function SitterProfileScreen() {
     const [userModalVisible, setUserModalVisible] = useState(false);
     const [refreshing, setRefreshing] = useState(false);
 
+    useEffect(() => {
+        (async () => {
+            await loadStoredUser();
+        })();
+    }, [loadStoredUser]);
 
     useEffect(() => {
-        loadStoredUser();
-    }, []);
-
-    useEffect(() => {
-        if (user?.profile?.id) {
-            getProfileById(user.profile.id);
-        }
-    }, [user]);
+        (async () => {
+            if (!user || !user.profile?.id) return;
+            const profileId = user.profile.id;
+            await getProfileById(profileId);
+        })();
+    }, [user, getProfileById]);
 
     const onRefresh = async () => {
         setRefreshing(true);

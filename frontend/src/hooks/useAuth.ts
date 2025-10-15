@@ -4,7 +4,7 @@ import { auth } from '../services/auth';
 export const useAuth = () => {
     const [user, setUser] = useState<any>(null);
     const [token, setToken] = useState<string | null>(null);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
     const login = async (email: string, password: string) => {
