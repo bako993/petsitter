@@ -1,5 +1,5 @@
 import React from "react";
-import {Text, FlatList, TouchableOpacity, StyleSheet, ScrollView} from "react-native";
+import { Text, FlatList, TouchableOpacity, StyleSheet } from "react-native";
 import BaseEditModal from "@/src/components/BaseEditModal";
 import { Theme } from "@/src/theme/theme";
 

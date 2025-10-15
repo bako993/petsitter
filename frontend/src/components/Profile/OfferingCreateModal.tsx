@@ -4,14 +4,16 @@ import BaseEditModal from "@/src/components/BaseEditModal";
 import { Theme } from "@/src/theme/theme";
 import { OFFERING_TYPES } from "@/src/constants/offering_types";
 import AppDropdown from "@/src/components/AppDropdown";
+import {Offering} from "@/src/types/types";
 
 type Props = {
     visible: boolean;
     onClose: () => void;
     onOfferingSaved?: (data: any) => void;
+    existingOfferings?: Offering[];
 };
 
-export default function OfferingCreateModal({ visible, onClose, onOfferingSaved }: Props) {
+export default function OfferingCreateModal({ visible, onClose, onOfferingSaved, existingOfferings = [] }: Props) {
     const [form, setForm] = useState({
         offering_type: "",
         price: "",
@@ -20,6 +22,9 @@ export default function OfferingCreateModal({ visible, onClose, onOfferingSaved 
     });
 
     const [loading, setLoading] = useState(false);
+
+    const usedTypes = existingOfferings?.map(o => o.offering_type) || [];
+    const availableOfferingTypes = OFFERING_TYPES.filter(type => !usedTypes.includes(type));
 
     const handleSave = async () => {
         setLoading(true);
@@ -51,7 +56,7 @@ export default function OfferingCreateModal({ visible, onClose, onOfferingSaved 
         >
             <Text style={styles.label}>Offering Type</Text>
             <AppDropdown
-                items={OFFERING_TYPES.map(type => ({ label: type, value: type }))}
+                items={availableOfferingTypes.map(type => ({ label: type, value: type }))}
                 value={form.offering_type}
                 onChange={(val) => setForm(prev => ({ ...prev, offering_type: val }))}
                 placeholder="Select Offering Type"
