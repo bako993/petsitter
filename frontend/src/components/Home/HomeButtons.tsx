@@ -16,7 +16,6 @@ export default function HomeButtons() {
         })();
     }, [loadStoredUser]);
 
-    console.log('user here or not?? ', user);
     const handleBecomeSitter = () => {
         if (!user) {
             Alert.alert("Error", "User not loaded yet. Please log in.");
@@ -40,7 +39,13 @@ export default function HomeButtons() {
                 <Text style={styles.searchButtonText}>Find Sitter</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.becomeButton} onPress={handleBecomeSitter}>
+            <TouchableOpacity
+                style={styles.becomeButton}
+                onPress={() => {
+                    if (!user) return;
+                    handleBecomeSitter();
+                }}
+            >
                 <Text style={styles.becomeButtonText}>
                     {user?.profile ? "Go to Profile" : "Become a Sitter"}
                 </Text>

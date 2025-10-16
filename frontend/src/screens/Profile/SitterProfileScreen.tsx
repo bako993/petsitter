@@ -7,7 +7,7 @@ import ProfileCard from "@/src/components/Profile/ProfileCard";
 import ProfileButton from "@/src/components/Profile/ProfileButton";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { AppStackParams, Offering } from "@/src/types/types";
+import {AppStackParams, Offering, User} from "@/src/types/types";
 import { useAuth } from "@/src/hooks/useAuth";
 import { BASE_URL } from '@env';
 import ProfileEditModal from "@/src/components/Profile/ProfileEditModal";
@@ -19,11 +19,12 @@ import OfferingCreateModal from "@/src/components/Profile/OfferingCreateModal";
 import OfferingEditModal from "@/src/components/Profile/OfferingEditModal";
 import OfferingEditDetailModal from "@/src/components/Profile/OfferingEditDetailModal"; // new modal
 import { useOfferings } from "@/src/hooks/useOfferings";
+import { saveUserToStorage } from "@/src/utils/storage";
 
 export default function SitterProfileScreen() {
     const navigation = useNavigation<NativeStackNavigationProp<AppStackParams>>();
     const { logout } = useAuth();
-    const { user, fetchUserById, loadStoredUser } = useUsers();
+    const { user, setUser, fetchUserById, loadStoredUser } = useUsers();
     const { profile, getProfileById, loading } = useProfiles();
     const { data: offeringsData, setData: setOfferings, createOffering, updateOffering, deleteOffering } = useOfferings();
 
@@ -37,7 +38,6 @@ export default function SitterProfileScreen() {
     const [selectedOffering, setSelectedOffering] = useState<Offering | null>(null);
     const [refreshing, setRefreshing] = useState(false);
 
-    // Load user and profile
     useEffect(() => { (async () => { await loadStoredUser(); })(); }, [loadStoredUser]);
     useEffect(() => {
         (async () => {
@@ -55,6 +55,7 @@ export default function SitterProfileScreen() {
     };
 
     const handleDeleteOffering = async (offering: Offering) => {
+        if (!user?.id) return;
         Alert.alert(
             "Delete Offering",
             `Are you sure you want to delete "${offering.offering_type}"?`,
@@ -63,7 +64,14 @@ export default function SitterProfileScreen() {
                 { text: "Delete", style: "destructive", onPress: async () => {
                         try {
                             await deleteOffering(offering.id);
-                            setOfferings(prev => prev.filter(o => o.id !== offering.id));
+                            const updatedUser = await fetchUserById(user.id);
+
+                            setUser(updatedUser);
+                            await saveUserToStorage(updatedUser);
+
+                            if (updatedUser.profile?.offerings) {
+                                setOfferings(updatedUser.profile.offerings);
+                            }
                         } catch (err) {
                             console.warn("Failed to delete offering:", err);
                         }
@@ -72,6 +80,49 @@ export default function SitterProfileScreen() {
             ]
         );
     };
+    const handleCreateOffering = async (data: any) => {
+        if (!user?.id || !user?.profile?.id) return;
+
+        try {
+            await createOffering({ ...data, profile_id: user.profile.id });
+
+            const updatedUser = await fetchUserById(user.id);
+
+            setUser(updatedUser);
+            await saveUserToStorage(updatedUser);
+
+            if (updatedUser.profile?.offerings) {
+                setOfferings(updatedUser.profile.offerings);
+            }
+        } catch (err) {
+            console.warn("Failed to create offering:", err);
+        } finally {
+            setCreateOfferingModalVisible(false);
+        }
+    };
+
+    const handleEditOffering = async (data: any) => {
+        if (!user?.id || !selectedOffering) return;
+
+        try {
+            await updateOffering(selectedOffering.id, data);
+
+            const updatedUser = await fetchUserById(user.id);
+
+            setUser(updatedUser);
+            await saveUserToStorage(updatedUser);
+
+            if (updatedUser.profile?.offerings) {
+                setOfferings(updatedUser.profile.offerings);
+            }
+        } catch (err) {
+            console.warn("Failed to update offering:", err);
+        } finally {
+            setOfferingEditDetailModalVisible(false);
+        }
+    };
+
+
 
     const handleLogout = async () => {
         try {
@@ -107,7 +158,6 @@ export default function SitterProfileScreen() {
             <ProfileCard title="Phone" content={profile?.phone || "No phone number"} />
             <ProfileButton text="Edit Sitter Info" type="primary" onPress={() => setModalVisible(true)} />
 
-            {/* Offerings Section */}
             {offeringsData.length > 0 ? (
                 offeringsData.map((offering: Offering) => (
                     <ProfileCard
@@ -164,14 +214,7 @@ export default function SitterProfileScreen() {
                     visible={createOfferingModalVisible}
                     existingOfferings={offeringsData}
                     onClose={() => setCreateOfferingModalVisible(false)}
-                    onOfferingSaved={async (data) => {
-                        if (user?.profile?.id) {
-                            await createOffering({ ...data, profile_id: user.profile.id });
-                            const prof = await getProfileById(user.profile.id);
-                            setOfferings(prof.offerings);
-                        }
-                        setCreateOfferingModalVisible(false);
-                    }}
+                    onOfferingSaved={handleCreateOffering}
                 />
             )}
             {editOfferingsModalVisible && (
@@ -193,16 +236,7 @@ export default function SitterProfileScreen() {
                     offering={selectedOffering}
                     existingOfferings={offeringsData}
                     onClose={() => setOfferingEditDetailModalVisible(false)}
-                    onOfferingSaved={async (data) => {
-                        if (selectedOffering) {
-                            await updateOffering(selectedOffering.id, data);
-                            if (user?.profile?.id) {
-                                const prof = await getProfileById(user.profile.id);
-                                setOfferings(prof.offerings);
-                            }
-                        }
-                        setOfferingEditDetailModalVisible(false);
-                    }}
+                    onOfferingSaved={handleEditOffering}
                 />
             )}
         </ScreenWrapper>
