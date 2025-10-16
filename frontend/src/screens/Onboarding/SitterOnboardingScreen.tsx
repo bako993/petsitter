@@ -71,7 +71,7 @@ export default function SitterOnboardingScreen() {
 
                 setUser(updatedUser);
                 await saveUserToStorage(updatedUser);
-                navigation.navigate("OfferingScreen");
+                navigation.navigate("OfferingCompletionScreen");
             }
         } catch (err: any) {
             Alert.alert('Error', err.message || 'Something went wrong.');

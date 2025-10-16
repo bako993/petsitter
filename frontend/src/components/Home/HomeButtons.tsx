@@ -30,7 +30,8 @@ export default function HomeButtons() {
     };
 
     const handleFindSitter = () => {
-        navigation.navigate("MainTabs", { screen: "Search" });
+        // navigation.navigate("MainTabs", { screen: "Search" });
+        navigation.navigate("OfferingCompletionScreen");
     };
 
     return (

@@ -7,7 +7,8 @@ export type AppStackParams = {
     OwnerProfileScreen: undefined;
     LoginScreen: undefined;
     SignupScreen: undefined;
-    OfferingScreen: undefined;
+    OfferingCompletionScreen: undefined;
+    LocationCompletionScreen: undefined;
 };
 
 export type BottomTabParams = {

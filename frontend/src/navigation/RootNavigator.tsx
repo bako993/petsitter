@@ -8,10 +8,11 @@ import { AppStackParams } from '@/src/types/types';
 import { Theme } from '@/src/theme/theme';
 import AuthGate from '@/src/components/AuthGate';
 import WelcomeScreen from "@/src/screens/WelcomeScreen";
-import SitterOnboardingScreen from "@/src/screens/SitterOnboardingScreen";
+import SitterOnboardingScreen from "@/src/screens/Onboarding/SitterOnboardingScreen";
 import OwnerProfileScreen from "@/src/screens/Profile/OwnerProfileScreen";
 import SitterProfileScreen from "@/src/screens/Profile/SitterProfileScreen";
-import OfferingScreen from "@/src/screens/OfferingScreen";
+import OfferingCompletionScreen from "@/src/screens/Onboarding/OfferingCompletionScreen"
+import LocationCompletionScreen from "@/src/screens/Onboarding/LocationCompletionScreen"
 
 const Stack = createNativeStackNavigator<AppStackParams>();
 
@@ -29,7 +30,8 @@ export default function RootNavigator() {
                         <Stack.Screen name="SitterOnboardingScreen" component={SitterOnboardingScreen} />
                         <Stack.Screen name="SitterProfileScreen" component={SitterProfileScreen} />
                         <Stack.Screen name="OwnerProfileScreen" component={OwnerProfileScreen} />
-                        <Stack.Screen name="OfferingScreen" component={OfferingScreen} />
+                        <Stack.Screen name="OfferingCompletionScreen" component={OfferingCompletionScreen} />
+                        {/*<Stack.Screen name="LocationCompletionScreen" component={LocationCompletionScreen} />*/}
                     </Stack.Navigator>
                 )}
             </AuthGate>

@@ -35,8 +35,11 @@ export default function OfferingCreateModal({ visible, onClose, onOfferingSaved,
                 duration: form.duration ? parseInt(form.duration, 10) : undefined,
                 conditions: form.conditions ? form.conditions.split(",").map(c => c.trim()) : [],
             };
+            console.log("OfferingCreateModal -> calling onOfferingSaved with:", cleanedData);
 
             onOfferingSaved?.(cleanedData);
+
+            console.log("OfferingCreateModal -> onOfferingSaved resolved");
             onClose();
             setForm({ offering_type: "", price: "", duration: "", conditions: "" });
         } catch (err) {
