@@ -44,7 +44,14 @@ class ProfileService
             $data['profile_photo'] = $this->fileService->upload($photo, 'profiles');
         }
 
-        return $this->profileRepo->create($data);
+        $profile = $this->profileRepo->create($data);
+
+        if ($authUser->type !== 'sitter') {
+            $authUser->type = 'sitter';
+            $authUser->save();
+        }
+
+        return $profile;
     }
 
     /**
@@ -63,10 +70,10 @@ class ProfileService
         }
 
         if ($photo) {
+            $data['profile_photo'] = $this->fileService->upload($photo, 'profiles');
             if ($profile->profile_photo) {
                 $this->fileService->delete($profile->profile_photo);
             }
-            $data['profile_photo'] = $this->fileService->upload($photo, 'profiles');
         }
 
         return $this->profileRepo->update($id, $data);

@@ -1,31 +1,36 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { Theme } from '@/src/theme/theme';
-import { useNavigation } from '@react-navigation/native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { AppStackParams } from '@/src/types/types';
-
-const currentUser = {
-    id: 1,
-    type: 'owner',
-    sitterProfile: null,
-};
+import React, {useEffect} from "react";
+import {View, Text, TouchableOpacity, StyleSheet, Alert} from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { AppStackParams } from "@/src/types/types";
+import { Theme } from "@/src/theme/theme";
+import {useUsers} from "@/src/hooks/useUsers";
 
 export default function HomeButtons() {
     const navigation = useNavigation<NativeStackNavigationProp<AppStackParams>>();
+    const { user, loadStoredUser } = useUsers();
+
+    useEffect(() => {
+        (async () => {
+            await loadStoredUser();
+        })();
+    }, [loadStoredUser]);
 
     const handleBecomeSitter = () => {
-        if (!currentUser) {
-            navigation.navigate('LoginScreen');
-        } else if (!currentUser.sitterProfile) {
-            navigation.navigate('SitterOnboardingScreen');
+        if (!user) {
+            Alert.alert("Error", "User not loaded yet. Please log in.");
+            return;
+        }
+
+        if (user.type === "sitter" || user.profile) {
+            navigation.navigate("MainTabs", { screen: "Profile" });
         } else {
-            navigation.navigate('MainTabs', { screen: 'Profile' });
+            navigation.navigate("ProfileCompletionScreen");
         }
     };
 
     const handleFindSitter = () => {
-        navigation.navigate('MainTabs', { screen: 'Search' });
+        navigation.navigate("MainTabs", { screen: "Search" });
     };
 
     return (
@@ -34,18 +39,34 @@ export default function HomeButtons() {
                 <Text style={styles.searchButtonText}>Find Sitter</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.becomeButton} onPress={handleBecomeSitter}>
-                <Text style={styles.becomeButtonText}>Become a Sitter</Text>
+            <TouchableOpacity
+                style={styles.becomeButton}
+                onPress={() => {
+                    if (!user) return;
+                    handleBecomeSitter();
+                }}
+            >
+                <Text style={styles.becomeButtonText}>
+                    {user?.profile ? "Go to Profile" : "Become a Sitter"}
+                </Text>
             </TouchableOpacity>
         </View>
     );
 }
 
 const styles = StyleSheet.create({
+    loadingContainer: {
+        padding: 20,
+        alignItems: "center"
+    },
     buttonsContainer: {
         justifyContent: 'center',
         width: '100%',
         marginVertical: 60,
+    },
+    errorText: {
+        color: Theme.COLORS.error,
+        fontSize: Theme.FONTS.sizes.small
     },
     searchButton: {
         backgroundColor: Theme.COLORS.secondary,

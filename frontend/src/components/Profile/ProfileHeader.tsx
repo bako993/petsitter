@@ -1,14 +1,14 @@
 import React from 'react';
-import { View, Text, Image } from 'react-native';
+import { View, Text, Image, ImageSourcePropType } from 'react-native';
 import { profileStyles as styles } from '@/src/theme/profileStyles';
 
-type Props = {
+export interface ProfileHeaderProps {
     name: string;
     email: string;
-    profileImage?: any;
-};
+    profileImage?: ImageSourcePropType;
+}
 
-export default function ProfileHeader({ name, email, profileImage }: Props) {
+export const ProfileHeader: React.FC<ProfileHeaderProps> = ({ name, email, profileImage }) => {
     return (
         <View style={styles.header}>
             {profileImage && <Image source={profileImage} style={styles.profileImage} />}
@@ -16,4 +16,4 @@ export default function ProfileHeader({ name, email, profileImage }: Props) {
             <Text style={styles.email}>{email}</Text>
         </View>
     );
-}
+};

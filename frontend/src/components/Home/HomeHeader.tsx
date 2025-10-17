@@ -1,25 +1,41 @@
-import React from 'react';
-import { View, Text, Image, StyleSheet } from 'react-native';
-import { Theme } from '@/src/theme/theme';
+import React, {use, useEffect} from "react";
+import { View, Text, StyleSheet } from "react-native";
+import Logo from "@/src/components/Logo";
+import { Theme } from "@/src/theme/theme";
+import { useUsers} from "@/src/hooks/useUsers";
 
 export default function HomeHeader() {
+    const { user, loadStoredUser } = useUsers();
+
+    useEffect(() => {
+        (async () => {
+            await loadStoredUser();
+        })();
+    }, [loadStoredUser]);
+
     return (
         <View style={styles.header}>
-            <Image
-                source={require('@/assets/images/applogo.png')}
-                style={styles.logo}
-                resizeMode="contain"
-            />
-            <Text style={styles.appTitle}>Petsitting</Text>
-            <Text style={styles.welcomeText}>Find Perfect Care for Your Pets</Text>
+            <Logo />
+            <Text style={styles.welcomeText}>
+                {"Welcome " + user?.name + "!"}
+            </Text>
+
             <Text style={styles.tagline}>
-                Connect with trusted, local pet sitters who will love and care for your pets like their own
+                Connect with trusted, local pet sitters who will love and care for your pets like their own.
             </Text>
         </View>
     );
 }
 
 const styles = StyleSheet.create({
+    loadingContainer: {
+        padding: 20,
+        alignItems: "center"
+    },
+    errorText: {
+        color: Theme.COLORS.error,
+        fontSize: Theme.FONTS.sizes.small
+    },
     header: {
         alignItems: 'center',
         marginBottom: Theme.SPACING.section,
@@ -27,6 +43,12 @@ const styles = StyleSheet.create({
     logo: {
         width: 80,
         height: 80,
+        marginBottom: 10,
+    },
+    profilePhoto: {
+        width: 80,
+        height: 80,
+        borderRadius: 40,
         marginBottom: 10,
     },
     appTitle: {

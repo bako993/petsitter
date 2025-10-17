@@ -21,14 +21,14 @@ class ProfileController extends Controller
 
     public function index(): ProfileCollection
     {
-        $profiles = $this->profileService->paginate(15, ['offerings', 'reviews']);
+        $profiles = $this->profileService->paginate(15, ['user', 'offerings', 'reviews']);
 
         return new ProfileCollection($profiles);
     }
 
     public function show(int $id): ProfileResource|JsonResponse
     {
-        $profile = $this->profileService->findById($id, ['offerings', 'reviews']);
+        $profile = $this->profileService->findById($id, ['user', 'offerings', 'reviews']);
 
         if (!$profile) {
             return response()->json(['message' => 'Profile not found.'], 404);
@@ -58,6 +58,11 @@ class ProfileController extends Controller
     public function update(ProfileUpdateRequest $request, int $id): JsonResponse|ProfileResource
     {
         $data = $request->validated();
+        if ($request->hasFile('profile_photo')) {
+            $data['profile_photo'] = $request->file('profile_photo');
+        } else {
+            unset($data['profile_photo']);
+        }
 
         $updatedProfile = $this->profileService->update($id, $data, $request->user(), $request->file('profile_photo'));
 

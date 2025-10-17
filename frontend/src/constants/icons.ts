@@ -8,5 +8,13 @@ export const ICONS = {
     person: 'person',
     personOutline: 'person-outline',
     star: 'star',
-    back: 'arrow-back'
+    back: 'arrow-back',
+    edit: 'pencil',
+    checkMark: 'checkmark-circle',
+    checkMarkOutline: 'checkmark-circle-outline',
+    location: 'location',
+    locationOutline: 'location-outline',
+    info: 'information-circle-outline',
+    chevronUp: 'chevron-up-outline',
+    paw: 'paw-outline',
 } as const;

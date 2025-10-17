@@ -31,4 +31,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('profiles', ProfileController::class)->only(['store', 'update', 'destroy']);
     Route::apiResource('offerings', OfferingController::class)->only(['store', 'update', 'destroy']);
     Route::apiResource('reviews', ReviewController::class)->only(['store', 'update', 'destroy']);
+    Route::post('logout', [AuthController::class, 'logout']);
 });
