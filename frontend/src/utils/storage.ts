@@ -9,6 +9,17 @@ export const saveUserToStorage = async (user: any) => {
     }
 };
 
+export const loadUserFromStorage = async () => {
+    try {
+        const stored = await SecureStore.getItemAsync('user');
+        if (stored) return JSON.parse(stored).data;
+        return null;
+    } catch (error) {
+        console.warn('Failed to load user from storage:', error);
+        return null;
+    }
+};
+
 export const saveSittersToStorage = async (sitters: any[]) => {
     try {
         await AsyncStorage.setItem('sitters', JSON.stringify({ data: sitters }));

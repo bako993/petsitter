@@ -1,23 +1,28 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { View, StyleSheet, ActivityIndicator } from 'react-native';
-import MapView, { LatLng } from 'react-native-maps';
+import MapView, { Marker, LatLng } from 'react-native-maps';
 import * as Location from 'expo-location';
 import { Theme } from '@/src/theme/theme';
-import MapMarkers from '@/src/components/Map/MapMarkers';
 import MyLocationButton from '@/src/components/Map/MyLocationButton';
+import { useProfiles } from '@/src/hooks/useProfiles';
+import { useLocations } from '@/src/hooks/useLocations';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { AppStackParams } from '@/src/types/types';
+
+type Navigation = NativeStackNavigationProp<AppStackParams>;
 
 export default function MapScreen() {
     const [location, setLocation] = useState<{ latitude: number; longitude: number } | null>(null);
     const [loading, setLoading] = useState(true);
+    const [sitters, setSitters] = useState<any[]>([]);
     const mapRef = useRef<MapView>(null);
 
-    const sitters = [
-        { id: 1, name: 'Alice', latitude: 51.9878, longitude: 5.8834 },
-        { id: 2, name: 'Bob', latitude: 51.9880, longitude: 5.8840 },
-        { id: 3, name: 'Charlie', latitude: 51.9875, longitude: 5.8852 },
-        { id: 4, name: 'Daisy', latitude: 52.3676, longitude: 4.9041 },
-    ];
+    const { getProfiles } = useProfiles();
+    const { getLocations } = useLocations();
+    const navigation = useNavigation<Navigation>();
 
+    // Load current user location
     useEffect(() => {
         (async () => {
             const { status } = await Location.requestForegroundPermissionsAsync();
@@ -32,23 +37,52 @@ export default function MapScreen() {
                 latitude: currentLocation.coords.latitude,
                 longitude: currentLocation.coords.longitude,
             });
-            setLoading(false);
         })();
     }, []);
 
     useEffect(() => {
-        if (!loading && mapRef.current) {
+        (async () => {
+            try {
+                const profiles = await getProfiles();
+                const allLocations = await getLocations();
+
+                const sitterList = profiles
+                    .map((p: any) => {
+                        const loc = allLocations.find((l: any) => l.user?.id === p.user_id);
+                        if (!loc || !loc.latitude || !loc.longitude) return null;
+                        return {
+                            id: p.id,
+                            name: p.user?.name || 'Unnamed sitter',
+                            latitude: loc.latitude,
+                            longitude: loc.longitude,
+                        };
+                    })
+                    .filter(Boolean);
+
+                setSitters(sitterList);
+            } catch (err) {
+                console.error('Error fetching sitters or locations:', err);
+            } finally {
+                setLoading(false);
+            }
+        })();
+    }, []);
+
+    useEffect(() => {
+        if (!loading && mapRef.current && (location || sitters.length > 0)) {
             const coordinates: LatLng[] = [
                 ...(location ? [location] : []),
                 ...sitters.map((s) => ({ latitude: s.latitude, longitude: s.longitude })),
             ];
 
-            mapRef.current.fitToCoordinates(coordinates, {
-                edgePadding: { top: 120, right: 50, bottom: 120, left: 50 },
-                animated: true,
-            });
+            if (coordinates.length > 0) {
+                mapRef.current.fitToCoordinates(coordinates, {
+                    edgePadding: { top: 120, right: 50, bottom: 120, left: 50 },
+                    animated: true,
+                });
+            }
         }
-    }, [loading, location]);
+    }, [loading, location, sitters]);
 
     const zoomToMyLocation = () => {
         if (mapRef.current && location) {
@@ -75,7 +109,14 @@ export default function MapScreen() {
     return (
         <View style={styles.container}>
             <MapView ref={mapRef} style={styles.map} showsUserLocation>
-                <MapMarkers sitters={sitters} />
+                {sitters.map((sitter) => (
+                    <Marker
+                        key={sitter.id}
+                        coordinate={{ latitude: sitter.latitude, longitude: sitter.longitude }}
+                        title={sitter.name}
+                        onPress={() => navigation.navigate('SitterScreen', { sitterId: sitter.id })}
+                    />
+                ))}
             </MapView>
             <MyLocationButton onPress={zoomToMyLocation} />
         </View>
