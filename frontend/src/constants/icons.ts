@@ -14,4 +14,7 @@ export const ICONS = {
     checkMarkOutline: 'checkmark-circle-outline',
     location: 'location',
     locationOutline: 'location-outline',
+    info: 'information-circle-outline',
+    chevronUp: 'chevron-up-outline',
+    paw: 'paw-outline',
 } as const;
