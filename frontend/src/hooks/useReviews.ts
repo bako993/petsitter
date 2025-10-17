@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useCallback } from 'react';
 import { reviews } from '../services/reviews';
 
 export const useReviews = () => {
@@ -6,23 +6,37 @@ export const useReviews = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<any>(null);
 
-    const fetchReviews = async () => {
+    const getReviews = useCallback(async () => {
         setLoading(true);
+        setError(null);
         try {
             const res = await reviews.getAll();
-            setData(res);
-        } catch (err) {
-            setError(err);
+            setData(res.data);
+            return res.data;
+        } catch (err: any) {
+            console.error("Error getting reviews: ", err);
+            setError(err.message || 'Failed to get reviews');
+            throw err;
         } finally {
             setLoading(false);
         }
-    };
-
-    useEffect(() => {
-        (async () => {
-            await fetchReviews();
-        })();
     }, []);
 
-    return { data, loading, error, refresh: fetchReviews };
+    const createReview = useCallback(async (payload: any) => {
+        setLoading(true);
+        setError(null);
+        try {
+            const res = await reviews.create(payload);
+            setData(res.data);
+            return res.data;
+        } catch (err: any) {
+            console.error("Error creating reviews: ", err);
+            setError(err.message || 'Failed to create reviews');
+            throw err;
+        } finally {
+            setLoading(false);
+        }
+    }, []);
+
+    return { data, loading, error, getReviews, createReview };
 };

@@ -55,10 +55,3 @@ export const useAuth = () => {
 
     return { user, token, loading, error, login, signup, logout };
 };
-
-// useEffect(() => {
-//     (async () => {
-//         await refreshUser();
-//     })();
-// }, []);
-

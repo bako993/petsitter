@@ -28,7 +28,7 @@ class ProfileController extends Controller
 
     public function show(int $id): ProfileResource|JsonResponse
     {
-        $profile = $this->profileService->findById($id, ['offerings', 'reviews']);
+        $profile = $this->profileService->findById($id, ['user', 'offerings', 'reviews']);
 
         if (!$profile) {
             return response()->json(['message' => 'Profile not found.'], 404);

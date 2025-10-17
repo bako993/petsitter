@@ -24,7 +24,7 @@ export default function SitterCard({ sitter, onPress }: Props) {
             <View style={styles.info}>
                 <Text style={styles.name}>{sitter.name}</Text>
                 <Text style={styles.city}>{sitter.city}</Text>
-                <Text style={styles.rating}>⭐ {sitter.rating} ({sitter.reviews} reviews)</Text>
+                <Text style={styles.rating}>{sitter.rating} ({sitter.reviews} reviews)</Text>
                 <Text style={styles.services}>Services: {sitter.services.join(", ")}</Text>
             </View>
         </TouchableOpacity>

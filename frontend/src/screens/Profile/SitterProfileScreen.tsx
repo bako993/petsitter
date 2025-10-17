@@ -9,7 +9,6 @@ import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import {AppStackParams, Offering, User} from "@/src/types/types";
 import { useAuth } from "@/src/hooks/useAuth";
-import { BASE_URL } from '@env';
 import ProfileEditModal from "@/src/components/Profile/ProfileEditModal";
 import UserEditModal from '@/src/components/Profile/UserEditModal';
 import { useProfiles } from "@/src/hooks/useProfiles";
@@ -20,6 +19,7 @@ import OfferingEditModal from "@/src/components/Profile/OfferingEditModal";
 import OfferingEditDetailModal from "@/src/components/Profile/OfferingEditDetailModal"; // new modal
 import { useOfferings } from "@/src/hooks/useOfferings";
 import { saveUserToStorage } from "@/src/utils/storage";
+import { getFullPhotoUri } from "@/src/utils/getFullPhotoUri";
 
 export default function SitterProfileScreen() {
     const navigation = useNavigation<NativeStackNavigationProp<AppStackParams>>();
@@ -135,9 +135,7 @@ export default function SitterProfileScreen() {
 
     if (loading || !user) return <Loading />;
 
-    const profilePhotoUri = profile?.profile_photo
-        ? `${BASE_URL.replace(/\/api$/, '')}${profile.profile_photo}`
-        : undefined;
+    const profilePhotoUri = getFullPhotoUri(profile?.profile_photo);
 
     return (
         <ScreenWrapper
@@ -148,7 +146,7 @@ export default function SitterProfileScreen() {
             <ProfileHeader
                 name={user.name || "unknown"}
                 email={user.email || "No email"}
-                profileImage={profilePhotoUri ? { uri: profilePhotoUri } : undefined}
+                profileImage={profilePhotoUri ? { uri: profilePhotoUri } : require("@/assets/images/avatar.jpg")}
             />
 
             <ProfileButton text="Edit Personal Info" type="primary" onPress={() => setUserModalVisible(true)} />

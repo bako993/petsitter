@@ -12,13 +12,15 @@ const COLORS = {
     shadow: "#000000",
     error: "#FF4C4C",
     success: "#4CAF50",
-    overlayBackground: "rgba(0,0,0,0.5)",
+    overlayBackground: "rgba(0,0,0,0.4)",
+    yellow: "#FFD700"
 } as const;
 
 const FONTS = {
     sizes: {
         title: 28,
         subtitle: 22,
+        medium: 18,
         body: 16,
         small: 14,
     },

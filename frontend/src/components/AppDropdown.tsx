@@ -9,7 +9,7 @@ type DropdownItem = {
 };
 
 type Props = {
-    label?: string; // Optional label above dropdown
+    label?: string;
     items: DropdownItem[];
     value: string;
     onChange: (value: string) => void;

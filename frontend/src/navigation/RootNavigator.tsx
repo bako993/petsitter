@@ -13,6 +13,7 @@ import SitterProfileScreen from "@/src/screens/Profile/SitterProfileScreen";
 import OfferingCompletionScreen from "@/src/screens/Onboarding/OfferingCompletionScreen"
 import LocationCompletionScreen from "@/src/screens/Onboarding/LocationCompletionScreen"
 import ProfileCompletionScreen from "@/src/screens/Onboarding/ProfileCompletionScreen"
+import SitterScreen from "@/src/screens/SitterScreen";
 
 const Stack = createNativeStackNavigator<AppStackParams>();
 
@@ -32,6 +33,7 @@ export default function RootNavigator() {
                         <Stack.Screen name={"ProfileCompletionScreen"} component={ProfileCompletionScreen} />
                         <Stack.Screen name="OfferingCompletionScreen" component={OfferingCompletionScreen} />
                         <Stack.Screen name="LocationCompletionScreen" component={LocationCompletionScreen} />
+                        <Stack.Screen name="SitterScreen" component={SitterScreen} />
                     </Stack.Navigator>
                 )}
             </AuthGate>
