@@ -6,6 +6,21 @@ export const useProfiles = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
+    const getProfiles = useCallback(async () => {
+        setLoading(true);
+        setError(null);
+        try {
+            const res = await profiles.getAll();
+            setProfile(res.data);
+            return res.data ;
+        } catch (err: any) {
+            setError(err.message || 'Failed to fetch profiles');
+            throw err;
+        } finally {
+            setLoading(false);
+        }
+    }, []);
+
     const getProfileById = useCallback(async (id: number) => {
         setLoading(true);
         setError(null);
@@ -52,5 +67,5 @@ export const useProfiles = () => {
         }
     }, []);
 
-    return { profile, loading, error, getProfileById, updateProfile, createProfile, setProfile };
+    return { profile, loading, error, getProfiles, getProfileById, updateProfile, createProfile, setProfile };
 };

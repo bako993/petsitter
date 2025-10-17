@@ -9,5 +9,9 @@ export const ICONS = {
     personOutline: 'person-outline',
     star: 'star',
     back: 'arrow-back',
-    edit: 'pencil'
+    edit: 'pencil',
+    checkMark: 'checkmark-circle',
+    checkMarkOutline: 'checkmark-circle-outline',
+    location: 'location',
+    locationOutline: 'location-outline',
 } as const;

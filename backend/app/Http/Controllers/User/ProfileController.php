@@ -21,7 +21,7 @@ class ProfileController extends Controller
 
     public function index(): ProfileCollection
     {
-        $profiles = $this->profileService->paginate(15, ['offerings', 'reviews']);
+        $profiles = $this->profileService->paginate(15, ['user', 'offerings', 'reviews']);
 
         return new ProfileCollection($profiles);
     }

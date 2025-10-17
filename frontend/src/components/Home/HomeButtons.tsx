@@ -25,13 +25,12 @@ export default function HomeButtons() {
         if (user.type === "sitter" || user.profile) {
             navigation.navigate("MainTabs", { screen: "Profile" });
         } else {
-            navigation.navigate("SitterOnboardingScreen");
+            navigation.navigate("ProfileCompletionScreen");
         }
     };
 
     const handleFindSitter = () => {
-        // navigation.navigate("MainTabs", { screen: "Search" });
-        navigation.navigate("OfferingCompletionScreen");
+        navigation.navigate("MainTabs", { screen: "Search" });
     };
 
     return (

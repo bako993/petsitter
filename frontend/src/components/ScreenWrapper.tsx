@@ -6,8 +6,8 @@ import {Theme} from "@/src/theme/theme";
 type ScreenWrapperProps = {
     children: React.ReactNode;
     scrollable?: boolean;
-    onRefresh?: () => Promise<void> | void; // ✅ add this
-    refreshing?: boolean; // ✅ needed for RefreshControl
+    onRefresh?: () => Promise<void> | void;
+    refreshing?: boolean;
 } & ViewProps;
 
 export default function ScreenWrapper({

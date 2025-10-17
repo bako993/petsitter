@@ -23,6 +23,7 @@ class LocationResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'user_id' => $this->user_id,
             'latitude' => $this->latitude,
             'longitude' => $this->longitude,
             'city' => $this->city,

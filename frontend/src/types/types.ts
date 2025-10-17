@@ -1,12 +1,14 @@
+import ProfileCompletionScreen from "@/src/screens/Onboarding/ProfileCompletionScreen";
+
 export type AppStackParams = {
     WelcomeScreen: undefined;
     MainTabs: {screen: keyof BottomTabParams};
     SitterScreen: { sitterId: number };
-    SitterOnboardingScreen: undefined;
     SitterProfileScreen: undefined;
     OwnerProfileScreen: undefined;
     LoginScreen: undefined;
     SignupScreen: undefined;
+    ProfileCompletionScreen: undefined;
     OfferingCompletionScreen: undefined;
     LocationCompletionScreen: undefined;
 };

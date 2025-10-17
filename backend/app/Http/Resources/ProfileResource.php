@@ -21,11 +21,13 @@ class ProfileResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'user_id' => $this->user_id,
             'profile_photo' => $this->profile_photo,
             'bio' => $this->bio,
             'phone' => $this->phone,
             'experience' => $this->experience,
             'availability' => $this->availability,
+            'user' => new UserResource($this->whenLoaded('user')),
             'offerings' => OfferingResource::collection($this->whenLoaded('offerings')),
             'reviews' => ReviewResource::collection($this->whenLoaded('reviews')),
             'created_at' => $this->created_at,

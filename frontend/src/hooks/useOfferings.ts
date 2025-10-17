@@ -92,9 +92,3 @@ export const useOfferings = () => {
         setData,
     };
 };
-
-// useEffect(() => {
-//     (async () => {
-//         await fetchOfferings();
-//     })();
-// }, []);

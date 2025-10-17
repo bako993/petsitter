@@ -9,6 +9,7 @@ import { useOfferings } from "@/src/hooks/useOfferings";
 import { useUsers } from "@/src/hooks/useUsers";
 import OfferingCreateModal from "@/src/components/Profile/OfferingCreateModal";
 import {saveUserToStorage} from "@/src/utils/storage";
+import ProgressIndicator from '@/src/components/ProgressIndicator'
 
 export default function OfferingCompletionScreen() {
     const navigation = useNavigation<NativeStackNavigationProp<AppStackParams>>();
@@ -83,6 +84,10 @@ export default function OfferingCompletionScreen() {
 
     return (
         <ScreenWrapper style={{ backgroundColor: Theme.COLORS.background }}>
+            <ProgressIndicator
+                currentStep={1}
+                steps={['Profile', 'Offering', 'Location']}
+            />
             <View style={styles.container}>
                 <Text style={styles.title}>Complete Your Sitter Profile</Text>
                 <Text style={styles.subtitle}>
@@ -125,7 +130,7 @@ export default function OfferingCompletionScreen() {
 
                 {offeringsData.length > 0 && (
                     <Text style={{ marginTop: 20, color: Theme.COLORS.primary, textAlign: "center" }}>
-                        🎉 You’ve added offerings! You can now continue to complete your profile.
+                        You’ve added offerings! You can now continue to complete your profile.
                     </Text>
                 )}
             </View>
