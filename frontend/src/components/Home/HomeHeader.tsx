@@ -1,4 +1,4 @@
-import React, {use, useEffect} from "react";
+import React, { useEffect } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import Logo from "@/src/components/Logo";
 import { Theme } from "@/src/theme/theme";

@@ -1,5 +1,3 @@
-import ProfileCompletionScreen from "@/src/screens/Onboarding/ProfileCompletionScreen";
-
 export type AppStackParams = {
     WelcomeScreen: undefined;
     MainTabs: {screen: keyof BottomTabParams};

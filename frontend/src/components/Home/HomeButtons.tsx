@@ -41,10 +41,7 @@ export default function HomeButtons() {
 
             <TouchableOpacity
                 style={styles.becomeButton}
-                onPress={() => {
-                    if (!user) return;
-                    handleBecomeSitter();
-                }}
+                onPress={handleBecomeSitter}
             >
                 <Text style={styles.becomeButtonText}>
                     {user?.profile ? "Go to Profile" : "Become a Sitter"}

@@ -1,7 +1,6 @@
 import React, { useEffect, useState, ReactNode } from 'react';
-import { ActivityIndicator, View } from 'react-native';
 import * as SecureStore from 'expo-secure-store';
-import { Theme } from '@/src/theme/theme';
+import {Loading} from "@/src/components/Loading";
 
 type AuthGateProps = {
     children: (isLoggedIn: boolean) => ReactNode;
@@ -24,13 +23,7 @@ export default function AuthGate({ children }: AuthGateProps) {
         })();
     }, []);
 
-    if (loading) {
-        return (
-            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                <ActivityIndicator size="large" color={Theme.COLORS.primary} />
-            </View>
-        );
-    }
+    if (loading) return <Loading />;
 
     return <>{children(isLoggedIn)}</>;
 }

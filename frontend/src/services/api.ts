@@ -21,31 +21,3 @@ export const api = async (endpoint: string, options: RequestInit = {}) => {
 
     return data;
 };
-
-
-// export const api = async (endpoint: string, options: RequestInit = {}) => {
-//     const token = await SecureStore.getItemAsync("token");
-//
-//     const res = await fetch(`${BASE_URL}${endpoint}`, {
-//         ...options,
-//         headers: {
-//             "Content-Type": "application/json",
-//             "Accept": "application/json",
-//             ...(token ? { Authorization: `Bearer ${token}` } : {}),
-//             ...options.headers,
-//         },
-//     });
-//
-//     console.log("Status:", res.status);
-//
-//     const data = await res.json().catch(() => null);
-//
-//     console.log("DAta:", data);
-//
-//
-//     if (!res.ok) {
-//         throw data || { message: `Request failed with status ${res.status}` };
-//     }
-//
-//     return data;
-// };

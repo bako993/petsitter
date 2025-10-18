@@ -54,26 +54,6 @@ export default function OfferingEditModal({ visible, offerings, onClose, onSelec
                         </View>
                     )}
                 />
-
-                // <FlatList
-                //     data={offerings}
-                //     keyExtractor={(item) => item.id.toString()}
-                //     scrollEnabled={true}
-                //     renderItem={({ item }) => (
-                //         <TouchableOpacity
-                //             style={styles.offeringItem}
-                //             onPress={() => onSelectOffering(item)}
-                //         >
-                //             <Text style={styles.title}>{item.offering_type}</Text>
-                //             <Text style={styles.details}>
-                //                 Price: ${item.price}
-                //                 {item.duration ? ` / ${item.duration} min` : ""}
-                //                 {"\n"}
-                //                 {item.conditions?.join(", ")}
-                //             </Text>
-                //         </TouchableOpacity>
-                //     )}
-                // />
             ) : (
                 <Text style={styles.noOfferings}>No offerings to edit</Text>
             )}

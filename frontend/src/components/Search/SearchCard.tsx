@@ -2,7 +2,7 @@ import React from "react";
 import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native";
 import { Theme } from "@/src/theme/theme";
 
-type Sitter = {
+export type Sitter = {
     id: number;
     name: string;
     city: string;
