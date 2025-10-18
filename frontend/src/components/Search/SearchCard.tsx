@@ -17,7 +17,7 @@ type Props = {
     onPress: () => void;
 };
 
-export default function SitterCard({ sitter, onPress }: Props) {
+export default function SearchCard({ sitter, onPress }: Props) {
     return (
         <TouchableOpacity style={styles.card} onPress={onPress}>
             <Image source={sitter.image} style={styles.image} />

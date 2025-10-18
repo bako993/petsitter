@@ -80,7 +80,7 @@ export default function OfferingCreateModal({ visible, onClose, onOfferingSaved,
                 onChangeText={text => setForm(prev => ({ ...prev, duration: text }))}
                 keyboardType="numeric"
             />
-            <Text style={styles.label}>Conditions (comma separated)</Text>
+            <Text style={styles.label}>Conditions</Text>
             <TextInput
                 style={styles.input}
                 placeholder="Conditions"

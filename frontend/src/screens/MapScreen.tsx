@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, StyleSheet, ActivityIndicator } from 'react-native';
-import MapView, { Marker, LatLng } from 'react-native-maps';
+import { View, StyleSheet } from 'react-native';
+import MapView, { LatLng } from 'react-native-maps';
 import * as Location from 'expo-location';
 import { Theme } from '@/src/theme/theme';
 import MyLocationButton from '@/src/components/Map/MyLocationButton';
@@ -9,6 +9,8 @@ import { useLocations } from '@/src/hooks/useLocations';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { AppStackParams } from '@/src/types/types';
+import {Loading} from "@/src/components/Loading";
+import {LocationMarkers} from "@/src/components/Map/LocationMarkers";
 
 type Navigation = NativeStackNavigationProp<AppStackParams>;
 
@@ -22,7 +24,6 @@ export default function MapScreen() {
     const { getLocations } = useLocations();
     const navigation = useNavigation<Navigation>();
 
-    // Load current user location
     useEffect(() => {
         (async () => {
             const { status } = await Location.requestForegroundPermissionsAsync();
@@ -98,25 +99,12 @@ export default function MapScreen() {
         }
     };
 
-    if (loading) {
-        return (
-            <View style={styles.loadingContainer}>
-                <ActivityIndicator size="large" color={Theme.COLORS.primary} />
-            </View>
-        );
-    }
+    if (loading) return <Loading />
 
     return (
         <View style={styles.container}>
             <MapView ref={mapRef} style={styles.map} showsUserLocation>
-                {sitters.map((sitter) => (
-                    <Marker
-                        key={sitter.id}
-                        coordinate={{ latitude: sitter.latitude, longitude: sitter.longitude }}
-                        title={sitter.name}
-                        onPress={() => navigation.navigate('SitterScreen', { sitterId: sitter.id })}
-                    />
-                ))}
+                <LocationMarkers sitters={sitters} navigation={navigation} />
             </MapView>
             <MyLocationButton onPress={zoomToMyLocation} />
         </View>
@@ -124,12 +112,11 @@ export default function MapScreen() {
 }
 
 const styles = StyleSheet.create({
-    container: { flex: 1, backgroundColor: Theme.COLORS.background },
-    map: { flex: 1 },
-    loadingContainer: {
+    container: {
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: Theme.COLORS.background,
+        backgroundColor: Theme.COLORS.background
+    },
+    map: {
+        flex: 1
     },
 });

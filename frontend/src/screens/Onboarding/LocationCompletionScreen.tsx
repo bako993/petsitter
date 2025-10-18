@@ -2,9 +2,6 @@ import React, {useEffect, useState} from "react";
 import {
     View,
     Text,
-    TextInput,
-    TouchableOpacity,
-    ActivityIndicator,
     StyleSheet,
     Alert,
 } from "react-native";
@@ -16,9 +13,10 @@ import { Theme } from "@/src/theme/theme";
 import ScreenWrapper from "@/src/components/ScreenWrapper";
 import { useUsers } from "@/src/hooks/useUsers";
 import { useLocations } from "@/src/hooks/useLocations";
-import {Ionicons} from "@expo/vector-icons";
-import {ICONS} from "@/src/constants/icons";
 import ProgressIndicator from '@/src/components/ProgressIndicator'
+import SubmitButton from "@/src/components/Onboarding/SubmitButton";
+import LocationButton from "@/src/components/Onboarding/LocationButton";
+import LocationForm from "@/src/components/Onboarding/LocationForm";
 
 export default function LocationCompletionScreen() {
     const navigation = useNavigation<NativeStackNavigationProp<AppStackParams>>();
@@ -112,92 +110,27 @@ export default function LocationCompletionScreen() {
                 <Text style={styles.title}>Set Your Location</Text>
                 <Text style={styles.subtitle}>
                     Share your location so nearby pet owners can find you.
-
                 </Text>
 
-                <TouchableOpacity style={styles.locationButton} onPress={requestLocation}>
-                    <Ionicons
-                        name={coords ? ICONS.location : ICONS.locationOutline}
-                        size={Theme.FONTS.sizes.subtitle}
-                        color={Theme.COLORS.background}
-                        style={{ marginRight: 8 }}
-                    />
-                    <Text style={styles.locationButtonText}>
-                        {coords ? "Location Captured" : "Share My Location"}
-                    </Text>
-                    {coords && (
-                        <Ionicons
-                            name={ICONS.checkMark}
-                            size={Theme.FONTS.sizes.body}
-                            color={Theme.COLORS.success}
-                            style={{ marginLeft: 8 }}
-                        />
-                    )}
-                </TouchableOpacity>
+                <LocationButton coordsCaptured={!!coords} onPress={requestLocation} />
 
-                <View style={styles.form}>
-                    <View style={styles.fieldRow}>
-                        <Text style={styles.label}>City (optional)</Text>
-                    </View>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="e.g., Amsterdam"
-                        placeholderTextColor={Theme.COLORS.textSecondary}
-                        value={city}
-                        onChangeText={setCity}
-                    />
+                <LocationForm
+                    city={city}
+                    postalCode={postalCode}
+                    street={street}
+                    houseNumber={houseNumber}
+                    setCity={setCity}
+                    setPostalCode={setPostalCode}
+                    setStreet={setStreet}
+                    setHouseNumber={setHouseNumber}
+                />
 
-                    <View style={styles.fieldRow}>
-                        <Text style={styles.label}>Postal Code (optional)</Text>
-                    </View>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="e.g., 1012AB"
-                        placeholderTextColor={Theme.COLORS.textSecondary}
-                        value={postalCode}
-                        onChangeText={setPostalCode}
-                    />
-
-                    <View style={styles.fieldRow}>
-                        <Text style={styles.label}>Street (optional)</Text>
-                    </View>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="e.g., Main Street"
-                        placeholderTextColor={Theme.COLORS.textSecondary}
-                        value={street}
-                        onChangeText={setStreet}
-                    />
-
-                    <View style={styles.fieldRow}>
-                        <Text style={styles.label}>House Number (optional)</Text>
-                    </View>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="e.g., 12A"
-                        placeholderTextColor={Theme.COLORS.textSecondary}
-                        value={houseNumber}
-                        onChangeText={setHouseNumber}
-                    />
-
-                    <View style={styles.requiredNote}>
-                        <Text style={styles.requiredText}>
-                            * Sharing your location is <Text style={{ fontWeight: Theme.FONTS.weights.bold }}>required</Text> to continue.
-                        </Text>
-                    </View>
-                </View>
-
-                <TouchableOpacity
-                    style={[styles.saveButton, !coords && { backgroundColor: Theme.COLORS.card }]}
+                <SubmitButton
                     onPress={handleSaveLocation}
-                    disabled={!coords || loading}
-                >
-                    {loading ? (
-                        <ActivityIndicator color={Theme.COLORS.background} />
-                    ) : (
-                        <Text style={styles.saveButtonText}>Save and Continue</Text>
-                    )}
-                </TouchableOpacity>
+                    loading={loading}
+                    disabled={!coords}
+                    title={"Submit"}
+                />
             </View>
         </ScreenWrapper>
     );
@@ -221,58 +154,5 @@ const styles = StyleSheet.create({
         color: Theme.COLORS.textSecondary,
         textAlign: "center",
         marginBottom: Theme.SPACING.section,
-    },
-    locationButton: {
-        flexDirection: "row",
-        backgroundColor: Theme.COLORS.secondary,
-        borderRadius: 8,
-        paddingVertical: Theme.SPACING.card,
-        justifyContent: "center",
-        alignItems: "center",
-        marginBottom: Theme.SPACING.section,
-    },
-    locationButtonText: {
-        color: Theme.COLORS.background,
-        fontSize: Theme.FONTS.sizes.body,
-        fontWeight: Theme.FONTS.weights.semiBold,
-    },
-    form: {
-        marginVertical: Theme.SPACING.sm,
-    },
-    fieldRow: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-    },
-    label: {
-        color: Theme.COLORS.textSecondary,
-        marginBottom: Theme.SPACING.xs,
-        fontSize: Theme.FONTS.sizes.small,
-    },
-    input: {
-        backgroundColor: Theme.COLORS.cardSkyBlue,
-        borderRadius: 8,
-        padding: Theme.SPACING.sm,
-        marginBottom: Theme.SPACING.sm,
-        color: Theme.COLORS.text,
-    },
-    requiredNote: {
-        marginTop: Theme.SPACING.xs,
-    },
-    requiredText: {
-        color: Theme.COLORS.textSecondary,
-        fontSize: Theme.FONTS.sizes.small,
-        textAlign: "center",
-    },
-    saveButton: {
-        backgroundColor: Theme.COLORS.primary,
-        borderRadius: 10,
-        padding: Theme.SPACING.card,
-        marginTop: Theme.SPACING.section,
-        alignItems: "center",
-    },
-    saveButtonText: {
-        color: Theme.COLORS.background,
-        fontSize: Theme.FONTS.sizes.body,
-        fontWeight: Theme.FONTS.weights.semiBold,
     },
 });

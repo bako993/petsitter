@@ -91,7 +91,7 @@ export default function OfferingEditDetailModal({ visible, offering, onClose, on
                 onChangeText={text => setForm(prev => ({ ...prev, duration: text }))}
                 keyboardType="numeric"
             />
-            <Text style={styles.label}>Conditions (comma separated)</Text>
+            <Text style={styles.label}>Conditions</Text>
             <TextInput
                 style={styles.input}
                 placeholder="Conditions"

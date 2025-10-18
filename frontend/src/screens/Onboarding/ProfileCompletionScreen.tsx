@@ -2,24 +2,23 @@ import React, {useEffect, useState} from 'react';
 import {
     View,
     Text,
-    TouchableOpacity,
     StyleSheet,
     Alert,
     KeyboardAvoidingView,
     Platform,
-    ActivityIndicator
 } from 'react-native';
 import { Theme } from '@/src/theme/theme';
 import ScreenWrapper from '@/src/components/ScreenWrapper';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { AppStackParams } from '@/src/types/types';
-import { FormInput } from '@/src/components/FormInput';
 import { useUsers } from '@/src/hooks/useUsers';
 import { useProfiles } from '@/src/hooks/useProfiles';
 import { saveUserToStorage } from '@/src/utils/storage';
 import PhotoPicker from '@/src/components/PhotoPicker';
 import ProgressIndicator from '@/src/components/ProgressIndicator'
+import SubmitButton from "@/src/components/Onboarding/SubmitButton";
+import FormFields from "@/src/components/Onboarding/FormFields";
 
 export default function ProfileCompletionScreen() {
     const navigation = useNavigation<NativeStackNavigationProp<AppStackParams>>();
@@ -101,17 +100,17 @@ export default function ProfileCompletionScreen() {
                         size={120}
                     />
 
-                    <FormInput label="Bio" value={bio} onChange={setBio} placeholder="Tell us about yourself" />
-                    <FormInput label="Experience" value={experience} onChange={setExperience} placeholder="Your experience with pets" />
-                    <FormInput label="Phone" value={phone} onChange={setPhone} placeholder="Your phone number" keyboardType="phone-pad" />
-                    <FormInput label="Availability" value={availability} onChange={setAvailability} placeholder="e.g. Weekdays 9–5" />
-                    <TouchableOpacity style={styles.button} onPress={handleSubmit} disabled={loading || !user}>
-                        {loading ? (
-                            <ActivityIndicator size="small" color={Theme.COLORS.background} />
-                        ) : (
-                            <Text style={styles.buttonText}>Submit</Text>
-                        )}
-                    </TouchableOpacity>
+                    <FormFields
+                        bio={bio} setBio={setBio}
+                        experience={experience} setExperience={setExperience}
+                        phone={phone} setPhone={setPhone}
+                        availability={availability} setAvailability={setAvailability}
+                    />
+                    <SubmitButton
+                        onPress={handleSubmit}
+                        loading={loading}
+                        disabled={!user}
+                    />
                 </View>
             </ScreenWrapper>
         </KeyboardAvoidingView>
@@ -141,21 +140,5 @@ const styles = StyleSheet.create({
         width: 120,
         height: 120,
         borderRadius: 60,
-    },
-    photoText: {
-        color: Theme.COLORS.textSecondary,
-        textAlign: 'center',
-    },
-    button: {
-        backgroundColor: Theme.COLORS.primary,
-        paddingVertical: 15,
-        borderRadius: 10,
-        marginTop: Theme.SPACING.section,
-        alignItems: 'center',
-    },
-    buttonText: {
-        color: Theme.COLORS.background,
-        fontSize: Theme.FONTS.sizes.body,
-        fontWeight: Theme.FONTS.weights.bold,
     },
 });

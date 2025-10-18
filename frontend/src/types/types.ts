@@ -57,3 +57,8 @@ export type Offering = {
     created_at?: string;
     updated_at?: string;
 };
+
+export type Review = {
+    rating: number;
+    comment: string;
+};

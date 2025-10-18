@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from "react";
-import { FlatList } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import ScreenWrapper from "@/src/components/ScreenWrapper";
@@ -7,13 +6,13 @@ import { Theme } from "@/src/theme/theme";
 import { AppStackParams } from "@/src/types/types";
 import SearchBar from "@/src/components/Search/SearchBar";
 import ServiceFilters from "@/src/components/Search/ServiceFilters";
-import SitterCard from "@/src/components/Search/SitterCard";
 import EmptyState from "@/src/components/Search/EmptyState";
 import { useProfiles } from "@/src/hooks/useProfiles";
 import { useLocations } from "@/src/hooks/useLocations";
 import { getFullPhotoUri} from "@/src/utils/getFullPhotoUri";
 import {loadSittersFromStorage, saveSittersToStorage} from "@/src/utils/storage";
 import {Loading} from "@/src/components/Loading";
+import {SearchList} from "@/src/components/Search/SearchList";
 
 export default function SearchScreen() {
     const navigation = useNavigation<NativeStackNavigationProp<AppStackParams>>();
@@ -24,6 +23,25 @@ export default function SearchScreen() {
     const { getProfiles } = useProfiles();
     const { getLocations } = useLocations();
 
+    function mapProfilesToSitters(profiles: any[], locations: any[]) {
+        return profiles.map((profile) => {
+            const fullPhotoUri = getFullPhotoUri(profile.profile_photo);
+            const userLocation = locations.find((loc) => loc.user?.id === profile.user_id);
+            const userName = profile?.user?.name || "Unknown";
+
+            return {
+                id: profile.id,
+                name: userName,
+                city: userLocation?.full_address || userLocation?.city || "Unknown",
+                rating: "N/A",
+                reviews: profile.reviews?.length || 0,
+                image: fullPhotoUri ? { uri: fullPhotoUri } : require("@/assets/images/avatar.jpg"),
+                services: profile.offerings?.map((o: any) => o.offering_type) || [],
+                __rawProfile: profile,
+            };
+        });
+    }
+
     useEffect(() => {
         (async () => {
             try {
@@ -33,27 +51,7 @@ export default function SearchScreen() {
                 const profilesData = await getProfiles();
                 const locationsData = await getLocations();
 
-                const mapped = (profilesData || []).map((profile: any) => {
-
-                    const fullPhotoUri = getFullPhotoUri(profile.profile_photo);
-                    const userLocation = locationsData.find(
-                        (loc: any) => loc.user?.id === profile.user_id
-                    );
-                    const userName = profile?.user?.name || "Unknown";
-
-                    return {
-                        id: profile.id,
-                        name: userName,
-                        city: userLocation?.full_address || userLocation?.city || "Unknown",
-                        rating: "N/A",
-                        reviews: 0,
-                        image: fullPhotoUri
-                            ? { uri: fullPhotoUri }
-                            : require("@/assets/images/avatar.jpg"),
-                        services: profile.offerings?.map((o: any) => o.offering_type) || [],
-                        __rawProfile: profile,
-                    };
-                });
+                const mapped = mapProfilesToSitters(profilesData || [], locationsData);
 
                 setSitters(mapped);
                 await saveSittersToStorage(mapped);
@@ -85,20 +83,11 @@ export default function SearchScreen() {
             />
 
             {filteredSitters.length > 0 ? (
-                <FlatList
-                    data={filteredSitters}
-                    keyExtractor={(item) => item.id.toString()}
-                    contentContainerStyle={{ paddingBottom: Theme.SPACING.page }}
-                    renderItem={({ item }) => (
-                        <SitterCard
-                            sitter={item}
-                            onPress={() => navigation.navigate("SitterScreen", { sitterId: item.id })}
-                        />
-                    )}
-                />
+                <SearchList sitters={filteredSitters} navigation={navigation} />
             ) : (
                 <EmptyState />
             )}
+
         </ScreenWrapper>
     );
 }
