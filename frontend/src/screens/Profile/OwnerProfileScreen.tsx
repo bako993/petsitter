@@ -2,7 +2,6 @@ import React, {useEffect, useState} from "react";
 import ScreenWrapper from "@/src/components/ScreenWrapper";
 import { Theme } from "@/src/theme/theme";
 import { ProfileHeader } from "@/src/components/Profile/ProfileHeader";
-import ProfileCard from "@/src/components/Profile/ProfileCard";
 import ProfileButton from "@/src/components/Profile/ProfileButton";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
@@ -51,10 +50,6 @@ export default function OwnerProfileScreen() {
             <ProfileHeader
                 name={user.name || "unknown"}
                 email={user.email || "No email"}
-            />
-            <ProfileCard
-                title="Saved Sitters"
-                content="No saved sitters yet."
             />
             <ProfileButton
                 text="Edit Personal Info"

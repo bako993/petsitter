@@ -45,28 +45,3 @@ jest.mock('expo-secure-store', () => ({
     getItemAsync: jest.fn(),
     deleteItemAsync: jest.fn(),
 }));
-
-
-
-
-// import 'react-native-gesture-handler/jestSetup';
-//
-// // Mock SecureStore
-// jest.mock('expo-secure-store', () => ({
-//     setItemAsync: jest.fn(),
-//     getItemAsync: jest.fn(),
-//     deleteItemAsync: jest.fn(),
-// }));
-//
-// // Mock AsyncStorage
-// import mockAsyncStorage from '@react-native-async-storage/async-storage/jest/async-storage-mock';
-// jest.mock('@react-native-async-storage/async-storage', () => mockAsyncStorage);
-//
-// // Mock alerts
-// import { Alert } from 'react-native';
-// jest.spyOn(Alert, 'alert').mockImplementation(() => {});
-//
-// // Mock navigation
-// jest.mock('@react-navigation/native', () => ({
-//     useNavigation: () => ({ navigate: jest.fn() }),
-// }));

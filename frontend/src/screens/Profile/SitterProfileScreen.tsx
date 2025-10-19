@@ -122,8 +122,6 @@ export default function SitterProfileScreen() {
         }
     };
 
-
-
     const handleLogout = async () => {
         try {
             await logout();

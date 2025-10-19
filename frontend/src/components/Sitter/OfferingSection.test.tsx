@@ -3,7 +3,7 @@ import { render, fireEvent } from "@testing-library/react-native";
 import { OfferingsSection } from "./OfferingsSection";
 
 jest.mock("@expo/vector-icons", () => ({
-    Ionicons: "Ionicons", // simplify icon rendering
+    Ionicons: "Ionicons",
 }));
 
 describe("OfferingsSection", () => {

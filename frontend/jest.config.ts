@@ -15,6 +15,19 @@ const config: Config = {
     moduleNameMapper: {
         '^@/(.*)$': '<rootDir>/$1',
     },
+
+    reporters: [
+        'default',
+        [
+            'jest-html-reporter',
+            {
+                pageTitle: 'Petsitting App Test Report',
+                outputPath: 'test-report.html',
+                includeFailureMsg: true,
+                includeConsoleLog: true
+            }
+        ]
+    ],
 };
 
 export default config;
