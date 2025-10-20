@@ -2,6 +2,7 @@ stages:
   - lint
   - test_unit
   - test_feature
+  - deploy_acceptance
 
 lint:
   stage: lint
@@ -73,3 +74,39 @@ feature_tests:
     - php backend/vendor/bin/phpunit --configuration backend/phpunit.xml --testsuite=Feature
   only:
     - merge_requests
+
+deploy_acceptance:
+  stage: deploy_acceptance
+  image: php:8.4
+  services:
+    - name: mysql:8.0
+      alias: mysql_acceptance
+  variables:
+    MYSQL_ROOT_PASSWORD: ${ACCEPTANCE_DB_ROOT_PASSWORD}
+    MYSQL_DATABASE: ${ACCEPTANCE_DB_DATABASE}
+    MYSQL_USER: ${ACCEPTANCE_DB_USERNAME}
+    MYSQL_PASSWORD: ${ACCEPTANCE_DB_PASSWORD}
+    APP_ENV: acceptance
+    DB_CONNECTION: mysql
+    DB_HOST: mysql_acceptance
+    DB_PORT: "3306"
+    DB_DATABASE: ${ACCEPTANCE_DB_DATABASE}
+    DB_USERNAME: ${ACCEPTANCE_DB_USERNAME}
+    DB_PASSWORD: ${ACCEPTANCE_DB_PASSWORD}
+    APP_KEY: ${APP_KEY}
+  before_script:
+    - apt-get update && apt-get install -y unzip git libpng-dev libjpeg-dev libfreetype6-dev
+    - docker-php-ext-install pdo_mysql
+    - docker-php-ext-configure gd --with-freetype --with-jpeg
+    - docker-php-ext-install gd
+    - curl -sS https://getcomposer.org/installer | php
+    - php composer.phar install --no-interaction --prefer-dist --working-dir=backend
+    - sleep 5
+    - php backend/artisan migrate --env=acceptance --force
+  script:
+    - echo "Running acceptance tests..."
+    - php backend/vendor/bin/phpunit --configuration backend/phpunit.xml --testsuite=Feature
+  environment:
+    name: acceptance
+  only:
+    - main
