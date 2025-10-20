@@ -1,3 +1,9 @@
+stages:
+  - lint
+  - format
+  - test_unit
+  - test_feature
+
 include:
   - local: 'backend/.gitlab-ci.yml'
   - local: 'frontend/.gitlab-ci.yml'
