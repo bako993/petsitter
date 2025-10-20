@@ -50,6 +50,23 @@ services:
     networks:
       - network
 
+  mysql_acceptance:
+    image: mysql:8.0
+    container_name: mysql_acceptance
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${ACCEPTANCE_DB_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${ACCEPTANCE_DB_DATABASE}
+      MYSQL_USER: ${ACCEPTANCE_DB_USERNAME}
+      MYSQL_PASSWORD: ${ACCEPTANCE_DB_PASSWORD}
+    ports:
+      - "33064:3306"
+    volumes:
+      - mysql_acceptance_data:/var/lib/mysql
+    networks:
+      - network
+
+
 networks:
   network:
     driver: bridge
@@ -57,3 +74,4 @@ networks:
 volumes:
   mysql_dev_data:
   mysql_test_data:
+  mysql_acceptance_data:

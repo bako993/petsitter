@@ -3,6 +3,7 @@ stages:
   - format
   - test_unit
   - test_feature
+  - deploy_acceptance
 
 include:
   - local: 'backend/.gitlab-ci.yml'
