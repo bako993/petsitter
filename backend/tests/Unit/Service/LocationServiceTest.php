@@ -5,7 +5,7 @@ namespace Service;
 use App\Exceptions\UserNotAllowedException;
 use App\Models\Location;
 use App\Models\User;
-use App\Policies\LocationPolicy;
+use Core\Policies\LocationPolicy;
 use Core\Repositories\LocationRepositoryInterface;
 use Core\Services\LocationService;
 use Illuminate\Pagination\LengthAwarePaginator;

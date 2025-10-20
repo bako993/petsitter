@@ -3,7 +3,7 @@
 namespace Core\Services;
 
 use App\Exceptions\UserNotAllowedException;
-use App\Policies\ReviewPolicy;
+use Core\Policies\ReviewPolicy;
 use Core\Repositories\ReviewRepositoryInterface;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 

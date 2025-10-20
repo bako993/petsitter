@@ -4,7 +4,7 @@ namespace Core\Services;
 
 use App\Exceptions\NotFoundException;
 use App\Exceptions\UserNotAllowedException;
-use App\Policies\LocationPolicy;
+use Core\Policies\LocationPolicy;
 use Core\Repositories\LocationRepositoryInterface;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 

@@ -6,7 +6,7 @@ use App\Exceptions\UserNotAllowedException;
 use App\Models\Offering;
 use App\Models\Profile;
 use App\Models\User;
-use App\Policies\OfferingPolicy;
+use Core\Policies\OfferingPolicy;
 use Core\Repositories\OfferingRepositoryInterface;
 use Core\Services\OfferingService;
 use Illuminate\Pagination\LengthAwarePaginator;

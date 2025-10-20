@@ -4,7 +4,7 @@ namespace Service;
 
 use App\Exceptions\UserNotAllowedException;
 use App\Models\User;
-use App\Policies\UserPolicy;
+use Core\Policies\UserPolicy;
 use Core\Repositories\UserRepositoryInterface;
 use Core\Services\UserService;
 use Illuminate\Pagination\LengthAwarePaginator;

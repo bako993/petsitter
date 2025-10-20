@@ -5,7 +5,7 @@ namespace Service;
 use App\Exceptions\UserNotAllowedException;
 use App\Models\Profile;
 use App\Models\User;
-use App\Policies\ProfilePolicy;
+use Core\Policies\ProfilePolicy;
 use Core\Repositories\ProfileRepositoryInterface;
 use Core\Services\FileService;
 use Core\Services\ProfileService;
