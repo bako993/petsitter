@@ -8,8 +8,8 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "lint": "expo lint",
-    "lint:fix": "expo lint --fix",
     "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx}\"",
+    "format:check": "prettier --check \"src/**/*.{js,jsx,ts,tsx}\"",
     "test": "jest --coverage",
     "test:watch": "jest --watch"
   },

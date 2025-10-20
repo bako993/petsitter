@@ -1,0 +1,17 @@
+stages:
+  - format
+
+frontend_format:
+  stage: format
+  image: node:20
+  before_script:
+    - cd frontend
+    - npm ci
+  script:
+    - npm run format:check || (echo "Formatting issues found. Run npm run format locally to fix." && exit 1)
+  only:
+    - merge_requests
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - frontend/node_modules/
