@@ -1,10 +1,8 @@
-import { jest } from '@jest/globals';
-import { Alert } from 'react-native';
+import {jest} from '@jest/globals';
+import {Alert} from 'react-native';
 
-// Mock Alert
 jest.spyOn(Alert, 'alert').mockImplementation(() => {});
 
-// Mock React Navigation
 jest.mock('@react-navigation/native', () => {
     const actualNav = jest.requireActual('@react-navigation/native') as any;
     return {
@@ -13,14 +11,12 @@ jest.mock('@react-navigation/native', () => {
     };
 });
 
-// Mock Expo Vector Icons
 jest.mock('@expo/vector-icons', () => {
     return {
         Ionicons: 'Ionicons',
     };
 });
 
-// Mock react-native-maps Marker
 jest.mock('@react-navigation/native', () => {
     const actualNav = jest.requireActual('@react-navigation/native') as Record<string, any>;
     return {
@@ -29,7 +25,6 @@ jest.mock('@react-navigation/native', () => {
     };
 });
 
-// Mock AsyncStorage
 jest.mock('@react-native-async-storage/async-storage', () => {
     return {
         setItem: jest.fn(),
@@ -39,9 +34,24 @@ jest.mock('@react-native-async-storage/async-storage', () => {
     };
 });
 
-// Mock Expo SecureStore
 jest.mock('expo-secure-store', () => ({
     setItemAsync: jest.fn(),
     getItemAsync: jest.fn(),
     deleteItemAsync: jest.fn(),
 }));
+
+jest.mock('expo-location', () => ({
+    getCurrentPositionAsync: jest.fn(),
+    requestForegroundPermissionsAsync: jest.fn(),
+    watchPositionAsync: jest.fn(),
+}));
+
+jest.mock('react-native-reanimated', () => require('react-native-reanimated/mock'));
+
+jest.mock('react-native-reanimated-carousel', () => {
+    return { __esModule: true, default: jest.fn(() => null) };
+});
+
+jest.mock('react-native-dropdown-picker', () => {
+    return { __esModule: true, default: jest.fn(() => null) };
+});

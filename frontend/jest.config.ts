@@ -6,11 +6,14 @@ const config: Config = {
         '^.+\\.(js|jsx|ts|tsx)$': 'babel-jest',
     },
     setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
+    // transformIgnorePatterns: [
+    //     'node_modules/(?!(@react-native|react-native|@react-navigation|react-native-maps|expo-|@expo|expo-secure-store|@react-native-community)/)',
+    // ],
     transformIgnorePatterns: [
-        'node_modules/(?!(@react-native|react-native|@react-navigation|react-native-maps|expo-|@expo|expo-secure-store|@react-native-community)/)',
+        "node_modules/(?!(react-native|@react-native|react-navigation|@react-navigation|react-native-maps|expo|@expo|react-native-reanimated|react-native-reanimated-carousel|react-native-worklets)/)"
     ],
 
-    testPathIgnorePatterns: ['/node_modules/', '/android/', '/ios/'],
+    // testPathIgnorePatterns: ['/node_modules/', '/android/', '/ios/'],
     moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
     moduleNameMapper: {
         '^@/(.*)$': '<rootDir>/$1',
