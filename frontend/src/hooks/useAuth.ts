@@ -2,56 +2,61 @@ import { useState } from 'react';
 import { auth } from '../services/auth';
 
 export const useAuth = () => {
-    const [user, setUser] = useState<any>(null);
-    const [token, setToken] = useState<string | null>(null);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
+  const [user, setUser] = useState<any>(null);
+  const [token, setToken] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-    const login = async (email: string, password: string) => {
-        setLoading(true);
-        setError(null);
-        try {
-            const { user: loggedUser, token: authToken } = await auth.login({ email, password });
-            setUser(loggedUser);
-            setToken(authToken);
-            return loggedUser;
-        } catch (err: any) {
-            setError(err.message || 'Login failed');
-            throw err;
-        } finally {
-            setLoading(false);
-        }
-    };
+  const login = async (email: string, password: string) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const { user: loggedUser, token: authToken } = await auth.login({ email, password });
+      setUser(loggedUser);
+      setToken(authToken);
+      return loggedUser;
+    } catch (err: any) {
+      setError(err.message || 'Login failed');
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    const signup = async (params: { name: string; email: string; password: string; password_confirmation: string }) => {
-        setLoading(true);
-        setError(null);
-        try {
-            const { user: newUser, token: authToken } = await auth.signup(params);
-            setUser(newUser);
-            setToken(authToken);
-            return newUser;
-        } catch (err: any) {
-            setError(err.message || 'Signup failed');
-            throw err;
-        } finally {
-            setLoading(false);
-        }
-    };
+  const signup = async (params: {
+    name: string;
+    email: string;
+    password: string;
+    password_confirmation: string;
+  }) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const { user: newUser, token: authToken } = await auth.signup(params);
+      setUser(newUser);
+      setToken(authToken);
+      return newUser;
+    } catch (err: any) {
+      setError(err.message || 'Signup failed');
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    const logout = async () => {
-        setLoading(true);
-        setError(null);
-        try {
-            await auth.logout();
-            setUser(null);
-            setToken(null);
-        } catch (err: any) {
-            setError(err.message || 'Logout failed');
-        } finally {
-            setLoading(false);
-        }
-    };
+  const logout = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      await auth.logout();
+      setUser(null);
+      setToken(null);
+    } catch (err: any) {
+      setError(err.message || 'Logout failed');
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    return { user, token, loading, error, login, signup, logout };
+  return { user, token, loading, error, login, signup, logout };
 };

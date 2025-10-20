@@ -12,60 +12,57 @@ const mockUsersGet = users.get as jest.Mock;
 const mockUsersUpdate = users.update as jest.Mock;
 
 describe('useUsers hook', () => {
-    beforeEach(() => {
-        jest.clearAllMocks();
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('fetches a user by ID and stores it', async () => {
+    const fakeUser = { id: 1, name: 'John' };
+    mockUsersGet.mockResolvedValue({ data: fakeUser });
+    mockSetItemAsync.mockResolvedValue(undefined);
+
+    const { result } = renderHook(() => useUsers());
+
+    let user;
+    await act(async () => {
+      user = await result.current.fetchUserById(1);
     });
 
-    it('fetches a user by ID and stores it', async () => {
-        const fakeUser = { id: 1, name: 'John' };
-        mockUsersGet.mockResolvedValue({ data: fakeUser });
-        mockSetItemAsync.mockResolvedValue(undefined);
+    expect(user).toEqual(fakeUser);
+    expect(result.current.user).toEqual(fakeUser);
+    expect(mockSetItemAsync).toHaveBeenCalledWith('user', JSON.stringify({ data: fakeUser }));
+    expect(result.current.loading).toBe(false);
+  });
 
-        const { result } = renderHook(() => useUsers());
+  it('loads a stored user from SecureStore', async () => {
+    const stored = { data: { id: 2, name: 'Alice' } };
+    mockGetItemAsync.mockResolvedValue(JSON.stringify(stored));
 
-        let user;
-        await act(async () => {
-            user = await result.current.fetchUserById(1);
-        });
+    const { result } = renderHook(() => useUsers());
 
-        expect(user).toEqual(fakeUser);
-        expect(result.current.user).toEqual(fakeUser);
-        expect(mockSetItemAsync).toHaveBeenCalledWith(
-            'user',
-            JSON.stringify({ data: fakeUser })
-        );
-        expect(result.current.loading).toBe(false);
+    let user;
+    await act(async () => {
+      user = await result.current.loadStoredUser();
     });
 
-    it('loads a stored user from SecureStore', async () => {
-        const stored = { data: { id: 2, name: 'Alice' } };
-        mockGetItemAsync.mockResolvedValue(JSON.stringify(stored));
+    expect(user).toEqual(stored.data);
+    expect(result.current.user).toEqual(stored.data);
+  });
 
-        const { result } = renderHook(() => useUsers());
+  it('updates a user and refetches', async () => {
+    const updatedUser = { id: 1, name: 'Updated' };
+    mockUsersUpdate.mockResolvedValue({});
+    mockUsersGet.mockResolvedValue({ data: updatedUser });
+    mockSetItemAsync.mockResolvedValue(undefined);
 
-        let user;
-        await act(async () => {
-            user = await result.current.loadStoredUser();
-        });
+    const { result } = renderHook(() => useUsers());
 
-        expect(user).toEqual(stored.data);
-        expect(result.current.user).toEqual(stored.data);
+    let user;
+    await act(async () => {
+      user = await result.current.updateUserById(1, { name: 'Updated' });
     });
 
-    it('updates a user and refetches', async () => {
-        const updatedUser = { id: 1, name: 'Updated' };
-        mockUsersUpdate.mockResolvedValue({});
-        mockUsersGet.mockResolvedValue({ data: updatedUser });
-        mockSetItemAsync.mockResolvedValue(undefined);
-
-        const { result } = renderHook(() => useUsers());
-
-        let user;
-        await act(async () => {
-            user = await result.current.updateUserById(1, { name: 'Updated' });
-        });
-
-        expect(user).toEqual(updatedUser);
-        expect(result.current.user).toEqual(updatedUser);
-    });
+    expect(user).toEqual(updatedUser);
+    expect(result.current.user).toEqual(updatedUser);
+  });
 });
