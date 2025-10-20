@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Policies;
+namespace Core\Policies;
 
 class OfferingPolicy
 {

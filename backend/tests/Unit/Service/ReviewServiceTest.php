@@ -6,7 +6,7 @@ use App\Exceptions\UserNotAllowedException;
 use App\Models\Profile;
 use App\Models\Review;
 use App\Models\User;
-use App\Policies\ReviewPolicy;
+use Core\Policies\ReviewPolicy;
 use Core\Repositories\ReviewRepositoryInterface;
 use Core\Services\ReviewService;
 use Illuminate\Pagination\LengthAwarePaginator;

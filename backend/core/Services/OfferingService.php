@@ -4,7 +4,7 @@ namespace Core\Services;
 
 use App\Exceptions\NotFoundException;
 use App\Exceptions\UserNotAllowedException;
-use App\Policies\OfferingPolicy;
+use Core\Policies\OfferingPolicy;
 use Core\Repositories\OfferingRepositoryInterface;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use PHPUnit\Framework\InvalidDataProviderException;

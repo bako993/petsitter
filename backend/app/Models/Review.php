@@ -27,4 +27,9 @@ class Review extends Model
     {
         return $this->belongsTo(Profile::class);
     }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 }

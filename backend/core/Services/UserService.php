@@ -3,7 +3,7 @@
 namespace Core\Services;
 
 use App\Exceptions\UserNotAllowedException;
-use App\Policies\UserPolicy;
+use Core\Policies\UserPolicy;
 use Core\Repositories\UserRepositoryInterface;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Hash;

@@ -4,7 +4,7 @@ namespace Core\Services;
 
 use App\Exceptions\NotFoundException;
 use App\Exceptions\UserNotAllowedException;
-use App\Policies\ProfilePolicy;
+use Core\Policies\ProfilePolicy;
 use Core\Repositories\ProfileRepositoryInterface;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\UploadedFile;
