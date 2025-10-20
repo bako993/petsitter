@@ -1,9 +1,3 @@
-stages:
-  - lint
-  - test_unit
-  - test_feature
-  - deploy_acceptance
-
 lint:
   stage: lint
   image: php:8.4
@@ -75,7 +69,7 @@ feature_tests:
   only:
     - merge_requests
 
-deploy_acceptance:
+deploy_acceptance_backend:
   stage: deploy_acceptance
   image: php:8.4
   services:

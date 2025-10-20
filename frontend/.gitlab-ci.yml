@@ -12,3 +12,17 @@ frontend_format:
     key: ${CI_COMMIT_REF_SLUG}
     paths:
       - frontend/node_modules/
+
+frontend_acceptance:
+  stage: deploy_acceptance
+  image: node:20
+  before_script:
+    - cd frontend
+    - npm ci
+  script:
+    - echo "Running frontend acceptance tests..."
+    - npm test   # runs Jest tests only, no coverage
+  environment:
+    name: acceptance
+  only:
+    - main
