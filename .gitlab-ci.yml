@@ -4,6 +4,7 @@ stages:
   - test_unit
   - test_feature
   - deploy_acceptance
+  - deploy_production
 
 include:
   - local: 'backend/.gitlab-ci.yml'

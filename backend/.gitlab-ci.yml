@@ -104,3 +104,22 @@ deploy_acceptance_backend:
     name: acceptance
   only:
     - main
+
+deploy_production:
+  stage: deploy_production
+  image:
+    name: hashicorp/terraform:1.6.7
+    entrypoint: [""]
+  before_script:
+    - terraform --version
+  script:
+    - cd terraform
+    - terraform init
+    - terraform apply -auto-approve
+  environment:
+    name: production
+    url: http://your.backend.production.ip
+  when: manual
+  only:
+    - main
+  dependencies: []

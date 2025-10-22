@@ -1,0 +1,14 @@
+# Terraform
+*.tfstate
+*.tfstate.backup
+.terraform/
+.terraform.lock.hcl
+terraform.tfvars
+
+# AWS Keys
+*.pem
+
+# System / IDE
+.vscode/
+.idea/
+.DS_Store
