@@ -108,7 +108,7 @@ deploy_acceptance_backend:
 deploy_production:
   stage: deploy_production
   image:
-    name: hashicorp/terraform:1.6.7
+    name: hashicorp/terraform:latest
     entrypoint: [""]
   before_script:
     - terraform --version
