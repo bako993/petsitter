@@ -119,7 +119,8 @@ resource "aws_instance" "backend_ec2" {
               #!/bin/bash
               set -euo pipefail
               set -x
-              exec > >(tee/var/log/user-data.log) 2>&1
+              exec > >(tee /var/log/user-data.log) 2>&1
+              echo "Updating apt repositories..."
               apt update -y
               apt install -y docker.io docker-compose git
 
@@ -133,7 +134,11 @@ resource "aws_instance" "backend_ec2" {
               ls -la /home/ubuntu
 
               sudo -u ubuntu git clone ${var.repo_url} /home/ubuntu/backend
-
+              echo "Setting up .env.production..."
+              echo "Docker version:"
+              docker --version
+              echo "Docker-compose version:"
+              docker-compose --version
               cd /home/ubuntu/backend
               sudo rm -rf /home/ubuntu/backend/.env.production
               if [ -e .env.production ]; then
