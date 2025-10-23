@@ -144,7 +144,7 @@ resource "aws_instance" "backend_ec2" {
               APP_ENV=production
               APP_KEY=${var.app_key}
               APP_DEBUG=false
-              APP_URL=http://${aws_eip.backend_eip.public_ip}
+              APP_URL=http://${data.aws_eip.backend_eip.public_ip}
               APP_LOCALE=en
               APP_FALLBACK_LOCALE=en
               APP_FAKER_LOCALE=en_US
