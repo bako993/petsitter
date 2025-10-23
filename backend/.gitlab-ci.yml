@@ -110,15 +110,12 @@ deploy_production:
   image:
     name: hashicorp/terraform:latest
     entrypoint: [""]
-  before_script:
-    - terraform --version
   script:
     - cd terraform
     - terraform init
     - terraform apply -auto-approve
   environment:
     name: production
-    url: http://your.backend.production.ip
   when: manual
   only:
     - main
