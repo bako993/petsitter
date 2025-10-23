@@ -113,7 +113,6 @@ deploy_production:
   script:
     - cd terraform
     - terraform init
-    - terraform destroy -auto-approve
     - terraform apply -auto-approve
   environment:
     name: production
