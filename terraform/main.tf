@@ -185,7 +185,7 @@ resource "aws_instance" "backend_ec2" {
                   ports:
                     - "80:80"
                   volumes:
-                    - .:/var/www
+                    - ./backend:/var/www
                     - ./storage:/var/www/storage
                   env_file:
                     - ./.env.production
