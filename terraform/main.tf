@@ -86,18 +86,25 @@ resource "aws_security_group" "backend_sg" {
 }
 
 # 7a. Elastic IP for Backend EC2
-resource "aws_eip" "backend_eip" {
-  domain = "vpc"
-  tags         = { Name = "backend-eip" }
-  lifecycle {
-    prevent_destroy = true
-  }
+# resource "aws_eip" "backend_eip" {
+#   domain = "vpc"
+#   tags         = { Name = "backend-eip" }
+#   lifecycle {
+#     prevent_destroy = true
+#   }
+# }
+
+# Reference existing Elastic IP
+data "aws_eip" "backend_eip" {
+  public_ip = "3.223.170.7"
 }
+
 
 # 7b. Associate the Elastic IP with the EC2
 resource "aws_eip_association" "backend_eip_assoc" {
   instance_id   = aws_instance.backend_ec2.id
-  allocation_id = aws_eip.backend_eip.id
+  # allocation_id = aws_eip.backend_eip.id
+  allocation_id = data.aws_eip.backend_eip.id
 }
 
 # 7c. EC2 Instance
