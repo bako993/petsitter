@@ -120,7 +120,6 @@ resource "aws_instance" "backend_ec2" {
               set -euo pipefail
               set -x
               exec > >(tee /var/log/user-data.log) 2>&1
-              echo "Updating apt repositories..."
               apt update -y
               apt install -y docker.io docker-compose git
 
@@ -131,14 +130,8 @@ resource "aws_instance" "backend_ec2" {
               sudo mkdir -p /home/ubuntu/backend
               sudo chown -R ubuntu:ubuntu /home/ubuntu/backend
               sudo chmod 755 /home/ubuntu/backend
-              ls -la /home/ubuntu
 
               sudo -u ubuntu git clone ${var.repo_url} /home/ubuntu/backend
-              echo "Setting up .env.production..."
-              echo "Docker version:"
-              docker --version
-              echo "Docker-compose version:"
-              docker-compose --version
               cd /home/ubuntu/backend
               sudo rm -rf /home/ubuntu/backend/.env.production
               if [ -e .env.production ]; then
@@ -185,7 +178,7 @@ resource "aws_instance" "backend_ec2" {
                   ports:
                     - "80:80"
                   volumes:
-                    - ./backend:/var/www
+                    - .:/var/www
                     - ./storage:/var/www/storage
                   env_file:
                     - ./.env.production
@@ -203,7 +196,6 @@ resource "aws_instance" "backend_ec2" {
                     MYSQL_DATABASE: ${var.db_username}_db
                     MYSQL_USER: ${var.db_username}
                     MYSQL_PASSWORD: ${var.db_password}
-                  command: --default-authentication-plugin=mysql_native_password --ssl-mode=DISABLED --skip-ssl
                   ports:
                     - "3306:3306"
                   volumes:
