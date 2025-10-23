@@ -1,0 +1,15 @@
+deploy_production:
+  stage: deploy_production
+  image:
+    name: hashicorp/terraform:latest
+    entrypoint: [""]
+  script:
+    - cd terraform
+    - terraform init
+    - terraform apply -auto-approve
+  environment:
+    name: production
+  when: manual
+  only:
+    - main
+  dependencies: []

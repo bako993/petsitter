@@ -9,3 +9,4 @@ stages:
 include:
   - local: 'backend/.gitlab-ci.yml'
   - local: 'frontend/.gitlab-ci.yml'
+  - local: 'terraform/.gitlab-ci.yml'
