@@ -145,6 +145,8 @@ resource "aws_instance" "backend_ec2" {
                 rm -rf .env.production
               fi
 
+              echo "Repo contents:"
+              ls -R /home/ubuntu/backend
               cat <<EOF2 > .env.production
               APP_ENV=production
               APP_KEY=${var.app_key}
@@ -176,7 +178,7 @@ resource "aws_instance" "backend_ec2" {
               services:
                 backend:
                   build:
-                    context: .
+                    context: ./backend
                     dockerfile: Dockerfile
                   container_name: backend_prod
                   restart: unless-stopped
