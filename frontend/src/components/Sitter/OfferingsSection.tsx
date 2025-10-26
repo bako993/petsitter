@@ -22,7 +22,6 @@ export const OfferingsSection: React.FC<ServicesSectionProps> = ({ offerings }) 
 
   const handlePress = (offering: Offering) => {
     if (selectedOffering?.id === offering.id) {
-      // hide
       Animated.timing(animationHeight, {
         toValue: 0,
         duration: 200,
@@ -80,7 +79,7 @@ export const OfferingsSection: React.FC<ServicesSectionProps> = ({ offerings }) 
 
       {selectedOffering && (
         <Animated.View style={[styles.details, { height: animationHeight, overflow: 'hidden' }]}>
-          <Text style={styles.detailText}>Price: ${selectedOffering.price}</Text>
+          <Text style={styles.detailText}>Price: {selectedOffering.price} euro</Text>
           <Text style={styles.detailText}>Duration: {selectedOffering.duration}</Text>
           {selectedOffering.conditions && (
             <Text style={styles.detailText}>Conditions: {selectedOffering.conditions}</Text>
