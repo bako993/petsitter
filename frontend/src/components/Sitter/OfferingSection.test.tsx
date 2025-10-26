@@ -39,7 +39,7 @@ describe('OfferingsSection', () => {
   it('shows details when a service is pressed', () => {
     const { getByText } = render(<OfferingsSection offerings={mockOfferings} />);
     fireEvent.press(getByText('Walking'));
-    expect(getByText('Price: $10')).toBeTruthy();
+    expect(getByText('Price: 10 euro')).toBeTruthy();
     expect(getByText('Duration: 30 min')).toBeTruthy();
     expect(getByText('Conditions: Small dogs only')).toBeTruthy();
   });
