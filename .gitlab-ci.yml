@@ -1,12 +1,12 @@
-#stages:
-#  - lint
-#  - format
-#  - test_unit
-#  - test_feature
-#  - deploy_acceptance
-#  - deploy_production
-#
-#include:
-#  - local: 'backend/.gitlab-ci.yml'
-#  - local: 'frontend/.gitlab-ci.yml'
-#  - local: 'terraform/.gitlab-ci.yml'
+stages:
+  - lint
+  - format
+  - test_unit
+  - test_feature
+  - deploy_acceptance
+  - deploy_production
+
+include:
+  - local: 'backend/.gitlab-ci.yml'
+  - local: 'frontend/.gitlab-ci.yml'
+  - local: 'terraform/.gitlab-ci.yml'
